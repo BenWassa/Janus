@@ -23,7 +23,7 @@ class TestHarness:
     """Test harness for running automated game sequences."""
     
     def __init__(self):
-        self.data_path = Path(__file__).parent / "data"
+        self.data_path = Path(__file__).parent.parent / "data"
         self.scenarios = load_scenarios(self.data_path)
         self.test_results = []
         
