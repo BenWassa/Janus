@@ -13,6 +13,9 @@ NPC definitions, personality traits, and dialogue trees.
 ### Scenarios (`scenarios/`)
 Psychological testing scenarios and their scoring parameters.
 
+### Payoffs (`payoffs/`)
+Trait-driven micro payoffs and mid-scene forks keyed to player profiles.
+
 ## Format Guidelines
 - Use JSON for structured data
 - Include metadata for content management

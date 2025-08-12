@@ -1,0 +1,351 @@
+{
+  "micro_payoffs": [
+    {
+      "id": "banner_brush",
+      "trigger_trait": "Hubris",
+      "trigger_rank": 1,
+      "type": "ambient",
+      "text": "Banners along the hall seem to dip just low enough for you to brush them aside."
+    },
+    {
+      "id": "bard_pause",
+      "trigger_trait": "Hubris",
+      "trigger_rank": 2,
+      "type": "npc",
+      "text": "A bard pauses mid-tune, eyeing your stride as if you've already taken the stage."
+    },
+    {
+      "id": "coin_chime",
+      "trigger_trait": "Avarice",
+      "trigger_rank": 1,
+      "type": "item",
+      "text": "Coins in your pouch chime louder than they should, demanding notice."
+    },
+    {
+      "id": "merchant_grin",
+      "trigger_trait": "Avarice",
+      "trigger_rank": 2,
+      "type": "npc",
+      "text": "The merchant's smile widens whenever your gaze lingers on his wares."
+    },
+    {
+      "id": "split_shadow",
+      "trigger_trait": "Deception",
+      "trigger_rank": 1,
+      "type": "ambient",
+      "text": "Your shadow splits for an instant, each half walking a different path."
+    },
+    {
+      "id": "key_check",
+      "trigger_trait": "Deception",
+      "trigger_rank": 2,
+      "type": "npc",
+      "text": "The innkeeper laughs a beat too late, checking his keys after you pass."
+    },
+    {
+      "id": "stone_align",
+      "trigger_trait": "Control",
+      "trigger_rank": 1,
+      "type": "ambient",
+      "text": "Loose stones on the path shuffle into neat lines behind your steps."
+    },
+    {
+      "id": "map_edges",
+      "trigger_trait": "Control",
+      "trigger_rank": 2,
+      "type": "item",
+      "text": "The map in your hand refuses to crease, corners staying sharply folded."
+    },
+    {
+      "id": "torch_flare",
+      "trigger_trait": "Wrath",
+      "trigger_rank": 1,
+      "type": "ambient",
+      "text": "Torches crackle hotter when you draw near, spitting sparks in time with your pulse."
+    },
+    {
+      "id": "stablehand_flinch",
+      "trigger_trait": "Wrath",
+      "trigger_rank": 2,
+      "type": "npc",
+      "text": "A stablehand retreats quickly, citing unfinished chores when your gaze meets his."
+    },
+    {
+      "id": "whimper_wind",
+      "trigger_trait": "Fear",
+      "trigger_rank": 1,
+      "type": "ambient",
+      "text": "Wind squeezes through cracks with a whimper whenever the trail narrows."
+    },
+    {
+      "id": "shivering_talisman",
+      "trigger_trait": "Fear",
+      "trigger_rank": 2,
+      "type": "item",
+      "text": "The talisman at your belt shivers, as if anxious to flee the clasp."
+    },
+    {
+      "id": "dice_rattle",
+      "trigger_trait": "Impulsivity",
+      "trigger_rank": 1,
+      "type": "ambient",
+      "text": "Dice abandoned on a barrel still rattle as you pass, eager for another roll."
+    },
+    {
+      "id": "guard_mutter",
+      "trigger_trait": "Impulsivity",
+      "trigger_rank": 2,
+      "type": "npc",
+      "text": "A guard mutters that you move like a flicker of lightning—thrilling and dangerous."
+    },
+    {
+      "id": "noble_gleam",
+      "trigger_trait": "Envy",
+      "trigger_rank": 1,
+      "type": "ambient",
+      "text": "Jewels on passing nobles gleam brighter, tugging your gaze despite yourself."
+    },
+    {
+      "id": "dust_coat",
+      "trigger_trait": "Apathy",
+      "trigger_rank": 1,
+      "type": "ambient",
+      "text": "Dust settles on your shoulders even while you walk."
+    },
+    {
+      "id": "elder_sigh",
+      "trigger_trait": "Cynicism",
+      "trigger_rank": 1,
+      "type": "npc",
+      "text": "The elder's counsel ends with a sigh, expecting your rebuttal before it arrives."
+    },
+    {
+      "id": "cloud_shift",
+      "trigger_trait": "Moodiness",
+      "trigger_rank": 1,
+      "type": "ambient",
+      "text": "Clouds gather and scatter above you, mirroring your shifting silence."
+    },
+    {
+      "id": "staff_straight",
+      "trigger_trait": "Rigidity",
+      "trigger_rank": 1,
+      "type": "item",
+      "text": "The staff you carry stays arrow-straight, even when leaned against a wall."
+    },
+    {
+      "id": "story_trail_off",
+      "trigger_trait": "Apathy",
+      "trigger_rank": 2,
+      "type": "npc",
+      "text": "A companion stops mid-story, realizing you weren't listening."
+    },
+    {
+      "id": "glowing_sword",
+      "trigger_trait": "Envy",
+      "trigger_rank": 2,
+      "type": "item",
+      "text": "A sword on the rack glows faintly whenever someone else reaches for it."
+    }
+  ],
+  "mid_scene_forks": [
+    {
+      "scene_id": "abandoned_courtyard",
+      "base_scene": "courtyard_ruins",
+      "trigger_trait": "Hubris",
+      "trigger_rank": 1,
+      "text": "In a courtyard of toppled rulers, an empty pedestal invites you.",
+      "choices": [
+        {
+          "choice_id": "mount_pedestal",
+          "text": "Climb the empty plinth and survey the ruins.",
+          "primary_trait": "Hubris",
+          "primary_weight": 0.5,
+          "secondary_trait": "Deception",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "restore_statue",
+          "text": "Piece the broken statue back together.",
+          "primary_trait": "Control",
+          "primary_weight": 0.5,
+          "secondary_trait": "Rigidity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "move_on",
+          "text": "Leave the courtyard untouched.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "glittering_cache",
+      "base_scene": "forest_path",
+      "trigger_trait": "Avarice",
+      "trigger_rank": 1,
+      "text": "A split tree reveals a cache of coins seeping from within.",
+      "choices": [
+        {
+          "choice_id": "pocket_coins",
+          "text": "Gather every coin you can find.",
+          "primary_trait": "Avarice",
+          "primary_weight": 0.5,
+          "secondary_trait": "Deception",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "alert_others",
+          "text": "Alert the nearby town about the stash.",
+          "primary_trait": "Control",
+          "primary_weight": 0.5,
+          "secondary_trait": "Rigidity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "cover_cache",
+          "text": "Cover the coins and walk away.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "shadowed_bargain",
+      "base_scene": "market_alley",
+      "trigger_trait": "Deception",
+      "trigger_rank": 1,
+      "text": "A hooded stranger offers to trade a map for your 'word'.",
+      "choices": [
+        {
+          "choice_id": "swap_fake_map",
+          "text": "Slip a forged map into the stranger's hands.",
+          "primary_trait": "Deception",
+          "primary_weight": 0.5,
+          "secondary_trait": "Avarice",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "refuse_deal",
+          "text": "Refuse the bargain and demand they leave.",
+          "primary_trait": "Rigidity",
+          "primary_weight": 0.5,
+          "secondary_trait": "Control",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "accept_sincerely",
+          "text": "Accept the offer with a courteous nod.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "candlelit_chapel",
+      "base_scene": "chapel_nave",
+      "trigger_trait": "Control",
+      "trigger_rank": 1,
+      "text": "Candles in a neglected chapel lean at uneven angles.",
+      "choices": [
+        {
+          "choice_id": "straighten_candles",
+          "text": "Straighten each candle until the row is uniform.",
+          "primary_trait": "Control",
+          "primary_weight": 0.5,
+          "secondary_trait": "Rigidity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "snuff_flames",
+          "text": "Snuff the flames and leave the room in darkness.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.5,
+          "secondary_trait": "Impulsivity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "let_tilt",
+          "text": "Ignore the tilt and continue onward.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "sparring_ground",
+      "base_scene": "training_yard",
+      "trigger_trait": "Wrath",
+      "trigger_rank": 2,
+      "text": "On the training grounds, a challenger jeers, daring you to swing.",
+      "choices": [
+        {
+          "choice_id": "strike_fast",
+          "text": "Launch into an aggressive opening.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.5,
+          "secondary_trait": "Impulsivity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "parry_and_teach",
+          "text": "Parry the blow and lecture on proper form.",
+          "primary_trait": "Control",
+          "primary_weight": 0.5,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "nod_and_leave",
+          "text": "Nod politely and walk away.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "trembling_bridge",
+      "base_scene": "chasm_edge",
+      "trigger_trait": "Fear",
+      "trigger_rank": 2,
+      "text": "A rope bridge quivers over a dark ravine.",
+      "choices": [
+        {
+          "choice_id": "cross_carefully",
+          "text": "Grip the ropes and inch across.",
+          "primary_trait": "Fear",
+          "primary_weight": 0.5,
+          "secondary_trait": "Control",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "sprint_over",
+          "text": "Dash across before the bridge can sway.",
+          "primary_trait": "Impulsivity",
+          "primary_weight": 0.5,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "turn_back",
+          "text": "Turn back and seek another path.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    }
+  ]
+}
