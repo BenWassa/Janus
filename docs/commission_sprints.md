@@ -269,33 +269,38 @@ Updated READMEs in affected directories.
 
 
 
-
 Sprint 10 – Scenario Depth + Decoys
-Goal: Increase density and camouflage so the trait system isn’t transparent to testers.
+Goal: Increase content density and camouflage to prevent testers from reverse-engineering the trait system.
 
 Deliverables:
 
-Add ~10 micro-scenes spread evenly across Acts 1–3.
+Add ~10 micro-scenes across all three Acts:
 
-At least 3 zero-weight decoys purely for flavor.
+3 zero-weight decoys (purely narrative flavor)
 
-At least 3 low-weight (+0.2) choices that could plausibly be major.
+3 low-weight (+0.2) plausible high-impact lookalikes
 
-Remaining 4 balanced across +0.5 or +0.8 where missing coverage.
+4 mid/high-weight choices (+0.5 / +0.8) filling coverage gaps
 
-Review all existing choice weightings for “obviousness.”
+Review all existing scenes for “too obvious” weight–trait links.
 
-If a choice reads as clearly linked to a trait, soften via alternate wording or add decoy siblings.
+Adjust wording or introduce alternate/decoy siblings to obscure mechanics.
 
-Ensure pacing: major-weight choices never appear back-to-back.
+Ensure major-weight choices never appear back-to-back in a single playthrough.
 
-Deep Context to provide:
+Deep Context:
 
-Current scenario scripts (Acts 1–3).
+Current Acts 1–3 scripts
 
-List of existing decoys and their placement.
+Existing decoy placement map
 
-Known “too obvious” choice examples.
+List of “too obvious” traits and candidate adjustments
+
+
+
+
+
+
 
 
 
@@ -306,25 +311,33 @@ Known “too obvious” choice examples.
 
 
 Sprint 11 – End-to-End Trait Reveal Pass
-Goal: Ensure every possible run produces a coherent, satisfying endgame payoff.
+Goal: Guarantee that every playthrough produces a coherent, satisfying reveal with in-story callbacks.
 
 Deliverables:
 
-Verify trait tracking loop works start → finish.
+Verify the full trait-tracking loop (start → tag accumulation → top-3 determination → end reveal).
 
-Fill any gaps in reveal library — every top-3 constellation (or fallback grouping) must have a narrative template.
+Fill gaps in the reveal library:
 
-Ensure at least one micro/mid payoff triggers in each Act for most playstyles.
+Every possible top-3 constellation must have a reveal
 
-Run a 2–3 simulated playthroughs (scripted inputs) to verify different trait outcomes produce the correct reveals.
+Provide a neutral fallback for ties
 
-Deep Context to provide:
+Ensure each Act has at least one payoff beat (micro or mid) triggered by the player’s current top trait(s).
 
-Current trait payoff library.
+Run 2–3 scripted playthrough simulations to confirm trait outcomes trigger correct reveals.
 
-Trait constellation mapping (top-3 logic).
+Deep Context:
 
-Example playthrough logs from Sprint 9.
+Current reveal template library
+
+Trait constellation mapping rules
+
+Logs from simulated or past playthroughs
+
+
+
+
 
 
 
@@ -336,26 +349,28 @@ Example playthrough logs from Sprint 9.
 
 
 Sprint 12 – Alpha/Beta Test Setup
-Goal: Package the game for real-world playtesting.
+Goal: Deliver a playable, test-ready build for internal/external testers.
 
 Deliverables:
 
-Integrate save/load and basic telemetry logging (choice IDs, traits before/after).
+Integrate save/load and telemetry logging:
 
-Add lightweight debug HUD toggle for internal testers showing:
+Log choice ID, primary/secondary traits, and weight deltas
 
-Current trait scores
+Add an internal debug HUD toggle showing:
+
+Current trait totals
 
 Last choice’s primary/secondary/weight
 
-Package as a standalone, easy-to-run build with instructions.
+Package as a standalone build with simple run instructions.
 
-Run 1–2 internal dry runs to confirm stability before handing to external testers.
+Conduct 1–2 internal dry runs to validate stability and end-to-end flow before release to testers.
 
-Deep Context to provide:
+Deep Context:
 
-Current engine code and save/load hooks.
+Current engine code with save/load hooks
 
-Example telemetry output format.
+Telemetry output target format
 
-Packaging requirements (target OS, dependencies, run instructions).
+OS/package dependencies and run instructions
