@@ -13,7 +13,7 @@ cd Janus
 ```
 
 ### 2. Prototyping New Features
-- Start in `prototype/experiments/`
+- Start in `versions/v0-experiments/experiments/`
 - Create focused, small experiments
 - Document your findings
 - Test concepts thoroughly
