@@ -1,0 +1,231 @@
+{
+  "_comment": "Act 3: Whispers scenes for sprint 4",
+  "act": 3,
+  "title": "Whispers",
+  "description": "Secrets and temptations test sworn loyalties.",
+  "scenes": [
+    {
+      "scene_id": "sealed_letter",
+      "type": "micro",
+      "text": "A sealed letter with your name lies on a silent doorstep.",
+      "choices": [
+        {
+          "choice_id": "read_secret",
+          "text": "Break the seal and read the contents alone.",
+          "primary_trait": "Deception",
+          "primary_weight": 0.2,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "deliver_unopened",
+          "text": "Deliver it to the intended door without a glance.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "siren_fruit",
+      "type": "micro",
+      "text": "A merchant's fruit glows and whispers promises of flavor.",
+      "choices": [
+        {
+          "choice_id": "taste_fruit",
+          "text": "Bite into it despite the warnings etched on the stall.",
+          "primary_trait": "Impulsivity",
+          "primary_weight": 0.2,
+          "secondary_trait": "Avarice",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "walk_past",
+          "text": "Resist and walk past as the scent fades behind you.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "oathbound_statue",
+      "type": "micro",
+      "text": "An ancient statue murmurs names of those who kept their vows.",
+      "choices": [
+        {
+          "choice_id": "renew_oath",
+          "text": "Press your palm to the stone and swear anew.",
+          "primary_trait": "Control",
+          "primary_weight": 0.2,
+          "secondary_trait": "Rigidity",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "scratch_name",
+          "text": "Carve nonsense letters and laugh at the echo.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "curtain_conclave",
+      "type": "micro",
+      "text": "Behind a thin curtain, voices trade secrets in hushed tones.",
+      "choices": [
+        {
+          "choice_id": "listen_in",
+          "text": "Hold your breath and memorize every whispered bargain.",
+          "primary_trait": "Deception",
+          "primary_weight": 0.2,
+          "secondary_trait": "Cynicism",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "announce_self",
+          "text": "Draw the curtain aside and greet them plainly.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "luring_key",
+      "type": "micro",
+      "text": "A key dangles from a thread, whispering of the chest it fits.",
+      "choices": [
+        {
+          "choice_id": "snatch_key",
+          "text": "Grab it and pocket it before anyone notices.",
+          "primary_trait": "Impulsivity",
+          "primary_weight": 0.2,
+          "secondary_trait": "Avarice",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "leave_key",
+          "text": "Let it sway and continue down the hall.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "tattered_standard",
+      "type": "micro",
+      "text": "A tattered banner whispers for those still loyal to lift it.",
+      "choices": [
+        {
+          "choice_id": "raise_banner",
+          "text": "Lift it high and promise to keep it aloft.",
+          "primary_trait": "Control",
+          "primary_weight": 0.2,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "ignore_banner",
+          "text": "Leave it to fray in the wind.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "clandestine_feast",
+      "type": "mid",
+      "text": "A hidden feast awaits, dishes steaming with unasked questions.",
+      "choices": [
+        {
+          "choice_id": "eat_first",
+          "text": "Dig in before your host arrives.",
+          "primary_trait": "Impulsivity",
+          "primary_weight": 0.5,
+          "secondary_trait": "Avarice",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "serve_host",
+          "text": "Wait and serve the host before taking a bite.",
+          "primary_trait": "Control",
+          "primary_weight": 0.5,
+          "secondary_trait": "Rigidity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "watch_from_door",
+          "text": "Remain in the doorway until the feast grows cold.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "whisper_court",
+      "type": "mid",
+      "text": "In a quiet court, accusations flow like wine but never above a murmur.",
+      "choices": [
+        {
+          "choice_id": "spread_rumor",
+          "text": "Add your own whisper to tilt the verdict.",
+          "primary_trait": "Deception",
+          "primary_weight": 0.5,
+          "secondary_trait": "Cynicism",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "defend_friend",
+          "text": "Speak firmly for the absent and accept the scowls.",
+          "primary_trait": "Control",
+          "primary_weight": 0.5,
+          "secondary_trait": "Rigidity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "listen_only",
+          "text": "Hear every argument and offer none of your own.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "echoing_well",
+      "type": "pocket",
+      "text": "A well repeats whatever is whispered into its mouth.",
+      "choices": [
+        {
+          "choice_id": "lie_to_well",
+          "text": "Tell it a secret you know is false and listen to the echo.",
+          "primary_trait": "Deception",
+          "primary_weight": 0.5,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "drop_pebble",
+          "text": "Drop a pebble and walk away before the splash.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    }
+  ]
+}
