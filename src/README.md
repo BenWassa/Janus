@@ -3,8 +3,8 @@
 Core engine entry point and reusable modules.
 
 ## Components
-- **engine.py** – Minimal game loop with CLI options for save/load, HUD toggle, and telemetry logging.
-- **modules/** – Reusable engine modules (`tagging.py`, `save_system.py`, `telemetry.py`).
+- **engine.py** – Minimal game loop with CLI options for save/load, HUD toggle, telemetry logging, and endgame trait reveal.
+- **modules/** – Reusable engine modules (`tagging.py`, `save_system.py`, `telemetry.py`, `reveal.py`).
 
 ## Engine CLI
 
