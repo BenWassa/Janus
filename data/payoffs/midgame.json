@@ -146,6 +146,27 @@
       "trigger_rank": 2,
       "type": "item",
       "text": "A sword on the rack glows faintly whenever someone else reaches for it."
+    },
+    {
+      "id": "cobbler_scoff",
+      "trigger_trait": "Cynicism",
+      "trigger_rank": 2,
+      "type": "npc",
+      "text": "A cobbler scoffs that heroics never fix worn soles."
+    },
+    {
+      "id": "mood_torch",
+      "trigger_trait": "Moodiness",
+      "trigger_rank": 2,
+      "type": "ambient",
+      "text": "Torches dim and flare in rhythm with your moods."
+    },
+    {
+      "id": "unaligned_bricks",
+      "trigger_trait": "Rigidity",
+      "trigger_rank": 2,
+      "type": "ambient",
+      "text": "Loose bricks refuse to stay crooked when you pass."
     }
   ],
   "mid_scene_forks": [

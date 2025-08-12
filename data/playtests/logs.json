@@ -1,0 +1,29 @@
+{
+  "test_runs": [
+    {
+      "run_id": 1,
+      "path": [
+        "mirror_pool.touch_surface",
+        "caged_lion.open_gate",
+        "sealed_letter.read_secret"
+      ],
+      "trait_deltas": {
+        "Impulsivity": 0.4,
+        "Deception": 0.2,
+        "Rigidity": 0.2
+      }
+    },
+    {
+      "run_id": 2,
+      "path": [
+        "whisper_gallery.confront_portrait",
+        "feeding_pit.whip_beasts"
+      ],
+      "trait_deltas": {
+        "Wrath": 0.6,
+        "Control": 0.4,
+        "Cynicism": 0.1
+      }
+    }
+  ]
+}

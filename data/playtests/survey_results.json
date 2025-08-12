@@ -1,0 +1,19 @@
+{
+  "responses": [
+    {
+      "player": "alpha",
+      "balance_score": 3,
+      "comment": "Wrath builds too quickly compared to other traits."
+    },
+    {
+      "player": "beta",
+      "balance_score": 4,
+      "comment": "Wanted more payoffs tied to Moodiness and Rigidity."
+    },
+    {
+      "player": "gamma",
+      "balance_score": 5,
+      "comment": "Overall pacing felt good once decoy choices were limited."
+    }
+  ]
+}

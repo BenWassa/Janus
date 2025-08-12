@@ -13,9 +13,9 @@
           "choice_id": "finish_boar",
           "text": "Drive in another spear to end its struggle.",
           "primary_trait": "Wrath",
-          "primary_weight": 0.2,
+          "primary_weight": 0.1,
           "secondary_trait": "Impulsivity",
-          "secondary_weight": 0.0
+          "secondary_weight": 0.1
         },
         {
           "choice_id": "bind_wound",
@@ -38,13 +38,13 @@
           "primary_trait": "Control",
           "primary_weight": 0.2,
           "secondary_trait": "Rigidity",
-          "secondary_weight": 0.0
+          "secondary_weight": 0.1
         },
         {
           "choice_id": "open_gate",
           "text": "Swing the gate wide and step back.",
-          "primary_trait": "Apathy",
-          "primary_weight": 0.0,
+          "primary_trait": "Impulsivity",
+          "primary_weight": 0.2,
           "secondary_trait": null,
           "secondary_weight": 0.0
         }
@@ -182,17 +182,17 @@
           "choice_id": "whip_beasts",
           "text": "Crack a whip to assert brutal order.",
           "primary_trait": "Wrath",
-          "primary_weight": 0.5,
+          "primary_weight": 0.4,
           "secondary_trait": "Cynicism",
-          "secondary_weight": 0.2
+          "secondary_weight": 0.1
         },
         {
           "choice_id": "ration_food",
           "text": "Measure out portions and make them wait.",
           "primary_trait": "Control",
-          "primary_weight": 0.5,
+          "primary_weight": 0.4,
           "secondary_trait": "Rigidity",
-          "secondary_weight": 0.2
+          "secondary_weight": 0.1
         },
         {
           "choice_id": "feed_freely",
