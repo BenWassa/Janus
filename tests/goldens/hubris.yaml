@@ -1,0 +1,7 @@
+policy: hubris
+seed: 1
+max_steps: 10
+expect:
+  top3_contains:
+    - Hubris
+

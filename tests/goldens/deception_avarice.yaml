@@ -1,0 +1,8 @@
+policy: deception_avarice
+seed: 1
+max_steps: 10
+expect:
+  top3_contains:
+    - Deception
+    - Avarice
+
