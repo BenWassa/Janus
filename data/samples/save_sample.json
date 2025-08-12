@@ -1,0 +1,10 @@
+{
+  "player": {
+    "name": "Ada",
+    "traits": {
+      "Hubris": 0.5,
+      "Fear": 0.2
+    }
+  },
+  "scene": "end"
+}

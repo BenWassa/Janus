@@ -1,0 +1,17 @@
+[
+  {
+    "event": "choice",
+    "id": "door",
+    "selection": "open",
+    "tags": [
+      {
+        "trait": "Hubris",
+        "weight": 0.5
+      },
+      {
+        "trait": "Fear",
+        "weight": 0.2
+      }
+    ]
+  }
+]
