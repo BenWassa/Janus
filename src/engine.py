@@ -27,27 +27,39 @@ def default_state() -> Dict[str, Any]:
     }
 
 
-def show_hud(state: Dict[str, Any]) -> None:
+def show_hud(state: Dict[str, Any], debug_mode: bool = False) -> None:
     """Display game HUD with player status."""
-    print("== HUD ==")
-    print(f"Player: {state['player']['name']}")
-    print(f"Act: {state['current_act']}")
+    if debug_mode:
+        print("== DEBUG HUD ==")
+        print(f"Player: {state['player']['name']}")
+        print(f"Act: {state['current_act']}")
+        
+        # Show traits if any exist (debug only)
+        traits = state["player"]["traits"]
+        if traits:
+            for trait, value in sorted(traits.items()):
+                print(f"  {trait}: {value:.1f}")
+        
+        # Show last choice info (debug only)
+        last = state.get("last_choice")
+        if last:
+            print("Last Choice:")
+            print(f"  ID: {last['id']}")
+            if last.get("primary_trait"):
+                print(f"  Primary: {last['primary_trait']} ({last['primary_weight']})")
+            if last.get("secondary_trait"):
+                print(f"  Secondary: {last['secondary_trait']} ({last['secondary_weight']})")
+    else:
+        print("== Status ==")
+        print(f"Player: {state['player']['name']}")
+        act_names = {1: "Mirrors", 2: "Beasts", 3: "Whispers"}
+        print(f"Act: {state['current_act']} - {act_names.get(state['current_act'], 'Unknown')}")
+        
+        # Show only story-relevant info for users
+        last = state.get("last_choice")
+        if last and last.get("id") != "unknown":
+            print(f"Recent Choice: You made a decision")
     
-    # Show traits if any exist
-    traits = state["player"]["traits"]
-    if traits:
-        for trait, value in sorted(traits.items()):
-            print(f"  {trait}: {value:.1f}")
-    
-    # Show last choice info
-    last = state.get("last_choice")
-    if last:
-        print("Last Choice:")
-        print(f"  ID: {last['id']}")
-        if last.get("primary_trait"):
-            print(f"  Primary: {last['primary_trait']} ({last['primary_weight']})")
-        if last.get("secondary_trait"):
-            print(f"  Secondary: {last['secondary_trait']} ({last['secondary_weight']})")
     print("==========")
 
 
@@ -97,7 +109,7 @@ def get_player_choice(choices: List[Dict[str, Any]]) -> int:
         print("Invalid choice. Please try again.")
 
 
-def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], telemetry: Telemetry) -> None:
+def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], telemetry: Telemetry, debug_mode: bool = False) -> None:
     """Apply the psychological effects of a choice."""
     player_traits = state["player"]["traits"]
     
@@ -134,10 +146,18 @@ def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], telemetr
         "secondary_trait": secondary_trait,
         "secondary_weight": secondary_weight,
     })
+    
+    # Show choice feedback based on mode
+    if debug_mode and (primary_trait or secondary_trait):
+        print(f"\n[DEBUG] Choice effects:")
+        if primary_trait and primary_weight > 0:
+            print(f"  +{primary_weight} {primary_trait}")
+        if secondary_trait and secondary_weight > 0:
+            print(f"  +{secondary_weight} {secondary_trait}")
 
 
 def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any], 
-           telemetry: Telemetry, show_hud_flag: bool) -> bool:
+           telemetry: Telemetry, show_hud_flag: bool, debug_mode: bool = False) -> bool:
     """Run through an act's scenes. Returns True if player wants to continue."""
     
     print(f"\n{'='*60}")
@@ -161,7 +181,7 @@ def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any],
     
     for scene in selected_scenes:
         if show_hud_flag:
-            show_hud(state)
+            show_hud(state, debug_mode)
         
         display_scene(scene)
         
@@ -173,7 +193,7 @@ def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any],
         choice_idx = get_player_choice(choices)
         chosen = choices[choice_idx]
         
-        apply_choice_effects(state, chosen, telemetry)
+        apply_choice_effects(state, chosen, telemetry, debug_mode)
         
         print(f"\n> You chose: {chosen['text']}")
         
@@ -221,6 +241,7 @@ def main(argv: Any = None) -> int:
     parser.add_argument("--load", help="Load game state from file")
     parser.add_argument("--save", help="Save game state to file")
     parser.add_argument("--no-hud", action="store_true", help="Disable HUD display")
+    parser.add_argument("--debug", action="store_true", help="Enable developer debug mode (shows traits and weights)")
     parser.add_argument("--telemetry", help="Write telemetry events to file")
     args = parser.parse_args(argv)
 
@@ -247,7 +268,7 @@ def main(argv: Any = None) -> int:
     for act_num in range(state["current_act"], 4):
         state["current_act"] = act_num
         
-        if not run_act(act_num, scenarios.get(act_num, []), state, telemetry, not args.no_hud):
+        if not run_act(act_num, scenarios.get(act_num, []), state, telemetry, not args.no_hud, args.debug):
             print("\nYou choose to leave the labyrinth early...")
             break
     
@@ -258,7 +279,7 @@ def main(argv: Any = None) -> int:
     telemetry.save()
     
     if not args.no_hud:
-        show_hud(state)
+        show_hud(state, args.debug)
     
     show_final_reflection(state, data_path)
     

@@ -1,0 +1,38 @@
+[
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "smash_clock",
+    "primary_trait": "Wrath",
+    "primary_weight": 0.2,
+    "secondary_trait": "Impulsivity",
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "browse_and_leave",
+    "primary_trait": "Apathy",
+    "primary_weight": 0.0,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "touch_surface",
+    "primary_trait": "Impulsivity",
+    "primary_weight": 0.2,
+    "secondary_trait": "Moodiness",
+    "secondary_weight": 0.1
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "confront_portrait",
+    "primary_trait": "Wrath",
+    "primary_weight": 0.2,
+    "secondary_trait": "Control",
+    "secondary_weight": 0.1
+  }
+]

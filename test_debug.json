@@ -1,0 +1,38 @@
+[
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "wait_silently",
+    "primary_trait": "Rigidity",
+    "primary_weight": 0.2,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "browse_masks",
+    "primary_trait": "Apathy",
+    "primary_weight": 0.0,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "confront_portrait",
+    "primary_trait": "Wrath",
+    "primary_weight": 0.2,
+    "secondary_trait": "Control",
+    "secondary_weight": 0.1
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "cede_floor",
+    "primary_trait": "Apathy",
+    "primary_weight": 0.0,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  }
+]
