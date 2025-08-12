@@ -8,6 +8,20 @@ Production deployment configuration and release management.
 3. Include necessary data files
 4. Create distribution packages
 
+### Alpha/Beta Build
+
+Use the helper script to bundle a tester-ready archive:
+
+```
+python deployment/build_alpha.py
+```
+
+The script outputs `dist/janus_alpha.zip` containing `src/` and `data/`. Testers can unzip it and run the engine:
+
+```
+python src/engine.py --telemetry log.json
+```
+
 ## Release Management
 - Semantic versioning
 - Release notes generation

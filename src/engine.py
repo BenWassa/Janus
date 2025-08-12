@@ -12,7 +12,12 @@ from modules.reveal import load_reveals, pick_reveal
 
 
 def default_state() -> Dict[str, Any]:
-    return {"player": {"name": "Adventurer", "traits": {}}, "scene": "intro"}
+    """Initial game state."""
+    return {
+        "player": {"name": "Adventurer", "traits": {}},
+        "scene": "intro",
+        "last_choice": None,
+    }
 
 
 def show_hud(state: Dict[str, Any]) -> None:
@@ -20,6 +25,18 @@ def show_hud(state: Dict[str, Any]) -> None:
     print(f"Player: {state['player']['name']}")
     for trait, value in state["player"]["traits"].items():
         print(f"  {trait}: {value}")
+    last = state.get("last_choice")
+    if last:
+        print("Last Choice:")
+        print(f"  ID: {last['id']}")
+        if last.get("primary_trait"):
+            print(
+                f"  Primary: {last['primary_trait']} ({last['primary_weight']})"
+            )
+        if last.get("secondary_trait"):
+            print(
+                f"  Secondary: {last['secondary_trait']} ({last['secondary_weight']})"
+            )
     print("==========")
 
 
@@ -52,8 +69,32 @@ def main(argv: Any = None) -> int:
         for tag_info in choice["tags"]:
             trait = tag_info["trait"]
             state["player"]["traits"][trait] = state["player"]["traits"].get(trait, 0.0) + tag_info["weight"]
-        telemetry.log({"event": "choice", "id": "door", "selection": "open", "tags": choice["tags"]})
+        state["last_choice"] = {
+            "id": "door",
+            "primary_trait": choice["tags"][0]["trait"],
+            "primary_weight": choice["tags"][0]["weight"],
+            "secondary_trait": choice["tags"][1]["trait"],
+            "secondary_weight": choice["tags"][1]["weight"],
+        }
+        telemetry.log(
+            {
+                "event": "choice",
+                "id": "door",
+                "selection": "open",
+                "primary_trait": state["last_choice"]["primary_trait"],
+                "primary_weight": state["last_choice"]["primary_weight"],
+                "secondary_trait": state["last_choice"]["secondary_trait"],
+                "secondary_weight": state["last_choice"]["secondary_weight"],
+            }
+        )
     else:
+        state["last_choice"] = {
+            "id": "door",
+            "primary_trait": None,
+            "primary_weight": 0.0,
+            "secondary_trait": None,
+            "secondary_weight": 0.0,
+        }
         telemetry.log({"event": "choice", "id": "door", "selection": "walk_away"})
     state["scene"] = "end"
 

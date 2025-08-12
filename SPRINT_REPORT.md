@@ -1,7 +1,7 @@
 # Project Janus – Sprint Report
 
 ## Overview
-This document summarizes the work completed across ten development sprints and the current state of the Project Janus repository.
+This document summarizes the work completed across twelve development sprints and the current state of the Project Janus repository.
 
 ## Sprint Accomplishments
 1. **Sprint 1 – Trait glossary and tagging API.** Introduced psychological weighting for quest choices, enabling traits to be tracked throughout gameplay.
@@ -14,6 +14,8 @@ This document summarizes the work completed across ten development sprints and t
 8. **Sprint 8 – Trait balance from playtests.** Balanced trait progression using feedback and logs from playtest runs.
 9. **Sprint 9 – Repository audit and reorganization.** Consolidated directories and verified imports and documentation.
 10. **Sprint 10 – Scenario depth and decoys.** Added micro-scenes, decoy encounters, and high-weight options to obscure trait linkage.
+11. **Sprint 11 – End-to-end trait reveal pass.** Verified the full trait-tracking loop and ensured reveal coverage for all trait constellations.
+12. **Sprint 12 – Alpha/Beta test setup.** Introduced last-choice HUD details, expanded telemetry logging, and added a packaging script for tester builds.
 
 ## Repository Status
 - Source code and data are organized under clearly defined directories (`src/`, `data/`, `versions/`, etc.).
@@ -21,6 +23,6 @@ This document summarizes the work completed across ten development sprints and t
 - Playtest artifacts and trait payoff libraries are stored under `data/` for iterative tuning.
 
 ## Next Steps
+- Gather feedback from alpha/beta testers.
 - Expand scenario library and refine psychological mappings.
 - Continue playtesting to validate trait balance.
-- Prepare beta release build once content is finalized.
