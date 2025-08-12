@@ -374,3 +374,169 @@ Current engine code with save/load hooks
 Telemetry output target format
 
 OS/package dependencies and run instructions
+
+
+
+
+
+
+
+
+Sprint 13: Testing Dashboard & Control Panel
+Purpose
+Create an interactive, cleanly‑styled dashboard that lets developers and testers adjust trait thresholds, run archetype or random simulations, and visually explore results. This will make it easy to fine‑tune the psychological weighting and see how archetype runs evolve across scenes and acts.
+
+Stock Context (to attach with this sprint)
+Use the same Stock Context Document from previous sprints (traits list, weight rubric, story structure, repo conventions).
+
+Key constants restated:
+
+Traits: Hubris, Avarice, Deception, Control & Perfectionism, Wrath, Fear & Insecurity, Impulsivity, Envy, Apathy & Sloth, Pessimism & Cynicism, Moodiness & Indirectness, Rigidity.
+
+Weight categories: 0.0 (decoy), 0.2 (micro), 0.5 (mid), 0.8 (major).
+
+End reveal logic: Top 3 traits after normalization.
+
+Repo structure:
+
+/src/ for all runtime and engine code
+
+/data/ for scenario scripts, trait libraries, payoff templates, and test harness outputs (JSON)
+
+/docs/ for design docs and sprint reports
+
+Goal
+Deliver a visual dashboard that:
+
+Provides interactive controls (sliders, numeric inputs) for trait dominance thresholds, per‑trait caps, and decoy ratios.
+
+Lets testers launch multiple runs (seeded random and archetype policies) directly from the interface.
+
+Displays results with clear, attractive charts:
+
+Line graphs tracking trait totals across decisions/acts for each run.
+
+Grouped bar charts comparing final normalized trait scores across archetypes.
+
+Optionally: separate deep‑dive charts per trait to compare archetypes.
+
+Generates summary reports (tabular metrics, narrative summaries).
+
+Uses our existing test harness under the hood (from Sprint 10–12) to execute runs and parse outputs.
+
+Deliverables
+1) Dashboard Application
+Framework Choice: A Python web app using Plotly Dash (or similar), since it integrates with our Python codebase and can be served locally.
+
+Directory Placement:
+
+New module under /src/dashboard/ containing all Dash code.
+
+Entry point script run_dashboard.py in /src/dashboard/ or a CLI hook in /src/cli/.
+
+UI Layout:
+
+Control Panel (top section):
+
+Sliders/inputs for:
+
+Dominance threshold (percentage of total normalized score required for a “clear” trait reveal).
+
+Per‑trait act cap (soft cap slider).
+
+Decoy ratio target.
+
+Numeric fields for:
+
+Number of random runs.
+
+Random seed (optional; leave blank for auto‑generated).
+
+Archetype selection (dropdown of preset policies).
+
+Run buttons: “Run Random”, “Run Selected Archetype(s)”.
+
+Visualization Area (middle section):
+
+Primary Chart: line graph showing cumulative trait totals by decision step.
+
+X‑axis: decision number (or scene index).
+
+Y‑axis: trait total.
+
+Lines: each trait (color-coded) or each archetype (choose one view or allow toggling).
+
+Secondary Chart: grouped bar chart comparing final normalized scores across archetypes.
+
+X‑axis: traits.
+
+Y‑axis: normalized score (%).
+
+Bars grouped by archetype, with legend.
+
+Trait Deep‑Dive Tabs: optional tabbed area where selecting a trait displays a bar chart of that trait’s final scores across archetypes.
+
+Summary Panel (bottom section):
+
+A small table summarizing: run names, number of decisions, dominant/top‑3 traits, reveal narrative, pass/fail flags (for golden tests).
+
+Option to download raw results as JSON or CSV.
+
+Styling: Use a neutral, clean palette (greys, blues) consistent with Project Janus branding. Tooltips should explain controls and charts.
+
+2) Backend Integration
+Harness Calls: The dashboard must call the existing test harness (Runner API) to execute runs based on user input.
+
+Result Parsing: After a run completes, the dashboard should parse trait progression and final normalized scores from harness outputs.
+
+Threshold Application: When the tester adjusts dominance thresholds or caps, re-interpret run results accordingly (no need to rerun tests unless explicitly changed).
+
+Error Handling: Display readable errors if harness execution fails or a run yields invalid results.
+
+3) Data & Config
+Data Source: Harness outputs should be read from /data/test_results/ if they already exist, or generated on demand into a temporary location (or into /data/test_results/ with unique names).
+
+Config File: A YAML or JSON config under /data/dashboard_config.json to persist default threshold values, last used seed, or display preferences.
+
+README: Document setup instructions in /docs/dashboard.md, including dependencies (pip install dash plotly) and run command (python src/dashboard/run_dashboard.py).
+
+4) Visualization Components
+Use Plotly (through Dash) for interactivity:
+
+Line Graph: Use one trace per trait OR one trace per archetype (selectable).
+
+Grouped Bar Chart: Use barmode "group" with traits on x-axis and archetypes on legend.
+
+Trait Deep Dive: When a trait is selected, automatically regenerate a bar chart for that trait across archetypes.
+
+5) Testing & Acceptance
+Run a suite of archetype tests through the dashboard using existing HighWrath, HighControl, and decoy policies to confirm the graphs reflect expected trends.
+
+Trigger random runs (e.g., 5 runs with different seeds) and verify charts update correctly.
+
+Check that adjusting the dominance threshold changes the reveal classification live (e.g., from neutral to identifying a top trait).
+
+Make sure UI elements disable while a run is executing and show progress to avoid confusion.
+
+Deep Context for Sprint 13
+The repository already contains /data/test_results.json formatted as an array of run objects with keys: decisions_made, trait_progression, final_traits, and final_reveal.
+
+Use this format as the schema for new runs saved to /data/test_results/ — consistent keys for parsing.
+
+The harness runner from previous sprints returns a similar structure.
+
+Threshold and cap logic should be adjusted only at interpretation, not within the run — so the run data remains raw and can be reinterpreted without re-execution.
+
+Keep all new code under /src/dashboard/ and avoid polluting core engine modules.
+
+Acceptance Criteria
+Runs Triggered via UI: Random and archetype runs can be launched, and results appear in charts without manual file movement.
+
+Dynamic Thresholds: Adjusting thresholds instantly updates trait dominance and reveal classification for completed runs.
+
+Charts & Tabs Functionality: All charts render correctly, switch views smoothly, and scale gracefully as runs are added.
+
+Data Integrity: JSON results saved to /data/test_results/ remain intact; reloading the app displays saved runs.
+
+Documentation: /docs/dashboard.md explains how to install dependencies, run the dashboard, and interpret the UI.
+
