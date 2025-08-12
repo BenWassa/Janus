@@ -1,0 +1,301 @@
+[
+  {
+    "test_name": "HighWrath",
+    "decisions_made": [
+      {
+        "step": 1,
+        "scene_id": "shattered_clock",
+        "choice_index": 1,
+        "choice_text": "Strike the clock to silence its maddening tick.",
+        "primary_trait": "Wrath",
+        "primary_weight": 0.2,
+        "secondary_trait": "Impulsivity",
+        "secondary_weight": 0.0
+      },
+      {
+        "step": 2,
+        "scene_id": "whisper_gallery",
+        "choice_index": 0,
+        "choice_text": "Demand the nearest portrait speak clearly.",
+        "primary_trait": "Wrath",
+        "primary_weight": 0.2,
+        "secondary_trait": "Control",
+        "secondary_weight": 0.1
+      },
+      {
+        "step": 3,
+        "scene_id": "twin_scholar",
+        "choice_index": 0,
+        "choice_text": "Publicly dissect their argument until they falter.",
+        "primary_trait": "Envy",
+        "primary_weight": 0.8,
+        "secondary_trait": "Hubris",
+        "secondary_weight": 0.0
+      },
+      {
+        "step": 4,
+        "scene_id": "mask_market",
+        "choice_index": 0,
+        "choice_text": "Haggle ruthlessly for the finest mask.",
+        "primary_trait": "Avarice",
+        "primary_weight": 0.5,
+        "secondary_trait": "Deception",
+        "secondary_weight": 0.2
+      }
+    ],
+    "trait_progression": [
+      {
+        "after_decision": 1,
+        "traits": {
+          "Wrath": 0.2
+        },
+        "changes": {
+          "Wrath": {
+            "before": 0.0,
+            "after": 0.2,
+            "change": 0.2
+          }
+        }
+      },
+      {
+        "after_decision": 2,
+        "traits": {
+          "Wrath": 0.4,
+          "Control": 0.1
+        },
+        "changes": {
+          "Wrath": {
+            "before": 0.2,
+            "after": 0.4,
+            "change": 0.2
+          },
+          "Control": {
+            "before": 0.0,
+            "after": 0.1,
+            "change": 0.1
+          }
+        }
+      },
+      {
+        "after_decision": 3,
+        "traits": {
+          "Wrath": 0.4,
+          "Control": 0.1,
+          "Envy": 0.8
+        },
+        "changes": {
+          "Envy": {
+            "before": 0.0,
+            "after": 0.8,
+            "change": 0.8
+          }
+        }
+      },
+      {
+        "after_decision": 4,
+        "traits": {
+          "Wrath": 0.4,
+          "Control": 0.1,
+          "Envy": 0.8,
+          "Avarice": 0.5,
+          "Deception": 0.2
+        },
+        "changes": {
+          "Avarice": {
+            "before": 0.0,
+            "after": 0.5,
+            "change": 0.5
+          },
+          "Deception": {
+            "before": 0.0,
+            "after": 0.2,
+            "change": 0.2
+          }
+        }
+      }
+    ],
+    "final_traits": {
+      "Wrath": 0.4,
+      "Control": 0.1,
+      "Envy": 0.8,
+      "Avarice": 0.5,
+      "Deception": 0.2
+    },
+    "final_reveal": "The glass offers no single emblem. Threads of choice weave together, none pulling hardest. Your story remains open, waiting for the next step.",
+    "success": true,
+    "errors": []
+  },
+  {
+    "test_name": "HighControl",
+    "decisions_made": [
+      {
+        "step": 1,
+        "scene_id": "mirror_pool",
+        "choice_index": 1,
+        "choice_text": "Stand motionless until the water calms itself.",
+        "primary_trait": "Rigidity",
+        "primary_weight": 0.2,
+        "secondary_trait": null,
+        "secondary_weight": 0.0
+      },
+      {
+        "step": 2,
+        "scene_id": "labyrinth_library",
+        "choice_index": 0,
+        "choice_text": "Methodically reorder the shelves.",
+        "primary_trait": "Control",
+        "primary_weight": 0.5,
+        "secondary_trait": "Rigidity",
+        "secondary_weight": 0.2
+      },
+      {
+        "step": 3,
+        "scene_id": "frozen_echo",
+        "choice_index": 1,
+        "choice_text": "Hold your breath and listen as the echo fades.",
+        "primary_trait": "Apathy",
+        "primary_weight": 0.0,
+        "secondary_trait": null,
+        "secondary_weight": 0.0
+      },
+      {
+        "step": 4,
+        "scene_id": "twin_scholar",
+        "choice_index": 1,
+        "choice_text": "Applaud politely and leave the hall.",
+        "primary_trait": "Apathy",
+        "primary_weight": 0.0,
+        "secondary_trait": null,
+        "secondary_weight": 0.0
+      }
+    ],
+    "trait_progression": [
+      {
+        "after_decision": 1,
+        "traits": {
+          "Rigidity": 0.2
+        },
+        "changes": {
+          "Rigidity": {
+            "before": 0.0,
+            "after": 0.2,
+            "change": 0.2
+          }
+        }
+      },
+      {
+        "after_decision": 2,
+        "traits": {
+          "Rigidity": 0.4,
+          "Control": 0.5
+        },
+        "changes": {
+          "Rigidity": {
+            "before": 0.2,
+            "after": 0.4,
+            "change": 0.2
+          },
+          "Control": {
+            "before": 0.0,
+            "after": 0.5,
+            "change": 0.5
+          }
+        }
+      },
+      {
+        "after_decision": 3,
+        "traits": {
+          "Rigidity": 0.4,
+          "Control": 0.5
+        },
+        "changes": {}
+      },
+      {
+        "after_decision": 4,
+        "traits": {
+          "Rigidity": 0.4,
+          "Control": 0.5
+        },
+        "changes": {}
+      }
+    ],
+    "final_traits": {
+      "Rigidity": 0.4,
+      "Control": 0.5
+    },
+    "final_reveal": "The glass offers no single emblem. Threads of choice weave together, none pulling hardest. Your story remains open, waiting for the next step.",
+    "success": true,
+    "errors": []
+  },
+  {
+    "test_name": "MixedDecoys",
+    "decisions_made": [
+      {
+        "step": 1,
+        "scene_id": "mask_market",
+        "choice_index": 2,
+        "choice_text": "Wander the stalls without buying.",
+        "primary_trait": "Apathy",
+        "primary_weight": 0.0,
+        "secondary_trait": null,
+        "secondary_weight": 0.0
+      },
+      {
+        "step": 2,
+        "scene_id": "labyrinth_library",
+        "choice_index": 2,
+        "choice_text": "Browse aimlessly then leave the maze unchanged.",
+        "primary_trait": "Apathy",
+        "primary_weight": 0.0,
+        "secondary_trait": null,
+        "secondary_weight": 0.0
+      },
+      {
+        "step": 3,
+        "scene_id": "twin_scholar",
+        "choice_index": 1,
+        "choice_text": "Applaud politely and leave the hall.",
+        "primary_trait": "Apathy",
+        "primary_weight": 0.0,
+        "secondary_trait": null,
+        "secondary_weight": 0.0
+      },
+      {
+        "step": 4,
+        "scene_id": "frozen_echo",
+        "choice_index": 1,
+        "choice_text": "Hold your breath and listen as the echo fades.",
+        "primary_trait": "Apathy",
+        "primary_weight": 0.0,
+        "secondary_trait": null,
+        "secondary_weight": 0.0
+      }
+    ],
+    "trait_progression": [
+      {
+        "after_decision": 1,
+        "traits": {},
+        "changes": {}
+      },
+      {
+        "after_decision": 2,
+        "traits": {},
+        "changes": {}
+      },
+      {
+        "after_decision": 3,
+        "traits": {},
+        "changes": {}
+      },
+      {
+        "after_decision": 4,
+        "traits": {},
+        "changes": {}
+      }
+    ],
+    "final_traits": {},
+    "final_reveal": "The glass offers no single emblem. Threads of choice weave together, none pulling hardest. Your story remains open, waiting for the next step.",
+    "success": true,
+    "errors": []
+  }
+]

@@ -41,17 +41,28 @@ Complete project documentation including design notes, technical guides, and psy
 ### 📁 `/deployment/` - Release Management
 Production deployment configuration, build processes, and release management tools. Use `deployment/build_alpha.py` to bundle a tester-ready archive. [See deployment README](deployment/README.md) for details.
 
+### 📁 `/scripts/` - Launcher Scripts
+Convenient batch files for running the game in different modes. [See scripts README](scripts/README.md) for usage.
+
+### 📁 `/tools/` - Development Tools  
+Testing harnesses and development utilities. [See tools README](tools/README.md) for available tools.
+
+### 📁 `/outputs/` - Generated Files
+Telemetry logs, test results, and other generated content. [See outputs README](outputs/README.md) for file types.
+
 ## Getting Started
 1. **Run the Alpha Build**
    ```bash
    python deployment/build_alpha.py
    unzip dist/janus_v2-alpha.zip
-   python dist/janus_v2-alpha/src/engine.py --telemetry log.json
+   scripts/run_alpha.bat          # User mode (recommended)
+   scripts/run_alpha_debug.bat    # Developer mode (shows traits)
    ```
-2. **Play the Prototype**: Try the v1 pilot in `/versions/v1-prototype/` to experience the core concept.
-3. **Explore the Code**: Review `/src/` modules to understand the architecture.
-4. **Read the Docs**: Check `/docs/` for comprehensive design and technical documentation.
-5. **Run Tests**: Execute test scripts in `/tests/` to verify system functionality.
+2. **Test the System**: Use `tools/test_harness.py` to validate psychological profiling accuracy.
+3. **Play the Prototype**: Try the v1 pilot in `/versions/v1-prototype/` to experience the core concept.
+4. **Explore the Code**: Review `/src/` modules to understand the architecture.
+5. **Read the Docs**: Check `/docs/` for comprehensive design and technical documentation.
+6. **Run Tests**: Execute test scripts in `/tests/` to verify system functionality.
 
 ## Vision
 Future versions may expand into adaptive NPC behavior, multiplayer "party dynamics" profiling, and ethically designed research modules for psychological studies.
