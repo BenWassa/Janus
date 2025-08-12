@@ -1,0 +1,231 @@
+{
+  "_comment": "Act 1: Mirrors scenes for sprint 2",
+  "act": 1,
+  "title": "Mirrors",
+  "description": "Dreamlike, self-confrontational scenarios exploring personal reflection.",
+  "scenes": [
+    {
+      "scene_id": "mirror_pool",
+      "type": "micro",
+      "text": "A still pool mirrors the sky; your reflection waits for a ripple.",
+      "choices": [
+        {
+          "choice_id": "touch_surface",
+          "text": "Disturb the surface with your fingertip, watching your face fracture.",
+          "primary_trait": "Impulsivity",
+          "primary_weight": 0.2,
+          "secondary_trait": "Moodiness",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "wait_silently",
+          "text": "Stand motionless until the water calms itself.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "whisper_gallery",
+      "type": "micro",
+      "text": "Portraits line a hall, their painted mouths whispering about you.",
+      "choices": [
+        {
+          "choice_id": "confront_portrait",
+          "text": "Demand the nearest portrait speak clearly.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.2,
+          "secondary_trait": "Control",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "ignore_whispers",
+          "text": "Pass by without acknowledging the voices.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "shattered_clock",
+      "type": "micro",
+      "text": "A clock ticks backward, its glass face cracked like ice.",
+      "choices": [
+        {
+          "choice_id": "fix_gears",
+          "text": "Realign the gears with painstaking care.",
+          "primary_trait": "Control",
+          "primary_weight": 0.2,
+          "secondary_trait": "Rigidity",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "smash_clock",
+          "text": "Strike the clock to silence its maddening tick.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.2,
+          "secondary_trait": "Impulsivity",
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "confessing_mirror",
+      "type": "micro",
+      "text": "A mirror asks what flaw you hide.",
+      "choices": [
+        {
+          "choice_id": "admit_fault",
+          "text": "Confess a private failing to the glass.",
+          "primary_trait": "Fear",
+          "primary_weight": 0.2,
+          "secondary_trait": "Apathy",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "praise_reflection",
+          "text": "Praise your reflection's perfection.",
+          "primary_trait": "Hubris",
+          "primary_weight": 0.2,
+          "secondary_trait": "Deception",
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "wandering_doppelganger",
+      "type": "micro",
+      "text": "Your double approaches in a narrow corridor.",
+      "choices": [
+        {
+          "choice_id": "step_aside",
+          "text": "Step aside and let it pass without a word.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "block_path",
+          "text": "Square your shoulders and block its path.",
+          "primary_trait": "Hubris",
+          "primary_weight": 0.2,
+          "secondary_trait": "Control",
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "frozen_echo",
+      "type": "micro",
+      "text": "Your own voice echoes from frozen walls.",
+      "choices": [
+        {
+          "choice_id": "overpower_echo",
+          "text": "Speak over the echo to assert your voice.",
+          "primary_trait": "Control",
+          "primary_weight": 0.2,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "listen_echo",
+          "text": "Hold your breath and listen as the echo fades.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "mask_market",
+      "type": "mid",
+      "text": "A market of masks offers faces to wear and discard.",
+      "choices": [
+        {
+          "choice_id": "haggle_mask",
+          "text": "Haggle ruthlessly for the finest mask.",
+          "primary_trait": "Avarice",
+          "primary_weight": 0.5,
+          "secondary_trait": "Deception",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "remove_mask",
+          "text": "Remove your mask to speak sincerely.",
+          "primary_trait": "Fear",
+          "primary_weight": 0.5,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "browse_masks",
+          "text": "Wander the stalls without buying.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "labyrinth_library",
+      "type": "mid",
+      "text": "Shelves twist into a labyrinth of forgotten knowledge.",
+      "choices": [
+        {
+          "choice_id": "reorder_shelves",
+          "text": "Methodically reorder the shelves.",
+          "primary_trait": "Control",
+          "primary_weight": 0.5,
+          "secondary_trait": "Rigidity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "burn_pages",
+          "text": "Set forgotten pages ablaze to watch them curl.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.5,
+          "secondary_trait": "Impulsivity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "browse_and_leave",
+          "text": "Browse aimlessly then leave the maze unchanged.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "riddle_pond",
+      "type": "pocket",
+      "text": "A hidden pond whispers a riddle only you can hear.",
+      "choices": [
+        {
+          "choice_id": "answer_riddle",
+          "text": "Answer with a clever twist that feels like a lie.",
+          "primary_trait": "Deception",
+          "primary_weight": 0.5,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "skip_stones",
+          "text": "Skip stones until the question dissolves.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    }
+  ]
+}
