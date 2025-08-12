@@ -1,0 +1,45 @@
+{
+  "_comment": "Example Quest Definition",
+  "quest_id": "tutorial_village",
+  "title": "The Mysterious Village",
+  "description": "A stranger approaches you with tales of a village in need.",
+  "psychological_focus": ["openness", "conscientiousness", "agreeableness"],
+  "scenes": [
+    {
+      "scene_id": "village_entrance",
+      "description": "You arrive at the village gates. The guards look suspicious.",
+      "choices": [
+        {
+          "choice_id": "approach_directly",
+          "text": "Walk directly to the guards and introduce yourself",
+          "psychological_weight": {
+            "openness": 0.6,
+            "extraversion": 0.8,
+            "conscientiousness": 0.7
+          },
+          "next_scene": "guard_conversation"
+        },
+        {
+          "choice_id": "observe_first",
+          "text": "Stay back and observe the situation before acting",
+          "psychological_weight": {
+            "openness": -0.3,
+            "neuroticism": 0.4,
+            "conscientiousness": 0.8
+          },
+          "next_scene": "stealth_approach"
+        },
+        {
+          "choice_id": "find_alternate_route",
+          "text": "Look for another way into the village",
+          "psychological_weight": {
+            "openness": 0.7,
+            "conscientiousness": -0.2,
+            "agreeableness": -0.1
+          },
+          "next_scene": "alternate_path"
+        }
+      ]
+    }
+  ]
+}

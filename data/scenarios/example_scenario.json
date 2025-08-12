@@ -1,0 +1,66 @@
+{
+  "_comment": "Example Psychological Scenario",
+  "scenario_id": "moral_dilemma_theft",
+  "title": "The Hungry Child",
+  "description": "You witness a hungry child stealing bread from a merchant's stall",
+  "psychological_dimensions": [
+    "moral_reasoning",
+    "empathy",
+    "rule_following",
+    "situational_ethics"
+  ],
+  "scenario_text": "As you walk through the market, you notice a thin, dirty child quickly grab a loaf of bread from an unattended stall and start to run. The merchant hasn't noticed yet, but you have a clear view of what happened.",
+  "choices": [
+    {
+      "choice_id": "alert_merchant",
+      "text": "Alert the merchant to the theft",
+      "psychological_profile": {
+        "rule_following": 0.9,
+        "conscientiousness": 0.8,
+        "agreeableness": -0.3,
+        "moral_reasoning_stage": "law_and_order"
+      }
+    },
+    {
+      "choice_id": "help_child_escape",
+      "text": "Create a distraction to help the child escape",
+      "psychological_profile": {
+        "empathy": 0.9,
+        "rule_following": -0.7,
+        "agreeableness": 0.8,
+        "moral_reasoning_stage": "care_and_responsibility"
+      }
+    },
+    {
+      "choice_id": "pay_for_bread",
+      "text": "Quietly pay the merchant for the bread",
+      "psychological_profile": {
+        "empathy": 0.7,
+        "conscientiousness": 0.9,
+        "agreeableness": 0.6,
+        "moral_reasoning_stage": "universal_principles"
+      }
+    },
+    {
+      "choice_id": "do_nothing",
+      "text": "Do nothing and continue walking",
+      "psychological_profile": {
+        "empathy": -0.5,
+        "conscientiousness": 0.1,
+        "neuroticism": 0.3,
+        "moral_reasoning_stage": "self_interest"
+      }
+    }
+  ],
+  "follow_up_questions": [
+    {
+      "question": "What influenced your decision most?",
+      "options": [
+        "The child's obvious need",
+        "The importance of following rules",
+        "Not wanting to get involved",
+        "Finding a solution that helps everyone"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "_comment": "Example Character Definition",
+  "character_id": "village_elder",
+  "name": "Elder Marcus",
+  "role": "village_leader",
+  "personality_traits": {
+    "openness": 0.7,
+    "conscientiousness": 0.9,
+    "extraversion": 0.4,
+    "agreeableness": 0.8,
+    "neuroticism": 0.2
+  },
+  "dialogue_style": "wise_and_measured",
+  "assessment_focus": ["wisdom_vs_recklessness", "tradition_vs_innovation"],
+  "dialogue_trees": {
+    "initial_meeting": {
+      "text": "Welcome, traveler. Our village has been troubled by strange events. Will you help us?",
+      "responses": [
+        {
+          "option": "I'll help immediately",
+          "psychological_weight": {
+            "agreeableness": 0.8,
+            "conscientiousness": 0.6
+          },
+          "next_node": "eager_helper"
+        },
+        {
+          "option": "Tell me more about these events first",
+          "psychological_weight": {
+            "openness": 0.7,
+            "conscientiousness": 0.9
+          },
+          "next_node": "cautious_inquirer"
+        },
+        {
+          "option": "What's in it for me?",
+          "psychological_weight": {
+            "agreeableness": -0.5,
+            "conscientiousness": 0.3
+          },
+          "next_node": "self_interested"
+        }
+      ]
+    }
+  }
+}
