@@ -15,13 +15,13 @@
           "primary_trait": "Impulsivity",
           "primary_weight": 0.2,
           "secondary_trait": "Moodiness",
-          "secondary_weight": 0.0
+          "secondary_weight": 0.1
         },
         {
           "choice_id": "wait_silently",
           "text": "Stand motionless until the water calms itself.",
-          "primary_trait": "Apathy",
-          "primary_weight": 0.0,
+          "primary_trait": "Rigidity",
+          "primary_weight": 0.2,
           "secondary_trait": null,
           "secondary_weight": 0.0
         }
@@ -38,13 +38,13 @@
           "primary_trait": "Wrath",
           "primary_weight": 0.2,
           "secondary_trait": "Control",
-          "secondary_weight": 0.0
+          "secondary_weight": 0.1
         },
         {
           "choice_id": "ignore_whispers",
           "text": "Pass by without acknowledging the voices.",
-          "primary_trait": "Apathy",
-          "primary_weight": 0.0,
+          "primary_trait": "Cynicism",
+          "primary_weight": 0.2,
           "secondary_trait": null,
           "secondary_weight": 0.0
         }
