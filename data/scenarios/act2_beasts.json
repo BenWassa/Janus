@@ -1,0 +1,231 @@
+{
+  "_comment": "Act 2: Beasts scenes for sprint 3",
+  "act": 2,
+  "title": "Beasts",
+  "description": "Moral trials with bestial reflections of inner flaws.",
+  "scenes": [
+    {
+      "scene_id": "wounded_boar",
+      "type": "micro",
+      "text": "A boar stumbles before you, its flank pierced by spears.",
+      "choices": [
+        {
+          "choice_id": "finish_boar",
+          "text": "Drive in another spear to end its struggle.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.2,
+          "secondary_trait": "Impulsivity",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "bind_wound",
+          "text": "Kneel and bind its wound despite the gore.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "caged_lion",
+      "type": "micro",
+      "text": "Iron bars groan as a lion hurls itself against them.",
+      "choices": [
+        {
+          "choice_id": "tighten_bars",
+          "text": "Wedge new bolts to tighten its cage.",
+          "primary_trait": "Control",
+          "primary_weight": 0.2,
+          "secondary_trait": "Rigidity",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "open_gate",
+          "text": "Swing the gate wide and step back.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "trembling_hare",
+      "type": "micro",
+      "text": "A trembling hare hides beneath a broken statue.",
+      "choices": [
+        {
+          "choice_id": "command_hare",
+          "text": "Clap sharply to force it into your hands.",
+          "primary_trait": "Control",
+          "primary_weight": 0.2,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "shelter_hare",
+          "text": "Cup your cloak around it and carry it to safety.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "shadow_wolves",
+      "type": "micro",
+      "text": "Spectral wolves circle, their eyes reflecting yours.",
+      "choices": [
+        {
+          "choice_id": "strike_alpha",
+          "text": "Lunge at the largest wolf to scatter the pack.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.2,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "stand_down",
+          "text": "Lower your gaze and let them pass through.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "coiled_serpent",
+      "type": "micro",
+      "text": "A serpent coils around an abandoned helm, tongue tasting the air.",
+      "choices": [
+        {
+          "choice_id": "seize_serpent",
+          "text": "Grip its neck and wrest the helm free.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.2,
+          "secondary_trait": "Control",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "leave_offering",
+          "text": "Leave a token meal and back away slowly.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "rampaging_bull",
+      "type": "micro",
+      "text": "A bull of smoke charges blindly through crumbling ruins.",
+      "choices": [
+        {
+          "choice_id": "grab_horns",
+          "text": "Seize its horns and wrestle it to the ground.",
+          "primary_trait": "Control",
+          "primary_weight": 0.2,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "step_aside",
+          "text": "Let it thunder past and vanish into fog.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "verdict_pit",
+      "type": "mid",
+      "text": "A captured chimera kneels in a pit as the crowd roars for judgment.",
+      "choices": [
+        {
+          "choice_id": "strike_beast",
+          "text": "Deliver the killing blow to please them.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.5,
+          "secondary_trait": "Impulsivity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "command_submission",
+          "text": "Order the chimera to crawl and live as your servant.",
+          "primary_trait": "Control",
+          "primary_weight": 0.5,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "grant_mercy",
+          "text": "Raise a hand and spare it despite the jeers.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "feeding_pit",
+      "type": "mid",
+      "text": "Starving beasts claw at one another for scraps thrown into a pit.",
+      "choices": [
+        {
+          "choice_id": "whip_beasts",
+          "text": "Crack a whip to assert brutal order.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.5,
+          "secondary_trait": "Cynicism",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "ration_food",
+          "text": "Measure out portions and make them wait.",
+          "primary_trait": "Control",
+          "primary_weight": 0.5,
+          "secondary_trait": "Rigidity",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "feed_freely",
+          "text": "Dump all the food and watch them feast.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "mirror_chimera",
+      "type": "pocket",
+      "text": "A chimera with mirrored scales reflects your every motion.",
+      "choices": [
+        {
+          "choice_id": "shatter_reflection",
+          "text": "Strike the beast to break its mirrored hide.",
+          "primary_trait": "Wrath",
+          "primary_weight": 0.5,
+          "secondary_trait": "Control",
+          "secondary_weight": 0.2
+        },
+        {
+          "choice_id": "reach_out",
+          "text": "Touch the glassy mane and watch the image soften.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    }
+  ]
+}
