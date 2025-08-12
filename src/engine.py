@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 from typing import Any, Dict
 
 from modules.tagging import tag
 from modules.save_system import load_game, save_game
 from modules.telemetry import Telemetry
+from modules.reveal import load_reveals, pick_reveal
 
 
 def default_state() -> Dict[str, Any]:
@@ -60,6 +62,12 @@ def main(argv: Any = None) -> int:
     telemetry.save()
     if not args.no_hud:
         show_hud(state)
+
+    reveals_path = Path(__file__).resolve().parent.parent / "data" / "payoffs" / "endgame_reveals.json"
+    reveal_data = load_reveals(reveals_path)
+    reveal = pick_reveal(state["player"]["traits"], reveal_data)
+    print("\n== Final Reflection ==")
+    print(reveal["text"])
     return 0
 
 
