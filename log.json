@@ -1,0 +1,38 @@
+[
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "browse_and_leave",
+    "primary_trait": "Apathy",
+    "primary_weight": 0.0,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "smash_clock",
+    "primary_trait": "Wrath",
+    "primary_weight": 0.2,
+    "secondary_trait": "Impulsivity",
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "listen_echo",
+    "primary_trait": "Apathy",
+    "primary_weight": 0.0,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "decline_offer",
+    "primary_trait": "Fear",
+    "primary_weight": 0.2,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  }
+]
