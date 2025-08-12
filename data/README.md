@@ -15,12 +15,11 @@ Psychological testing scenarios and their scoring parameters.
 
 
 ### Payoffs (`payoffs/`)
-Trait-driven micro payoffs and mid-scene forks keyed to player profiles.
-=======
+Trait-driven micro payoffs, mid-scene forks, and endgame reveal templates keyed to player profiles.
+
 Includes:
-- `act1_mirrors.json` – dreamlike self-confrontational scenes.
-- `act2_beasts.json` – moral trials with bestial reflections.
-- `act3_whispers.json` – tests of secrecy, temptation, and loyalty.
+- `midgame.json` – micro payoffs and mid-scene forks keyed to traits.
+- `endgame_reveals.json` – 3×3 trait grid of endgame reveal templates with neutral fallback.
 
 
 ## Format Guidelines

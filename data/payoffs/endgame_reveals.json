@@ -1,0 +1,80 @@
+{
+  "trait_metaphors": {
+    "Hubris": "crown of mirrors",
+    "Avarice": "gilded scale",
+    "Deception": "twin-faced mask",
+    "Control": "clockwork key",
+    "Wrath": "smoldering blade",
+    "Fear": "shivering veil"
+  },
+  "reveal_templates": [
+    {
+      "id": "hubris_control",
+      "primary_trait": "Hubris",
+      "secondary_trait": "Control",
+      "template": "The {primary_metaphor} you chased towers above, yet it's balanced by the {secondary_metaphor} that measured each stride. Your {primary_trait} carried you high while {secondary_trait} kept your hands steady.",
+      "tone": "somber, reflective"
+    },
+    {
+      "id": "hubris_wrath",
+      "primary_trait": "Hubris",
+      "secondary_trait": "Wrath",
+      "template": "A {primary_metaphor} burns bright over the {secondary_metaphor} clenched within. Your {primary_trait} sought acclaim, but {secondary_trait} sparked every clash along the way.",
+      "tone": "fiery, reflective"
+    },
+    {
+      "id": "hubris_fear",
+      "primary_trait": "Hubris",
+      "secondary_trait": "Fear",
+      "template": "The {primary_metaphor} wavers when the {secondary_metaphor} whispers. Though your {primary_trait} reached for the spotlight, {secondary_trait} cooled your voice.",
+      "tone": "pensive, reflective"
+    },
+    {
+      "id": "avarice_control",
+      "primary_trait": "Avarice",
+      "secondary_trait": "Control",
+      "template": "Coins of the {primary_metaphor} spill into patterns set by the {secondary_metaphor}. Your {primary_trait} hungered, yet {secondary_trait} arranged each grasp with care.",
+      "tone": "measured, reflective"
+    },
+    {
+      "id": "avarice_wrath",
+      "primary_trait": "Avarice",
+      "secondary_trait": "Wrath",
+      "template": "The {primary_metaphor} glitters beside the {secondary_metaphor}'s heat. {primary_trait} drove your bargains, and {secondary_trait} scorched those who blocked the deal.",
+      "tone": "intense, reflective"
+    },
+    {
+      "id": "avarice_fear",
+      "primary_trait": "Avarice",
+      "secondary_trait": "Fear",
+      "template": "The {primary_metaphor} trembles against the {secondary_metaphor}. Your {primary_trait} craved more, but {secondary_trait} questioned every step.",
+      "tone": "uneasy, reflective"
+    },
+    {
+      "id": "deception_control",
+      "primary_trait": "Deception",
+      "secondary_trait": "Control",
+      "template": "Behind a {primary_metaphor}, the {secondary_metaphor} ticks. {primary_trait} veiled your path while {secondary_trait} scheduled each lie.",
+      "tone": "cool, reflective"
+    },
+    {
+      "id": "deception_wrath",
+      "primary_trait": "Deception",
+      "secondary_trait": "Wrath",
+      "template": "The {primary_metaphor} cracks from the {secondary_metaphor}'s heat. {primary_trait} shaped your words, yet {secondary_trait} erupted whenever truth neared.",
+      "tone": "sharp, reflective"
+    },
+    {
+      "id": "deception_fear",
+      "primary_trait": "Deception",
+      "secondary_trait": "Fear",
+      "template": "A {primary_metaphor} fades behind a {secondary_metaphor}. {primary_trait} hid your intent, but {secondary_trait} kept you glancing over your shoulder.",
+      "tone": "haunted, reflective"
+    }
+  ],
+  "neutral_fallback": {
+    "id": "balanced_reflection",
+    "template": "The glass offers no single emblem. Threads of choice weave together, none pulling hardest. Your story remains open, waiting for the next step.",
+    "tone": "even, reflective"
+  }
+}
