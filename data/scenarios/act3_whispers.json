@@ -97,6 +97,29 @@
       ]
     },
     {
+      "scene_id": "storm_door",
+      "type": "micro",
+      "text": "A door pulses with light and shadow as a storm rages behind it.",
+      "choices": [
+        {
+          "choice_id": "open_anyway",
+          "text": "Throw it wide regardless of what mood waits beyond.",
+          "primary_trait": "Moodiness",
+          "primary_weight": 0.5,
+          "secondary_trait": "Impulsivity",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "walk_away",
+          "text": "Let the storm howl without you.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
       "scene_id": "luring_key",
       "type": "micro",
       "text": "A key dangles from a thread, whispering of the chest it fits.",
@@ -112,6 +135,29 @@
         {
           "choice_id": "leave_key",
           "text": "Let it sway and continue down the hall.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "envy_shrine",
+      "type": "micro",
+      "text": "A shrine displays names of rivals basking in unearned glory.",
+      "choices": [
+        {
+          "choice_id": "deface_names",
+          "text": "Scratch your own name over theirs.",
+          "primary_trait": "Envy",
+          "primary_weight": 0.8,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "light_candle",
+          "text": "Light a candle and move on.",
           "primary_trait": "Apathy",
           "primary_weight": 0.0,
           "secondary_trait": null,
@@ -174,13 +220,36 @@
       ]
     },
     {
+      "scene_id": "whistling_chasm",
+      "type": "micro",
+      "text": "Wind whistles up from a chasm, carrying stray whispers.",
+      "choices": [
+        {
+          "choice_id": "toss_pebble",
+          "text": "Toss a pebble and wait for the distant clink.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "listen_wind",
+          "text": "Lean close and listen until the wind stills.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
       "scene_id": "whisper_court",
       "type": "mid",
       "text": "In a quiet court, accusations flow like wine but never above a murmur.",
       "choices": [
         {
           "choice_id": "spread_rumor",
-          "text": "Add your own whisper to tilt the verdict.",
+          "text": "Let slip a half-truth to tilt the verdict.",
           "primary_trait": "Deception",
           "primary_weight": 0.5,
           "secondary_trait": "Cynicism",
@@ -199,6 +268,29 @@
           "text": "Hear every argument and offer none of your own.",
           "primary_trait": "Apathy",
           "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "tempting_contract",
+      "type": "micro",
+      "text": "A contract appears in your hand, promising all you desire at an unnamed cost.",
+      "choices": [
+        {
+          "choice_id": "sign_name",
+          "text": "Sign quickly before doubt returns.",
+          "primary_trait": "Deception",
+          "primary_weight": 0.2,
+          "secondary_trait": "Avarice",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "tear_contract",
+          "text": "Tear it up and let the pieces scatter.",
+          "primary_trait": "Control",
+          "primary_weight": 0.2,
           "secondary_trait": null,
           "secondary_weight": 0.0
         }
