@@ -1,7 +1,17 @@
 # Project Janus Documentation
 
-## Overview
 Comprehensive documentation for the Project Janus psychological RPG system.
+
+## Key Documents
+- `commission_sprints.md`
+- `commissioning_context.md`
+- `game_logic_module.md`
+- `psychology_profiling_module.md`
+- `utility_functions.md`
+- `vision_hamartia_system.md`
+- `save_format.md`
+- `sprint8_playtest_report.md`
+- `sprint1_trait_glossary_and_tagging_api.md`
 
 ## Documentation Structure
 

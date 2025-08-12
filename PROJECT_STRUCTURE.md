@@ -8,42 +8,29 @@ This repository follows a modular, version-controlled structure designed for ite
 
 ```
 Janus/
-├── src/                        # Core source code (shared across versions)
-│   ├── core/                   # Core game engine components
-│   ├── game/                   # Game mechanics and logic
-│   ├── psychology/             # Psychological profiling system
-│   └── utils/                  # Utility functions and helpers
-│
+├── src/                        # Core source code
+│   ├── engine.py               # Main game loop
+│   └── modules/                # Reusable engine modules (tagging, telemetry, save system)
 ├── versions/                   # Version-specific implementations
+│   ├── v0-experiments/         # Research and prototype experiments
 │   ├── v1-prototype/           # Initial prototype version
-│   ├── v2-alpha/              # Alpha release version
-│   └── v3-beta/               # Beta release version
-│
-├── prototype/                  # Experimental and testing area
-│   ├── experiments/            # Feature experiments and POCs
-│   └── tests/                  # Prototype-specific tests
-│
+│   ├── v2-alpha/               # Alpha release version
+│   └── v3-beta/                # Beta release version
 ├── deployment/                 # Production deployment files
-│   ├── build/                  # Build artifacts
-│   └── release/                # Release packages
-│
 ├── data/                       # Game content and data
 │   ├── quests/                 # Quest definitions and storylines
 │   ├── characters/             # Character data and NPCs
-│   └── scenarios/              # Psychological scenarios
-│
-├── tests/                      # Comprehensive testing suite
-│   ├── unit/                   # Unit tests
-│   └── integration/            # Integration tests
-│
+│   ├── scenarios/              # Psychological scenarios
+│   ├── payoffs/                # Trait payoff templates
+│   └── playtests/              # Logs and feedback artifacts
+├── tests/                      # Testing scripts
 └── docs/                       # Documentation
 ```
 
 ## 🔄 Development Workflow
 
 ### 1. Prototyping Phase
-- Work in `prototype/experiments/` for new features
-- Use `prototype/tests/` for experimental testing
+- Work in `versions/v0-experiments/experiments/` for new features
 - Validate concepts before moving to versioned development
 
 ### 2. Version Development
@@ -52,25 +39,20 @@ Janus/
 - Version-specific features go in respective version directories
 
 ### 3. Production Deployment
-- Stable releases are built in `deployment/build/`
-- Final packages stored in `deployment/release/`
+- Stable releases are built in `deployment/`
+- Final packages stored for distribution
 
 ## 🧠 Core Components
 
-### Psychology Module (`src/psychology/`)
-- Personality trait scoring (Big Five, etc.)
-- Decision analysis algorithms
-- Profile generation system
+### Engine (`src/engine.py`)
+- Command-line game loop
+- Save/load handling
+- Telemetry integration
 
-### Game Engine (`src/core/`)
-- Text rendering and input handling
-- Save/load system
-- Game state management
-
-### Game Logic (`src/game/`)
-- Quest system
-- Character interactions
-- Narrative branching
+### Modules (`src/modules/`)
+- Trait tagging utilities
+- Save system helpers
+- Telemetry logging
 
 ## 📊 Data Organization
 
@@ -78,13 +60,15 @@ Game content is separated from code in the `data/` directory:
 - **Quests**: Story content, choices, and outcomes
 - **Characters**: NPC definitions and dialogue trees
 - **Scenarios**: Psychological testing scenarios
+- **Payoffs**: Trait-based payoff templates
+- **Playtests**: Logs and survey results
 
 ## 🚀 Getting Started
 
-1. Start prototyping in `prototype/experiments/`
+1. Start prototyping in `versions/v0-experiments/`
 2. Move stable features to `src/` for reuse
 3. Create version-specific implementations in `versions/`
-4. Test thoroughly using both `prototype/tests/` and `tests/`
+4. Test thoroughly using `tests/`
 5. Deploy stable versions through `deployment/`
 
 ## 🔧 Best Practices

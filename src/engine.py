@@ -1,17 +1,12 @@
 """Minimal engine loop with save/load, HUD toggle, and telemetry."""
 from __future__ import annotations
 
-
 import argparse
-import os
-import sys
 from typing import Any, Dict
 
-# Allow importing from project root
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from game.choice_engine import tag  # type: ignore
-from save_system import load_game, save_game
-from telemetry import Telemetry
+from modules.tagging import tag
+from modules.save_system import load_game, save_game
+from modules.telemetry import Telemetry
 
 
 def default_state() -> Dict[str, Any]:
