@@ -11,7 +11,7 @@ JSON files defining quest structures, dialogue, choices, and outcomes.
 NPC definitions, personality traits, and dialogue trees.
 
 ### Scenarios (`scenarios/`)
-Psychological testing scenarios and their scoring parameters.
+Psychological testing scenarios and their scoring parameters. Includes decoy scenes and varied weighting to camouflage trait tracking.
 
 
 ### Payoffs (`payoffs/`)

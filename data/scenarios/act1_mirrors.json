@@ -74,6 +74,29 @@
       ]
     },
     {
+      "scene_id": "twin_scholar",
+      "type": "micro",
+      "text": "A scholar identical to you presents a thesis claiming your life's work.",
+      "choices": [
+        {
+          "choice_id": "challenge_claim",
+          "text": "Publicly dissect their argument until they falter.",
+          "primary_trait": "Envy",
+          "primary_weight": 0.8,
+          "secondary_trait": "Hubris",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "cede_floor",
+          "text": "Applaud politely and leave the hall.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
       "scene_id": "confessing_mirror",
       "type": "micro",
       "text": "A mirror asks what flaw you hide.",
@@ -88,7 +111,7 @@
         },
         {
           "choice_id": "praise_reflection",
-          "text": "Praise your reflection's perfection.",
+          "text": "Offer a self-assured smile to the mirror.",
           "primary_trait": "Hubris",
           "primary_weight": 0.2,
           "secondary_trait": "Deception",
@@ -174,6 +197,29 @@
       ]
     },
     {
+      "scene_id": "echo_parlor",
+      "type": "micro",
+      "text": "Empty frames hang in a parlor, reflecting only echoes.",
+      "choices": [
+        {
+          "choice_id": "hum_a_tune",
+          "text": "Hum a fragment of song and listen for an answer.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "close_door",
+          "text": "Close the parlor door and keep the silence.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
       "scene_id": "labyrinth_library",
       "type": "mid",
       "text": "Shelves twist into a labyrinth of forgotten knowledge.",
@@ -199,6 +245,29 @@
           "text": "Browse aimlessly then leave the maze unchanged.",
           "primary_trait": "Apathy",
           "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "phantom_mentor",
+      "type": "micro",
+      "text": "A phantom mentor offers to erase one mistake from your past.",
+      "choices": [
+        {
+          "choice_id": "rewrite_memory",
+          "text": "Accept and choose a memory to rewrite.",
+          "primary_trait": "Deception",
+          "primary_weight": 0.2,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "decline_offer",
+          "text": "Decline, fearing who you might become without it.",
+          "primary_trait": "Fear",
+          "primary_weight": 0.2,
           "secondary_trait": null,
           "secondary_weight": 0.0
         }

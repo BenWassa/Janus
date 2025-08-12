@@ -9,14 +9,14 @@
       "type": "micro",
       "text": "A boar stumbles before you, its flank pierced by spears.",
       "choices": [
-        {
-          "choice_id": "finish_boar",
-          "text": "Drive in another spear to end its struggle.",
-          "primary_trait": "Wrath",
-          "primary_weight": 0.1,
-          "secondary_trait": "Impulsivity",
-          "secondary_weight": 0.1
-        },
+          {
+            "choice_id": "finish_boar",
+            "text": "Press another spear in to still its thrashing.",
+            "primary_trait": "Wrath",
+            "primary_weight": 0.1,
+            "secondary_trait": "Impulsivity",
+            "secondary_weight": 0.1
+          },
         {
           "choice_id": "bind_wound",
           "text": "Kneel and bind its wound despite the gore.",
@@ -32,14 +32,14 @@
       "type": "micro",
       "text": "Iron bars groan as a lion hurls itself against them.",
       "choices": [
-        {
-          "choice_id": "tighten_bars",
-          "text": "Wedge new bolts to tighten its cage.",
-          "primary_trait": "Control",
-          "primary_weight": 0.2,
-          "secondary_trait": "Rigidity",
-          "secondary_weight": 0.1
-        },
+          {
+            "choice_id": "tighten_bars",
+            "text": "Wedge new bolts with deliberate calm.",
+            "primary_trait": "Control",
+            "primary_weight": 0.2,
+            "secondary_trait": "Rigidity",
+            "secondary_weight": 0.1
+          },
         {
           "choice_id": "open_gate",
           "text": "Swing the gate wide and step back.",
@@ -143,6 +143,52 @@
       ]
     },
     {
+      "scene_id": "jealous_raven",
+      "type": "micro",
+      "text": "A raven guards a glittering trove stolen from travelers.",
+      "choices": [
+        {
+          "choice_id": "snatch_treasure",
+          "text": "Grab the brightest jewel while the bird preens.",
+          "primary_trait": "Envy",
+          "primary_weight": 0.8,
+          "secondary_trait": "Avarice",
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "leave_treasure",
+          "text": "Leave the hoard untouched and walk on.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "sleeping_dragon",
+      "type": "micro",
+      "text": "A dragon slumbers atop cold embers, smoke curling from its nostrils.",
+      "choices": [
+        {
+          "choice_id": "watch_slumber",
+          "text": "Watch quietly until its breathing steadies.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "tiptoe_past",
+          "text": "Ease past on silent feet, disturbing nothing.",
+          "primary_trait": "Apathy",
+          "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
       "scene_id": "verdict_pit",
       "type": "mid",
       "text": "A captured chimera kneels in a pit as the crowd roars for judgment.",
@@ -180,7 +226,7 @@
       "choices": [
         {
           "choice_id": "whip_beasts",
-          "text": "Crack a whip to assert brutal order.",
+          "text": "Snap a whip to force uneasy order.",
           "primary_trait": "Wrath",
           "primary_weight": 0.4,
           "secondary_trait": "Cynicism",
@@ -199,6 +245,29 @@
           "text": "Dump all the food and watch them feast.",
           "primary_trait": "Apathy",
           "primary_weight": 0.0,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        }
+      ]
+    },
+    {
+      "scene_id": "blood_vow",
+      "type": "micro",
+      "text": "A beast extends a claw, demanding a blood oath for safe passage.",
+      "choices": [
+        {
+          "choice_id": "seal_oath",
+          "text": "Prick your finger and seal the pact.",
+          "primary_trait": "Control",
+          "primary_weight": 0.2,
+          "secondary_trait": null,
+          "secondary_weight": 0.0
+        },
+        {
+          "choice_id": "refuse_oath",
+          "text": "Refuse and circle the long way around.",
+          "primary_trait": "Fear",
+          "primary_weight": 0.2,
           "secondary_trait": null,
           "secondary_weight": 0.0
         }
