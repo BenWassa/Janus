@@ -13,10 +13,15 @@ NPC definitions, personality traits, and dialogue trees.
 ### Scenarios (`scenarios/`)
 Psychological testing scenarios and their scoring parameters.
 
+
+### Payoffs (`payoffs/`)
+Trait-driven micro payoffs and mid-scene forks keyed to player profiles.
+=======
 Includes:
 - `act1_mirrors.json` – dreamlike self-confrontational scenes.
 - `act2_beasts.json` – moral trials with bestial reflections.
 - `act3_whispers.json` – tests of secrecy, temptation, and loyalty.
+
 
 ## Format Guidelines
 - Use JSON for structured data
