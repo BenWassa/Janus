@@ -1,0 +1,12 @@
+default_seed: 42
+runs:
+  random: 5
+  hubris: 1
+  control_fear: 1
+  deception_avarice: 1
+  reckless_chaotic: 1
+  balanced_human: 1
+trait_caps:
+  per_act: 2.0
+decoy_target: 0.35
+
