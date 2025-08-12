@@ -4,11 +4,20 @@ This module contains the fundamental components that power the Janus RPG system.
 
 ## Components
 
-- **engine.py**: Main game loop and state management
-- **renderer.py**: Text-based UI rendering system
-- **input_handler.py**: User input processing
-- **save_system.py**: Game state persistence
-- **event_manager.py**: Event-driven architecture support
+- **engine.py** – Minimal game loop with CLI options for save/load, HUD toggle, and telemetry logging.
+- **save_system.py** – JSON-based game state persistence.
+- **telemetry.py** – Lightweight gameplay event logger.
+
+## Engine CLI
+
+```
+python src/core/engine.py [--load FILE] [--save FILE] [--no-hud] [--telemetry FILE]
+```
+
+- `--load` loads a previously saved state.
+- `--save` writes the current state in JSON format.
+- `--no-hud` suppresses the HUD display.
+- `--telemetry` records gameplay events to a JSON file.
 
 ## Design Principles
 
