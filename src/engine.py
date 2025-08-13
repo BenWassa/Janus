@@ -15,6 +15,7 @@ from modules.save_system import load_game, save_game
 from modules.telemetry import Telemetry
 from modules.reveal import load_reveals, pick_reveal
 from modules.state_manager import StateManager
+from modules.scoring import normalize_scores, top_archetype
 
 
 def default_state() -> Dict[str, Any]:
@@ -263,25 +264,31 @@ def show_final_reflection(state: Dict[str, Any], data_path: Path) -> None:
     print("\n" + "="*60)
     print("FINAL REFLECTION")
     print("="*60)
-    
+
     reveals_path = data_path / "payoffs" / "endgame_reveals.json"
-    
+    traits = state["player"].get("traits", {})
+    scores = normalize_scores(traits)
+    archetype_name, archetype_desc = top_archetype(traits)
+
     if reveals_path.exists():
         reveal_data = load_reveals(reveals_path)
-        reveal = pick_reveal(state["player"]["traits"], reveal_data)
+        reveal = pick_reveal(traits, reveal_data)
         print("\n" + reveal["text"])
+    elif traits:
+        # Fallback reflection if reveal data is missing
+        print(f"\nYour journey reveals these prominent traits:")
+        top_traits = sorted(traits.items(), key=lambda x: x[1], reverse=True)[:3]
+        for trait, value in top_traits:
+            print(f"  {trait}: {value:.1f}")
+
+    # Archetype and detailed scores
+    print(f"\nYou are {archetype_name}: {archetype_desc}")
+    if scores:
+        print("\nTrait scores:")
+        for trait, score in sorted(scores.items(), key=lambda i: i[1], reverse=True):
+            print(f"  {trait}: {score:.0%}")
     else:
-        # Fallback reflection
-        traits = state["player"]["traits"]
-        if traits:
-            top_traits = sorted(traits.items(), key=lambda x: x[1], reverse=True)[:3]
-            print(f"\nYour journey reveals these prominent traits:")
-            for trait, value in top_traits:
-                print(f"  {trait}: {value:.1f}")
-            print(f"\nThrough your choices, {state['player']['name']}, you have shown who you truly are.")
-        else:
-            print(f"\nYour path through the labyrinth remains a mystery, {state['player']['name']}.")
-            print("Perhaps some stories are meant to be lived, not analyzed.")
+        print("No dominant traits emerged during your journey.")
 
 
 def main(argv: Any = None) -> int:
