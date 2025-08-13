@@ -380,8 +380,8 @@ def create_decision_tree_chart(result: Dict[str, Any]):
         )
         return fig
     
-    # The decision data is in 'trait_progression', not 'trace'
-    trait_progression = result.get("trait_progression", [])
+    # The decision data from the runner is in 'trace'
+    trait_progression = result.get("trace", [])
     print(f"🔍 Trait progression entries: {len(trait_progression)}")
     debug_info.append(f"Trait progression entries: {len(trait_progression)}")
     
@@ -414,15 +414,6 @@ def create_decision_tree_chart(result: Dict[str, Any]):
     debug_info.append(f"Found {len(decisions)} decisions")
     
     if not decisions:
-        fig = go.Figure()
-        fig.add_annotation(
-            text="No decision data available<br><br>Debug Info:<br>" + "<br>".join(debug_info),
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False,
-            font=dict(size=14, color="gray"),
-            align="left"
-        )
-        return fig
         # Return empty chart with message
         fig = go.Figure()
         fig.add_annotation(
