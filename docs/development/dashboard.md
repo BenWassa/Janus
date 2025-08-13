@@ -4,7 +4,7 @@ An interactive dashboard for running Janus simulation policies and visualising t
 
 ## Setup
 
-Install the required packages:
+The dashboard relies on Dash and Plotly. Dependencies are installed automatically on first launch, but you can pre-install them:
 
 ```bash
 pip install dash plotly
@@ -18,4 +18,8 @@ Start the dashboard from the repository root:
 python src/dashboard/run_dashboard.py
 ```
 
-A browser window will open with controls to select a policy and execute a run.  Results are saved under `data/test_results/` for later inspection.
+### Features
+
+- Choose between built-in policies and run simulations with a click
+- View line charts of trait progression and bar charts of final scores
+- Each run is saved under `data/test_results/` for later inspection

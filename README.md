@@ -18,7 +18,7 @@ At the end of your quest, you receive your Hero's Chronicle:
 - Covert psychological scoring system
 - Replayable scenarios with different personality outcomes
 - Modular design for adding new quests, dilemmas, and scoring frameworks
-- Interactive testing dashboard for visualising trait progression
+- Dash-powered testing dashboard for running simulations and visualising trait progression
 
 ## Project Structure
 
@@ -71,6 +71,7 @@ Telemetry logs, test results, and other generated content. [See outputs README](
    ```bash
    python src/dashboard/run_dashboard.py
    ```
+   Use the web UI to choose a policy, run simulations, and view trait charts.
 
 ## Vision
 Future versions may expand into adaptive NPC behavior, multiplayer "party dynamics" profiling, and ethically designed research modules for psychological studies.
