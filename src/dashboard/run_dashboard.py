@@ -363,26 +363,37 @@ def create_decision_tree_chart(result: Dict[str, Any]):
     print(f"🔍 Decision tree called with data type: {type(result)}")
     print(f"🔍 Decision tree data keys: {list(result.keys()) if result else 'None'}")
     
+    # Create debug info for the browser
+    debug_info = []
+    debug_info.append(f"Data type: {type(result)}")
+    debug_info.append(f"Data keys: {list(result.keys()) if result else 'None'}")
+    
     if not result:
         print("🔍 No result data provided")
-        return go.Figure().add_annotation(
-            text="No simulation data available",
+        debug_info.append("No result data provided")
+        fig = go.Figure()
+        fig.add_annotation(
+            text="No simulation data available<br>" + "<br>".join(debug_info),
             xref="paper", yref="paper",
             x=0.5, y=0.5, showarrow=False,
-            font=dict(size=20, color="gray")
+            font=dict(size=16, color="gray")
         )
+        return fig
     
     # The decision data is in 'trait_progression', not 'trace'
     trait_progression = result.get("trait_progression", [])
     print(f"🔍 Trait progression entries: {len(trait_progression)}")
+    debug_info.append(f"Trait progression entries: {len(trait_progression)}")
     
     if not trait_progression:
         # Maybe it's in a different key? Let's check
         for key, value in result.items():
             if isinstance(value, list) and len(value) > 0:
                 print(f"🔍 Found list in key '{key}' with {len(value)} items")
+                debug_info.append(f"Found list in key '{key}' with {len(value)} items")
                 if isinstance(value[0], dict) and "choice_id" in value[0]:
                     print(f"🔍 Key '{key}' contains decision data!")
+                    debug_info.append(f"Key '{key}' contains decision data!")
                     trait_progression = value
                     break
     
@@ -400,8 +411,18 @@ def create_decision_tree_chart(result: Dict[str, Any]):
         })
     
     print(f"🔍 Found {len(decisions)} decisions")
+    debug_info.append(f"Found {len(decisions)} decisions")
     
     if not decisions:
+        fig = go.Figure()
+        fig.add_annotation(
+            text="No decision data available<br><br>Debug Info:<br>" + "<br>".join(debug_info),
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=14, color="gray"),
+            align="left"
+        )
+        return fig
         # Return empty chart with message
         fig = go.Figure()
         fig.add_annotation(
