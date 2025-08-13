@@ -7,6 +7,7 @@
     {
       "scene_id": "wounded_boar",
       "type": "micro",
+      "symbol": "beast",
       "text": "A boar stumbles before you, its flank pierced by spears.",
       "choices": [
           {
@@ -44,6 +45,7 @@
     {
       "scene_id": "caged_lion",
       "type": "micro",
+      "symbol": "beast",
       "text": "Iron bars groan as a lion hurls itself against them.",
       "choices": [
           {
@@ -77,6 +79,7 @@
     {
       "scene_id": "trembling_hare",
       "type": "micro",
+      "symbol": "beast",
       "text": "A trembling hare hides beneath a broken statue.",
       "choices": [
         {
@@ -100,6 +103,7 @@
     {
       "scene_id": "shadow_wolves",
       "type": "micro",
+      "symbol": "beast",
       "text": "Spectral wolves circle, their eyes reflecting yours.",
       "choices": [
         {
@@ -133,6 +137,7 @@
     {
       "scene_id": "coiled_serpent",
       "type": "micro",
+      "symbol": "beast",
       "text": "A serpent coils around an abandoned helm, tongue tasting the air.",
       "choices": [
         {
@@ -156,6 +161,7 @@
     {
       "scene_id": "rampaging_bull",
       "type": "micro",
+      "symbol": "beast",
       "text": "A bull of smoke charges blindly through crumbling ruins.",
       "choices": [
         {
@@ -179,6 +185,7 @@
     {
       "scene_id": "jealous_raven",
       "type": "micro",
+      "symbol": "beast",
       "text": "A raven guards a glittering trove stolen from travelers.",
       "choices": [
         {
@@ -202,6 +209,7 @@
     {
       "scene_id": "sleeping_dragon",
       "type": "micro",
+      "symbol": "beast",
       "text": "A dragon slumbers atop cold embers, smoke curling from its nostrils.",
       "choices": [
         {
@@ -225,6 +233,7 @@
     {
       "scene_id": "verdict_pit",
       "type": "mid",
+      "symbol": "beast",
       "text": "A captured chimera kneels in a pit as the crowd roars for judgment.",
       "choices": [
         {
@@ -256,6 +265,7 @@
     {
       "scene_id": "feeding_pit",
       "type": "mid",
+      "symbol": "beast",
       "text": "Starving beasts claw at one another for scraps thrown into a pit.",
       "choices": [
         {
@@ -287,6 +297,7 @@
     {
       "scene_id": "blood_vow",
       "type": "micro",
+      "symbol": "beast",
       "text": "A beast extends a claw, demanding a blood oath for safe passage.",
       "choices": [
         {
@@ -310,6 +321,7 @@
     {
       "scene_id": "mirror_chimera",
       "type": "pocket",
+      "symbol": "beast",
       "text": "A chimera with mirrored scales reflects your every motion.",
       "choices": [
         {
