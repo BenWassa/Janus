@@ -14,6 +14,7 @@ from modules.tagging import tag
 from modules.save_system import load_game, save_game
 from modules.telemetry import Telemetry
 from modules.reveal import load_reveals, pick_reveal
+from modules.state_manager import StateManager
 
 
 def default_state() -> Dict[str, Any]:
@@ -24,6 +25,7 @@ def default_state() -> Dict[str, Any]:
         "current_scene": 0,
         "completed_scenes": [],
         "last_choice": None,
+        "flags": {},
     }
 
 
@@ -33,12 +35,19 @@ def show_hud(state: Dict[str, Any], debug_mode: bool = False) -> None:
         print("== DEBUG HUD ==")
         print(f"Player: {state['player']['name']}")
         print(f"Act: {state['current_act']}")
-        
+
         # Show traits if any exist (debug only)
         traits = state["player"]["traits"]
         if traits:
             for trait, value in sorted(traits.items()):
                 print(f"  {trait}: {value:.1f}")
+
+        # Show flags if any exist (debug only)
+        flags = state.get("flags", {})
+        if flags:
+            print("Flags:")
+            for flag, val in flags.items():
+                print(f"  {flag}: {val}")
         
         # Show last choice info (debug only)
         last = state.get("last_choice")
@@ -109,8 +118,9 @@ def get_player_choice(choices: List[Dict[str, Any]]) -> int:
         print("Invalid choice. Please try again.")
 
 
-def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], telemetry: Telemetry, debug_mode: bool = False) -> None:
-    """Apply the psychological effects of a choice."""
+def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], state_mgr: StateManager,
+                         telemetry: Telemetry, debug_mode: bool = False) -> None:
+    """Apply the psychological and state effects of a choice."""
     player_traits = state["player"]["traits"]
     
     # Apply primary trait effect
@@ -127,6 +137,11 @@ def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], telemetr
     if secondary_trait and secondary_weight > 0:
         player_traits[secondary_trait] = player_traits.get(secondary_trait, 0.0) + secondary_weight
     
+    # Handle state flag setting
+    flag_name = choice.get("set_flag")
+    if flag_name:
+        state_mgr.set_flag(flag_name, choice.get("flag_value", True))
+
     # Record the choice
     state["last_choice"] = {
         "id": choice.get("choice_id", "unknown"),
@@ -156,7 +171,19 @@ def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], telemetr
             print(f"  +{secondary_weight} {secondary_trait}")
 
 
-def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any], 
+def apply_scene_callbacks(scene: Dict[str, Any], state_mgr: StateManager) -> None:
+    """Modify scene content based on state flags."""
+    for cb in scene.get("callbacks", []):
+        if state_mgr.check_flag(cb.get("flag"), cb.get("value", True)):
+            if cb.get("text"):
+                scene["text"] += " " + cb["text"]
+            for change in cb.get("choices", []):
+                for choice in scene.get("choices", []):
+                    if choice.get("choice_id") == change.get("choice_id"):
+                        choice.update({k: v for k, v in change.items() if k != "choice_id"})
+
+
+def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any], state_mgr: StateManager,
            telemetry: Telemetry, show_hud_flag: bool, debug_mode: bool = False) -> bool:
     """Run through an act's scenes. Returns True if player wants to continue."""
     
@@ -180,9 +207,11 @@ def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any],
     selected_scenes = random.sample(available_scenes, num_scenes) if len(available_scenes) > num_scenes else available_scenes
     
     for scene in selected_scenes:
+        apply_scene_callbacks(scene, state_mgr)
+
         if show_hud_flag:
             show_hud(state, debug_mode)
-        
+
         display_scene(scene)
         
         choices = scene.get("choices", [])
@@ -193,7 +222,7 @@ def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any],
         choice_idx = get_player_choice(choices)
         chosen = choices[choice_idx]
         
-        apply_choice_effects(state, chosen, telemetry, debug_mode)
+        apply_choice_effects(state, chosen, state_mgr, telemetry, debug_mode)
         
         print(f"\n> You chose: {chosen['text']}")
         
@@ -250,6 +279,7 @@ def main(argv: Any = None) -> int:
     if args.load:
         state = load_game(args.load)
 
+    state_mgr = StateManager(state)
     telemetry = Telemetry(args.telemetry)
     data_path = Path(__file__).resolve().parent.parent / "data"
     
@@ -268,7 +298,7 @@ def main(argv: Any = None) -> int:
     for act_num in range(state["current_act"], 4):
         state["current_act"] = act_num
         
-        if not run_act(act_num, scenarios.get(act_num, []), state, telemetry, not args.no_hud, args.debug):
+        if not run_act(act_num, scenarios.get(act_num, []), state, state_mgr, telemetry, not args.no_hud, args.debug):
             print("\nYou choose to leave the labyrinth early...")
             break
     

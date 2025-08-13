@@ -84,7 +84,9 @@
           "primary_trait": "Envy",
           "primary_weight": 0.8,
           "secondary_trait": "Hubris",
-          "secondary_weight": 0.0
+          "secondary_weight": 0.0,
+          "set_flag": "twin_defeated",
+          "flag_value": true
         },
         {
           "choice_id": "cede_floor",
@@ -207,7 +209,9 @@
           "primary_trait": "Apathy",
           "primary_weight": 0.0,
           "secondary_trait": null,
-          "secondary_weight": 0.0
+          "secondary_weight": 0.0,
+          "set_flag": "echo_heard",
+          "flag_value": true
         },
         {
           "choice_id": "close_door",
@@ -230,7 +234,9 @@
           "primary_trait": "Control",
           "primary_weight": 0.5,
           "secondary_trait": "Rigidity",
-          "secondary_weight": 0.2
+          "secondary_weight": 0.2,
+          "set_flag": "artifact_found",
+          "flag_value": "mirror_shard"
         },
         {
           "choice_id": "burn_pages",
