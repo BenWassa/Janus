@@ -8,7 +8,11 @@ from datetime import datetime
 def install_requirements():
     req_path = os.path.join(os.path.dirname(__file__), 'requirements.txt')
     if os.path.exists(req_path):
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', req_path])
+        print("🔄 Installing dashboard dependencies...")
+        # Install silently
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', req_path], 
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print("✅ Dependencies installed successfully")
 
 install_requirements()
 import random
@@ -520,4 +524,31 @@ def update_chart_content(active_tab, simulation_data):
                      className="main-chart", config={'displayModeBar': False})]
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import webbrowser
+    import threading
+    import time
+    
+    # Dashboard startup message
+    print("\n" + "="*60)
+    print("🚀 JANUS DASHBOARD STARTING")
+    print("="*60)
+    print("📊 Initializing interactive dashboard...")
+    
+    def open_browser():
+        time.sleep(2)  # Wait for server to start
+        print("\n🌐 Opening dashboard in your browser...")
+        webbrowser.open('http://127.0.0.1:8050/')
+    
+    # Start browser opening in background
+    browser_thread = threading.Thread(target=open_browser)
+    browser_thread.daemon = True
+    browser_thread.start()
+    
+    print("🎯 Dashboard URL: http://127.0.0.1:8050/")
+    print("="*60)
+    
+    try:
+        app.run(debug=True, use_reloader=False)  # Disable reloader to prevent double browser opening
+    except KeyboardInterrupt:
+        print("\n\n👋 Dashboard stopped. Thanks for using Janus!")
+        print("="*60)
