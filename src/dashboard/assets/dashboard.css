@@ -204,7 +204,7 @@ body, html {
 /* Main Content Layout */
 .main-content {
     display: grid;
-    grid-template-columns: 400px 1fr;
+    grid-template-columns: 1fr;
     gap: var(--spacing-2xl);
     padding: 0 var(--spacing-xl) var(--spacing-2xl);
     max-width: 1400px;
@@ -215,8 +215,7 @@ body, html {
 
 /* Left Panel - Controls */
 .left-panel {
-    position: sticky;
-    top: var(--spacing-xl);
+    width: 100%;
     height: fit-content;
 }
 
@@ -247,8 +246,8 @@ body, html {
 /* Policy Selection */
 .policy-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-sm);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-md);
     margin-bottom: var(--spacing-xl);
 }
 
@@ -702,7 +701,7 @@ html {
 /* Responsive Design */
 @media (max-width: 1400px) {
     .policy-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: var(--spacing-sm);
     }
     
@@ -740,24 +739,17 @@ html {
 
 @media (max-width: 1200px) {
     .main-content {
-        grid-template-columns: 350px 1fr;
         gap: var(--spacing-xl);
     }
 }
 
 @media (max-width: 1024px) {
     .main-content {
-        grid-template-columns: 1fr;
         padding: 0 var(--spacing-lg) var(--spacing-xl);
     }
     
-    .left-panel {
-        position: static;
-        order: 2;
-    }
-    
-    .right-panel {
-        order: 1;
+    .policy-grid {
+        grid-template-columns: 1fr;
     }
 }
 
