@@ -34,6 +34,7 @@ from testing.policies import (
     random_policy, hubris_forward, control_fear,
     deception_avarice, reckless_chaotic, balanced_human
 )
+from dashboard import calibration_monitor
 
 DATA_DIR = ROOT / "data" / "test_results"
 
@@ -143,6 +144,7 @@ def create_metric_card(title, value, subtitle="", trend=None):
 
 app = Dash(external_stylesheets=['/assets/dashboard.css'])
 app.title = "Janus Dashboard"
+calibration_monitor.register_callbacks(app)
 
 # Enhanced layout with modern design
 app.layout = html.Div([
@@ -233,7 +235,9 @@ app.layout = html.Div([
                     dcc.Tab(label="Final Scores", value="final",
                            className="custom-tab", selected_className="custom-tab--selected"),
                     dcc.Tab(label="Decision Flow", value="decisions",
-                           className="custom-tab", selected_className="custom-tab--selected")
+                           className="custom-tab", selected_className="custom-tab--selected"),
+                    dcc.Tab(label="Calibration", value="calibration",
+                           className="custom-tab", selected_className="custom-tab--selected"),
                 ]),
 
                 # Chart Content
@@ -511,15 +515,36 @@ def run_simulation(n_clicks, policy_name, seed_value, history, active_tab):
     prevent_initial_call=True
 )
 def update_chart_content(active_tab, simulation_data):
+    if active_tab == "calibration":
+        return [calibration_monitor.layout]
+
     if not simulation_data:
-        return [dcc.Graph(id="main-chart", figure=get_initial_charts()[0], className="main-chart", config={'displayModeBar': False})]
+        return [
+            dcc.Graph(
+                id="main-chart",
+                figure=get_initial_charts()[0],
+                className="main-chart",
+                config={'displayModeBar': False},
+            )
+        ]
 
-    if active_tab == "progression": fig = create_enhanced_line_chart(simulation_data)
-    elif active_tab == "final": fig = create_enhanced_bar_chart(simulation_data)
-    elif active_tab == "decisions": fig = create_decision_tree_chart(simulation_data)
-    else: fig = get_initial_charts()[0]
+    if active_tab == "progression":
+        fig = create_enhanced_line_chart(simulation_data)
+    elif active_tab == "final":
+        fig = create_enhanced_bar_chart(simulation_data)
+    elif active_tab == "decisions":
+        fig = create_decision_tree_chart(simulation_data)
+    else:
+        fig = get_initial_charts()[0]
 
-    return [dcc.Graph(id="main-chart", figure=fig, className="main-chart", config={'displayModeBar': False})]
+    return [
+        dcc.Graph(
+            id="main-chart",
+            figure=fig,
+            className="main-chart",
+            config={'displayModeBar': False},
+        )
+    ]
 
 if __name__ == "__main__":
     import webbrowser, threading, time
