@@ -22,7 +22,10 @@ Janus/
 │   ├── characters/             # Character data and NPCs
 │   ├── scenarios/              # Psychological scenarios
 │   ├── payoffs/                # Trait payoff templates
-│   └── playtests/              # Logs and feedback artifacts
+│   ├── playtests/              # Logs and feedback artifacts
+│   ├── derived/                # Aggregated run metrics
+│   ├── samples/                # Example save and telemetry files
+│   └── test_results/           # Outputs from automated test runs
 ├── tests/                      # Testing scripts
 └── docs/                       # Documentation
 ```
@@ -62,6 +65,9 @@ Game content is separated from code in the `data/` directory:
 - **Scenarios**: Psychological testing scenarios
 - **Payoffs**: Trait-based payoff templates
 - **Playtests**: Logs and survey results
+- **Derived**: Aggregated run metrics
+- **Samples**: Example save and telemetry files
+- **Test Results**: JSON outputs from automated test runs
 
 ## 🚀 Getting Started
 
