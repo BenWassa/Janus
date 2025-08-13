@@ -25,6 +25,16 @@
           "secondary_trait": null,
           "secondary_weight": 0.0
         }
+      ],
+      "callbacks": [
+        {
+          "flag": "echo_heard",
+          "value": true,
+          "text": "A remembered echo hums around the boar, steadying your hands.",
+          "choices": [
+            {"choice_id": "bind_wound", "text": "Hum the echo while binding the wound."}
+          ]
+        }
       ]
     },
     {
@@ -47,6 +57,16 @@
           "primary_weight": 0.2,
           "secondary_trait": null,
           "secondary_weight": 0.0
+        }
+      ],
+      "callbacks": [
+        {
+          "flag": "twin_defeated",
+          "value": true,
+          "text": "From the shadows your twin loosens a bolt.",
+          "choices": [
+            {"choice_id": "open_gate", "text": "Notice the sabotage and let the lion loose."}
+          ]
         }
       ]
     },
@@ -93,6 +113,16 @@
           "primary_weight": 0.0,
           "secondary_trait": null,
           "secondary_weight": 0.0
+        }
+      ],
+      "callbacks": [
+        {
+          "flag": "artifact_found",
+          "value": "mirror_shard",
+          "text": "The mirror shard in your pack gleams, scattering some of the wolves.",
+          "choices": [
+            {"choice_id": "strike_alpha", "text": "Flash the shard and strike the alpha."}
+          ]
         }
       ]
     },
