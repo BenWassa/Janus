@@ -107,7 +107,9 @@
           "primary_trait": "Moodiness",
           "primary_weight": 0.5,
           "secondary_trait": "Impulsivity",
-          "secondary_weight": 0.0
+          "secondary_weight": 0.0,
+          "set_flag": "storm",
+          "flag_value": "entered"
         },
         {
           "choice_id": "walk_away",
@@ -115,7 +117,9 @@
           "primary_trait": "Apathy",
           "primary_weight": 0.0,
           "secondary_trait": null,
-          "secondary_weight": 0.0
+          "secondary_weight": 0.0,
+          "set_flag": "storm",
+          "flag_value": "avoided"
         }
       ]
     },

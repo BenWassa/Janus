@@ -21,12 +21,15 @@ from modules.scoring import normalize_scores, top_archetype
 def default_state() -> Dict[str, Any]:
     """Initial game state."""
     return {
-        "player": {"name": "Adventurer", "traits": {}},
+        "player": {"name": "Adventurer"},
         "current_act": 1,
         "current_scene": 0,
         "completed_scenes": [],
         "last_choice": None,
-        "flags": {},
+        "memory": {
+            "state_flags": {"mirror": None, "beast": None, "storm": None},
+            "trait_scores": {},
+        },
     }
 
 
@@ -38,13 +41,13 @@ def show_hud(state: Dict[str, Any], debug_mode: bool = False) -> None:
         print(f"Act: {state['current_act']}")
 
         # Show traits if any exist (debug only)
-        traits = state["player"]["traits"]
+        traits = state["memory"]["trait_scores"]
         if traits:
             for trait, value in sorted(traits.items()):
                 print(f"  {trait}: {value:.1f}")
 
         # Show flags if any exist (debug only)
-        flags = state.get("flags", {})
+        flags = state["memory"].get("state_flags", {})
         if flags:
             print("Flags:")
             for flag, val in flags.items():
@@ -128,7 +131,6 @@ def get_player_choice(choices: List[Dict[str, Any]]) -> int:
 def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], state_mgr: StateManager,
                          telemetry: Telemetry, debug_mode: bool = False) -> None:
     """Apply the psychological and state effects of a choice."""
-    player_traits = state["player"]["traits"]
 
     # Normalize to canonical tag format if needed
     if "tags" not in choice:
@@ -143,8 +145,8 @@ def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], state_mg
     for t in choice.get("tags", []):
         trait = t.get("trait")
         weight = t.get("weight", 0.0)
-        if trait and weight > 0:
-            player_traits[trait] = player_traits.get(trait, 0.0) + weight
+        if trait:
+            state_mgr.add_trait(trait, weight)
     
     # Handle state flag setting
     flag_name = choice.get("set_flag")
@@ -188,13 +190,73 @@ def apply_scene_callbacks(scene: Dict[str, Any], state_mgr: StateManager) -> Non
                         choice.update({k: v for k, v in change.items() if k != "choice_id"})
 
 
+def apply_state_variations(scene: Dict[str, Any], act_num: int, state_mgr: StateManager) -> None:
+    """Inject simple narrative variations based on stored flags."""
+    mirror = state_mgr.get_flag("mirror")
+    beast = state_mgr.get_flag("beast")
+    if act_num >= 2:
+        if mirror == "disturbed":
+            scene["text"] += " The memory of rippled glass unsettles you." 
+        elif mirror == "observed":
+            scene["text"] += " The mirror's calm steadies your resolve."
+    if act_num >= 3:
+        if beast == "spared":
+            scene["text"] += " A grateful beast's shadow follows." 
+        elif beast == "slain":
+            scene["text"] += " The cry of a slain beast echoes at your back."
+
+
+def act_intro(act_num: int, state_mgr: StateManager) -> None:
+    """Print an act introduction referencing prior flags."""
+    mirror = state_mgr.get_flag("mirror")
+    beast = state_mgr.get_flag("beast")
+    if act_num == 1:
+        print("You stand before endless mirrors, the journey begins.")
+    elif act_num == 2:
+        if mirror == "disturbed":
+            print("Ripples from the mirror pool guide your steps toward the beasts.")
+        elif mirror == "observed":
+            print("The still mirror lends you quiet focus as beasts stir ahead.")
+        else:
+            print("Memories of mirrored halls fade as beasts emerge.")
+    elif act_num == 3:
+        line = "Whispers rise around you"
+        if beast == "spared":
+            line += ", and the beast you spared pads nearby"
+        elif beast == "slain":
+            line += ", though the beast you slew haunts your thoughts"
+        print(line + ".")
+
+
+def act_interlude(act_num: int, state_mgr: StateManager) -> None:
+    """Summarise key prior actions between acts."""
+    mirror = state_mgr.get_flag("mirror")
+    beast = state_mgr.get_flag("beast")
+    if act_num == 1:
+        if mirror == "disturbed":
+            print("A brief calm settles as the mirror's ripples fade.")
+        elif mirror == "observed":
+            print("Silence rewards your patience before the mirror.")
+        else:
+            print("You leave the mirrors without a trace.")
+    elif act_num == 2:
+        if beast == "spared":
+            print("The spared beast watches over your path ahead.")
+        elif beast == "slain":
+            print("The memory of the beast you slew weighs on you.")
+        else:
+            print("No beast chose to follow you onward.")
+
+
 def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any], state_mgr: StateManager,
            telemetry: Telemetry, show_hud_flag: bool, debug_mode: bool = False) -> bool:
     """Run through an act's scenes. Returns True if player wants to continue."""
-    
+
     print(f"\n{'='*60}")
     print(f"ACT {act_num}: {['', 'MIRRORS', 'BEASTS', 'WHISPERS'][act_num]}")
     print(f"{'='*60}")
+
+    act_intro(act_num, state_mgr)
     
     if not scenes:
         print("No scenes available for this act.")
@@ -222,6 +284,7 @@ def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any], s
             locked_added = True
 
         apply_scene_callbacks(scene, state_mgr)
+        apply_state_variations(scene, act_num, state_mgr)
 
         if show_hud_flag:
             show_hud(state, debug_mode)
@@ -252,10 +315,11 @@ def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any], s
     
     # Ask if player wants to continue to next act
     if act_num < 3:
+        act_interlude(act_num, state_mgr)
         print(f"\nAct {act_num} complete. Continue to Act {act_num + 1}?")
         choice = input("Continue? (y/n): ").strip().lower()
         return choice in ['y', 'yes', '']
-    
+
     return True
 
 
@@ -266,7 +330,7 @@ def show_final_reflection(state: Dict[str, Any], data_path: Path) -> None:
     print("="*60)
 
     reveals_path = data_path / "payoffs" / "endgame_reveals.json"
-    traits = state["player"].get("traits", {})
+    traits = state["memory"].get("trait_scores", {})
     scores = normalize_scores(traits)
     archetype_name, archetype_desc = top_archetype(traits)
 
@@ -289,6 +353,13 @@ def show_final_reflection(state: Dict[str, Any], data_path: Path) -> None:
             print(f"  {trait}: {score:.0%}")
     else:
         print("No dominant traits emerged during your journey.")
+
+    # Symbolic callback
+    storm = state["memory"].get("state_flags", {}).get("storm")
+    if storm == "entered":
+        print("\nYou stepped through the storm's door, embracing the unknown.")
+    elif storm == "avoided":
+        print("\nYou left the storm door unopened, its thunder fading behind you.")
 
 
 def main(argv: Any = None) -> int:
