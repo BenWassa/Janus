@@ -359,146 +359,112 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
     return fig
 
 def create_decision_tree_chart(result: Dict[str, Any]):
-    """Create a decision tree visualization showing choices made during simulation."""
-    print(f"🔍 Decision tree called with data type: {type(result)}")
-    print(f"🔍 Decision tree data keys: {list(result.keys()) if result else 'None'}")
-    
-    # Create debug info for the browser
-    debug_info = []
-    debug_info.append(f"Data type: {type(result)}")
-    debug_info.append(f"Data keys: {list(result.keys()) if result else 'None'}")
-    
-    if not result:
-        print("🔍 No result data provided")
-        debug_info.append("No result data provided")
-        fig = go.Figure()
-        fig.add_annotation(
-            text="No simulation data available<br>" + "<br>".join(debug_info),
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, showarrow=False,
-            font=dict(size=16, color="gray")
-        )
-        return fig
-    
-    # The decision data from the runner is in 'trace'
+    """Create an enhanced decision flow timeline."""
     trait_progression = result.get("trace", [])
-    print(f"🔍 Trait progression entries: {len(trait_progression)}")
-    debug_info.append(f"Trait progression entries: {len(trait_progression)}")
-    
     if not trait_progression:
-        # Maybe it's in a different key? Let's check
-        for key, value in result.items():
-            if isinstance(value, list) and len(value) > 0:
-                print(f"🔍 Found list in key '{key}' with {len(value)} items")
-                debug_info.append(f"Found list in key '{key}' with {len(value)} items")
-                if isinstance(value[0], dict) and "choice_id" in value[0]:
-                    print(f"🔍 Key '{key}' contains decision data!")
-                    debug_info.append(f"Key '{key}' contains decision data!")
-                    trait_progression = value
-                    break
-    
-    decisions = []
-    for entry in trait_progression:
-        if entry.get("end"):
-            continue
-        # Extract decision data from trait progression entries
-        decisions.append({
-            "step": entry["step"],
-            "choice": entry["choice_id"],
-            "description": entry["text"],
-            "scene": entry.get("scene_id", "Unknown"),
-            "primary": entry.get("primary", "Unknown")
-        })
-    
-    print(f"🔍 Found {len(decisions)} decisions")
-    debug_info.append(f"Found {len(decisions)} decisions")
-    
-    if not decisions:
-        # Return empty chart with message
         fig = go.Figure()
-        fig.add_annotation(
-            text="No decision data available",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, xanchor='center', yanchor='middle',
-            font=dict(size=16, color='#64748B'),
-            showarrow=False
-        )
-        fig.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            height=500,
-            title="Decision Tree"
-        )
+        fig.add_annotation(text="No decision data available to build flow chart.", xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False)
         return fig
-    
-    # Create decision flow visualization
+
+    decisions = [entry for entry in trait_progression if not entry.get("end")]
+
+    # Define consistent colors for traits
+    TRAIT_COLORS = {
+        'Control': '#3B82F6', 'Fear': '#F59E0B', 'Deception': '#10B981', 
+        'Hubris': '#EF4444', 'Envy': '#8B5CF6', 'Avarice': '#EC4899',
+        'Rigidity': '#64748B', 'Cynicism': '#A1A1AA', 'Wrath': '#DC2626',
+        'Apathy & Sloth': '#78716C', 'Impulsivity': '#F97316', 
+        'Pessimism & Cynicism': '#A1A1AA', 'Moodiness & Indirectness': '#D946EF',
+        'default': '#94A3B8'
+    }
+
     fig = go.Figure()
     
-    # Add decision points as scatter plot
-    steps = [d["step"] for d in decisions]
-    choices = [d["choice"] for d in decisions]
-    descriptions = [d["description"][:50] + "..." if len(d["description"]) > 50 else d["description"] for d in decisions]
-    
-    # Color by decision type or use alternating colors
-    colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
-    node_colors = [colors[i % len(colors)] for i in range(len(decisions))]
-    
+    num_steps = len(decisions)
+
+    # 1. Add connecting lines
     fig.add_trace(go.Scatter(
-        x=steps,
-        y=[1] * len(steps),  # All on same horizontal line
-        mode='markers+text',
-        marker=dict(
-            size=20,
-            color=node_colors,
-            line=dict(color='white', width=2)
-        ),
-        text=choices,
-        textposition='top center',
-        textfont=dict(size=10, color='#E2E8F0'),
-        hovertemplate='<b>Step %{x}</b><br>' +
-                     'Choice: %{text}<br>' +
-                     'Description: %{customdata}<br>' +
-                     '<extra></extra>',
-        customdata=descriptions,
-        name='Decisions'
+        x=[0] * num_steps,
+        y=[-i for i in range(num_steps)],
+        mode='lines',
+        line=dict(color='rgba(255,255,255,0.2)', width=1),
+        hoverinfo='none'
     ))
-    
-    # Add connecting lines between decisions
-    for i in range(len(steps) - 1):
+
+    # 2. Add decision nodes and all annotations
+    for i, d in enumerate(decisions):
+        y_pos = -i
+        primary_trait = d.get('primary', 'None')
+        color = TRAIT_COLORS.get(primary_trait, TRAIT_COLORS['default'])
+
+        # Add the main node
         fig.add_trace(go.Scatter(
-            x=[steps[i], steps[i+1]],
-            y=[1, 1],
-            mode='lines',
-            line=dict(color='rgba(255,255,255,0.3)', width=2),
-            showlegend=False,
-            hoverinfo='skip'
+            x=[0], y=[y_pos],
+            mode='markers',
+            marker=dict(size=12, color=color, line=dict(width=2, color=TRAIT_COLORS['default'])),
+            hoverinfo='none',
+            showlegend=False
         ))
-    
+
+        # Annotation: Scene ID (Left)
+        fig.add_annotation(
+            x=-0.1, y=y_pos,
+            text=f"<b>{d['scene_id']}</b>",
+            xref="x", yref="y",
+            showarrow=False, align="right", xanchor="right",
+            font=dict(color="#CBD5E1", size=11)
+        )
+
+        # Annotation: Choice Text (Right, Main)
+        fig.add_annotation(
+            x=0.1, y=y_pos + 0.15,
+            text=f"{d['text']}",
+            xref="x", yref="y",
+            showarrow=False, align="left", xanchor="left",
+            font=dict(color="#F1F5F9", size=12)
+        )
+        
+        # Annotation: Trait Impact (Right, Sub)
+        delta_val = d.get('delta', {}).get(primary_trait, 0.0)
+        impact_text = f"<b>{delta_val:+.1f} {primary_trait}</b>" if delta_val != 0 else f"<i>No trait change</i>"
+        fig.add_annotation(
+            x=0.1, y=y_pos - 0.2,
+            text=impact_text,
+            xref="x", yref="y",
+            showarrow=False, align="left", xanchor="left",
+            font=dict(color=color, size=11)
+        )
+
+        # Annotation: Top 3 Traits (Far Right)
+        totals = d.get('totals', {})
+        if totals:
+            sorted_totals = sorted(totals.items(), key=lambda item: item[1], reverse=True)
+            top3_text = "<br>".join([f"{k}: {v:.1f}" for k, v in sorted_totals[:3]])
+            fig.add_annotation(
+                x=1.2, y=y_pos,
+                text=top3_text,
+                xref="x", yref="y",
+                showarrow=False, align="right", xanchor="right",
+                font=dict(color="#94A3B8", size=10),
+                bordercolor=TRAIT_COLORS['default'], borderwidth=1, borderpad=4, bgcolor="rgba(30,41,59,0.5)"
+            )
+
+
     fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='#E2E8F0', family="Inter"),
         title=dict(
-            text="Decision Tree - Choice Progression",
+            text="<b>Decision Flow & Trait Impact</b>",
             font=dict(size=20, color='#F1F5F9'),
             x=0.5, xanchor='center'
         ),
-        xaxis=dict(
-            title="Step",
-            gridcolor='rgba(255,255,255,0.1)',
-            title_font=dict(color='#CBD5E1'),
-            tickfont=dict(color='#94A3B8')
-        ),
-        yaxis=dict(
-            showticklabels=False,
-            showgrid=False,
-            range=[0.5, 1.5]
-        ),
-        margin=dict(l=60, r=60, t=80, b=60),
-        height=500,
-        showlegend=False
+        showlegend=False,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(visible=False, range=[-1.3, 1.3]),
+        yaxis=dict(visible=False, range=[-num_steps, 1]),
+        margin=dict(l=20, r=20, t=80, b=20),
+        height=max(500, num_steps * 60) # Dynamically adjust height
     )
-    
+
     return fig
 
 def create_enhanced_bar_chart(result: Dict[str, Any]):
