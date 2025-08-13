@@ -96,10 +96,11 @@
         }
       ]
     },
-    {
-      "scene_id": "storm_door",
-      "type": "micro",
-      "text": "A door pulses with light and shadow as a storm rages behind it.",
+      {
+        "scene_id": "storm_door",
+        "type": "micro",
+        "symbol": "storm",
+        "text": "A door pulses with light and shadow as a storm rages behind it.",
       "choices": [
         {
           "choice_id": "open_anyway",

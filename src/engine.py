@@ -16,6 +16,7 @@ from modules.telemetry import Telemetry
 from modules.reveal import load_reveals, pick_reveal
 from modules.state_manager import StateManager
 from modules.scoring import normalize_scores, top_archetype
+from modules.symbols import describe as describe_symbol
 
 
 def default_state() -> Dict[str, Any]:
@@ -201,9 +202,19 @@ def apply_state_variations(scene: Dict[str, Any], act_num: int, state_mgr: State
             scene["text"] += " The mirror's calm steadies your resolve."
     if act_num >= 3:
         if beast == "spared":
-            scene["text"] += " A grateful beast's shadow follows." 
+            scene["text"] += " A grateful beast's shadow follows."
         elif beast == "slain":
             scene["text"] += " The cry of a slain beast echoes at your back."
+
+
+def apply_symbol_rules(scene: Dict[str, Any], state_mgr: StateManager) -> None:
+    """Modify symbol scenes based on dominant related traits."""
+    symbol = scene.get("symbol")
+    if not symbol:
+        return
+    desc = describe_symbol(symbol, state_mgr.trait_scores)
+    if desc:
+        scene["text"] += f" {desc}"
 
 
 def act_intro(act_num: int, state_mgr: StateManager) -> None:
@@ -285,6 +296,7 @@ def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any], s
 
         apply_scene_callbacks(scene, state_mgr)
         apply_state_variations(scene, act_num, state_mgr)
+        apply_symbol_rules(scene, state_mgr)
 
         if show_hud_flag:
             show_hud(state, debug_mode)

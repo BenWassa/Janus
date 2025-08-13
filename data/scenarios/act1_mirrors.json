@@ -4,10 +4,11 @@
   "title": "Mirrors",
   "description": "Dreamlike, self-confrontational scenarios exploring personal reflection.",
   "scenes": [
-    {
-      "scene_id": "mirror_pool",
-      "type": "micro",
-      "text": "A still pool mirrors the sky; your reflection waits for a ripple.",
+      {
+        "scene_id": "mirror_pool",
+        "type": "micro",
+        "symbol": "mirror",
+        "text": "A still pool mirrors the sky; your reflection waits for a ripple.",
       "choices": [
         {
           "choice_id": "touch_surface",
@@ -102,10 +103,11 @@
         }
       ]
     },
-    {
-      "scene_id": "confessing_mirror",
-      "type": "micro",
-      "text": "A mirror asks what flaw you hide.",
+      {
+        "scene_id": "confessing_mirror",
+        "type": "micro",
+        "symbol": "mirror",
+        "text": "A mirror asks what flaw you hide.",
       "choices": [
         {
           "choice_id": "admit_fault",
