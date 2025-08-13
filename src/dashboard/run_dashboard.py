@@ -10,7 +10,7 @@ def install_requirements():
     if os.path.exists(req_path):
         print("🔄 Installing dashboard dependencies...")
         # Install silently
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', req_path], 
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', req_path],
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         print("✅ Dependencies installed successfully")
 
@@ -30,7 +30,7 @@ sys.path.append(str(ROOT / "src"))
 
 from testing import runner
 from testing.policies import (
-    random_policy, hubris_forward, control_fear, 
+    random_policy, hubris_forward, control_fear,
     deception_avarice, reckless_chaotic, balanced_human
 )
 
@@ -79,7 +79,7 @@ def get_initial_charts():
         font=dict(size=16, color='#64748B'),
         showarrow=False
     )
-    
+
     empty_bar = go.Figure()
     empty_bar.add_annotation(
         text="Waiting for simulation results...",
@@ -88,7 +88,7 @@ def get_initial_charts():
         font=dict(size=16, color='#64748B'),
         showarrow=False
     )
-    
+
     # Apply consistent dark theme
     for fig in [empty_line, empty_bar]:
         fig.update_layout(
@@ -101,14 +101,14 @@ def get_initial_charts():
         )
         fig.update_xaxes(showgrid=False, zeroline=False, showticklabels=False)
         fig.update_yaxes(showgrid=False, zeroline=False, showticklabels=False)
-    
+
     return empty_line, empty_bar
 
 def create_policy_card(policy_name, policy_info, is_selected=False):
     """Create a modern policy selection card."""
     border_color = "#3B82F6" if is_selected else "rgba(255,255,255,0.1)"
     bg_color = "rgba(59,130,246,0.1)" if is_selected else "#1E293B"
-    
+
     return html.Div([
         html.Div([
             html.Div(policy_info["icon"], className="policy-icon"),
@@ -118,7 +118,7 @@ def create_policy_card(policy_name, policy_info, is_selected=False):
             ], className="policy-text-content")
         ], className="policy-content"),
         html.Div("✓" if is_selected else "", className="policy-checkmark")
-    ], 
+    ],
     className="policy-card",
     style={
         "border": f"2px solid {border_color}",
@@ -130,7 +130,7 @@ def create_metric_card(title, value, subtitle="", trend=None):
     """Create a metric display card."""
     trend_color = "#10B981" if trend == "up" else "#EF4444" if trend == "down" else "#64748B"
     trend_icon = "↗" if trend == "up" else "↘" if trend == "down" else ""
-    
+
     return html.Div([
         html.H4(title, className="metric-title"),
         html.Div([
@@ -152,10 +152,10 @@ app.layout = html.Div([
                 html.Span("🚪", className="header-icon"),
                 "Janus Testing Dashboard"
             ], className="main-title"),
-            html.P("Advanced AI behavior testing and analysis platform", 
+            html.P("Advanced AI behavior testing and analysis platform",
                    className="subtitle")
         ], className="header-content"),
-        
+
         # Quick Stats Row
         html.Div([
             html.Div(id="quick-stats", children=[
@@ -166,22 +166,22 @@ app.layout = html.Div([
             ])
         ], className="stats-grid")
     ], className="dashboard-header"),
-    
+
     # Main Content Area
     html.Div([
         # Left Panel - Controls
         html.Div([
             html.Div([
                 html.H2("🎮 Policy Selection", className="section-title"),
-                html.P("Choose an AI strategy for behavior testing", 
+                html.P("Choose an AI strategy for behavior testing",
                        className="section-description"),
-                
+
                 # Policy Cards Grid
                 html.Div([
-                    create_policy_card(name, info, name == "Seeded Random") 
+                    create_policy_card(name, info, name == "Seeded Random")
                     for name, info in POLICIES.items()
                 ], className="policy-grid", id="policy-selection"),
-                
+
                 # Advanced Settings
                 html.Div([
                     html.H3("⚙️ Advanced Settings", className="subsection-title"),
@@ -204,7 +204,7 @@ app.layout = html.Div([
                         )
                     ], className="input-group")
                 ], className="advanced-settings"),
-                
+
                 # Action Button
                 html.Div([
                     html.Button([
@@ -214,36 +214,36 @@ app.layout = html.Div([
                 ], className="action-buttons")
             ], className="control-panel")
         ], className="left-panel"),
-        
+
         # Right Panel - Results
         html.Div([
             # Status Banner
             html.Div(id="status-banner", className="status-banner hidden"),
-            
+
             # Charts Section
             html.Div([
                 html.H2("📈 Real-time Analysis", className="section-title"),
-                
+
                 # Chart Tabs
-                dcc.Tabs(id="chart-tabs", value="progression", 
+                dcc.Tabs(id="chart-tabs", value="progression",
                         className="custom-tabs-container", children=[
-                    dcc.Tab(label="Trait Progression", value="progression", 
+                    dcc.Tab(label="Trait Progression", value="progression",
                            className="custom-tab", selected_className="custom-tab--selected"),
-                    dcc.Tab(label="Final Scores", value="final", 
+                    dcc.Tab(label="Final Scores", value="final",
                            className="custom-tab", selected_className="custom-tab--selected"),
-                    dcc.Tab(label="Decision Flow", value="decisions", 
+                    dcc.Tab(label="Decision Flow", value="decisions",
                            className="custom-tab", selected_className="custom-tab--selected")
                 ]),
-                
+
                 # Chart Content
                 html.Div(id="chart-content", children=[
-                    dcc.Graph(id="main-chart", 
+                    dcc.Graph(id="main-chart",
                              figure=get_initial_charts()[0],
                              className="main-chart",
                              config={'displayModeBar': False})
                 ])
             ], className="charts-section"),
-            
+
             # Results Summary
             html.Div([
                 html.H3("🎯 Results Summary", className="subsection-title"),
@@ -251,7 +251,7 @@ app.layout = html.Div([
             ], className="summary-section")
         ], className="right-panel")
     ], className="main-content"),
-    
+
     # Hidden data stores
     dcc.Store(id="selected-policy", data="Seeded Random"),
     dcc.Store(id="simulation-data", data={}),
@@ -263,7 +263,7 @@ def _save_run(result: Dict[str, Any], policy_name: str) -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     existing = sorted(DATA_DIR.glob("run_*.json"))
     fname = DATA_DIR / f"run_{len(existing) + 1}.json"
-    
+
     data = {
         "timestamp": datetime.now().isoformat(),
         "policy": policy_name,
@@ -275,10 +275,10 @@ def _save_run(result: Dict[str, Any], policy_name: str) -> None:
             "completion_status": "success" if result.get("final") else "incomplete"
         }
     }
-    
+
     with fname.open("w", encoding="utf-8") as fh:
         json.dump(data, fh, indent=2)
-    
+
     return data
 
 def create_enhanced_line_chart(result: Dict[str, Any]):
@@ -286,7 +286,7 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
     trait_series = {}
     for entry in result["trace"]:
         if entry.get("end"): continue
-        step = entry["step"]
+        step = entry.get("step")
         for trait, total in entry.get("totals", {}).items():
             trait_series.setdefault(trait, []).append((step, total))
 
@@ -294,7 +294,7 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
 
     trait_final_totals = {t: s[-1][1] for t, s in trait_series.items() if s}
     sorted_traits = sorted(trait_final_totals, key=trait_final_totals.get, reverse=True)
-    
+
     colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
     fig = go.Figure()
     for i, trait in enumerate(sorted_traits):
@@ -317,18 +317,22 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
     return fig
 
 def create_decision_tree_chart(result: Dict[str, Any]):
-    """Create an enhanced, ascending decision flow timeline with improved spacing."""
+    """Create an enhanced, ascending decision flow timeline with improved spacing and step labels."""
     trace = result.get("trace", [])
     decisions = [entry for entry in trace if not entry.get("end")]
+
+    # Ensure decisions are sorted by step number to guarantee chronological order.
+    decisions.sort(key=lambda d: d.get('step', 0))
+
     if not decisions:
         fig = go.Figure()
         fig.add_annotation(text="No decision data available to build flow chart.", xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False)
         return fig
 
     TRAIT_COLORS = {
-        'Control': '#3B82F6', 'Fear': '#F59E0B', 'Deception': '#10B981', 'Hubris': '#EF4444', 
-        'Envy': '#8B5CF6', 'Avarice': '#EC4899', 'Rigidity': '#64748B', 'Cynicism': '#A1A1AA', 
-        'Wrath': '#DC2626', 'Apathy & Sloth': '#78716C', 'Impulsivity': '#F97316', 
+        'Control': '#3B82F6', 'Fear': '#F59E0B', 'Deception': '#10B981', 'Hubris': '#EF4444',
+        'Envy': '#8B5CF6', 'Avarice': '#EC4899', 'Rigidity': '#64748B', 'Cynicism': '#A1A1AA',
+        'Wrath': '#DC2626', 'Apathy & Sloth': '#78716C', 'Impulsivity': '#F97316',
         'Pessimism & Cynicism': '#A1A1AA', 'Moodiness & Indirectness': '#D946EF', 'default': '#94A3B8'
     }
 
@@ -336,40 +340,73 @@ def create_decision_tree_chart(result: Dict[str, Any]):
     num_steps = len(decisions)
 
     # Add connecting timeline
-    fig.add_trace(go.Scatter(x=[0] * num_steps, y=[-i for i in range(num_steps)], mode='lines', line=dict(color='rgba(255,255,255,0.2)', width=1.5), hoverinfo='none'))
+    fig.add_trace(go.Scatter(
+        x=[0] * num_steps, y=[-i for i in range(num_steps)],
+        mode='lines', line=dict(color='rgba(148, 163, 184, 0.3)', width=1.5),
+        hoverinfo='none'
+    ))
 
     for i, d in enumerate(decisions):
-        y_pos = -i  # Plot from top to bottom
+        y_pos = -i  # Plot from top (y=0) to bottom
         primary_trait = d.get('primary', 'None')
         color = TRAIT_COLORS.get(primary_trait, TRAIT_COLORS['default'])
 
-        fig.add_trace(go.Scatter(x=[0], y=[y_pos], mode='markers', marker=dict(size=14, color=color, line=dict(width=2, color=TRAIT_COLORS['default'])), hoverinfo='none', showlegend=False))
-
-        # Scene (Left)
-        fig.add_annotation(x=-0.1, y=y_pos, text=f"<b>{d['scene_id']}</b>", xref="x", yref="y", showarrow=False, align="right", xanchor="right", font=dict(color="#CBD5E1", size=12))
-
-        # Choice Text (Right, Main)
-        fig.add_annotation(x=0.1, y=y_pos + 0.2, text=f"{d['text']}", xref="x", yref="y", showarrow=False, align="left", xanchor="left", font=dict(color="#F1F5F9", size=13))
+        fig.add_trace(go.Scatter(
+            x=[0], y=[y_pos], mode='markers',
+            marker=dict(size=14, color=color, line=dict(width=2, color='rgba(255, 255, 255, 0.2)')),
+            hoverinfo='none', showlegend=False
+        ))
         
-        # Trait Impact (Right, Sub)
+        # ADDED: Step Number Label
+        fig.add_annotation(
+            x=-1.2, y=y_pos, text=f"<b>#{d.get('step', i+1)}</b>",
+            xref="x", yref="y", showarrow=False, align="right", xanchor="right",
+            font=dict(color="#94A3B8", size=12)
+        )
+        
+        # Scene (Left of timeline)
+        fig.add_annotation(
+            x=-0.1, y=y_pos, text=f"<b>{d['scene_id']}</b>",
+            xref="x", yref="y", showarrow=False, align="right", xanchor="right",
+            font=dict(color="#CBD5E1", size=12)
+        )
+
+        # Choice Text (Right of timeline, top part)
+        fig.add_annotation(
+            x=0.1, y=y_pos + 0.2, text=d['text'],
+            xref="x", yref="y", showarrow=False, align="left", xanchor="left",
+            font=dict(color="#F1F5F9", size=13)
+        )
+
+        # Trait Impact (Right of timeline, bottom part)
         delta_val = d.get('delta', {}).get(primary_trait, 0.0)
         impact_text = f"<b>{delta_val:+.1f} {primary_trait}</b>" if delta_val != 0 else "<i>No trait change</i>"
-        fig.add_annotation(x=0.1, y=y_pos - 0.25, text=impact_text, xref="x", yref="y", showarrow=False, align="left", xanchor="left", font=dict(color=color, size=12))
+        fig.add_annotation(
+            x=0.1, y=y_pos - 0.25, text=impact_text,
+            xref="x", yref="y", showarrow=False, align="left", xanchor="left",
+            font=dict(color=color, size=12)
+        )
 
-        # Top 3 Traits (Far Right)
+        # Top 3 Traits Box (Far Right)
         totals = d.get('totals', {})
         if totals:
             sorted_totals = sorted(totals.items(), key=lambda item: item[1], reverse=True)
             top3_text = "<br>".join([f"<span style='color:{TRAIT_COLORS.get(k, TRAIT_COLORS['default'])}'>●</span> {k}: {v:.1f}" for k, v in sorted_totals[:3]])
-            fig.add_annotation(x=1.3, y=y_pos, text=top3_text, xref="x", yref="y", showarrow=False, align="right", xanchor="right", font=dict(color="#94A3B8", size=11), bordercolor="rgba(148,163,184,0.2)", borderwidth=1, borderpad=4, bgcolor="rgba(30,41,59,0.6)")
+            fig.add_annotation(
+                x=1.3, y=y_pos, text=top3_text,
+                xref="x", yref="y", showarrow=False, align="right", xanchor="right",
+                font=dict(color="#94A3B8", size=11),
+                bordercolor="rgba(148, 163, 184, 0.2)", borderwidth=1, borderpad=6,
+                bgcolor="rgba(30, 41, 59, 0.6)"
+            )
 
     fig.update_layout(
-        title=dict(text="<b>Decision Flow & Trait Impact</b>", font=dict(size=20, color='#F1F5F9'), x=0.5, xanchor='center'),
+        title=dict(text="<b>Decision Flow & Trait Impact</b>", font=dict(size=20, color='#F1F5F9'), x=0.5),
         showlegend=False, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
         xaxis=dict(visible=False, range=[-1.4, 1.4]),
-        yaxis=dict(visible=False, range=[-num_steps, 1]),
+        yaxis=dict(visible=False, range=[-num_steps + 0.5, 0.5]), # Padding
         margin=dict(l=20, r=20, t=80, b=20),
-        height=max(600, num_steps * 80) # Increased height per step
+        height=max(600, num_steps * 100)  # INCREASED: More vertical space per step
     )
     return fig
 
@@ -403,10 +440,10 @@ def update_policy_selection(n_clicks):
     if not any(n_clicks): raise PreventUpdate
     ctx = callback_context
     if not ctx.triggered: raise PreventUpdate
-    
+
     clicked_policy_id = ctx.triggered[0]["prop_id"].split(".")[0]
     policy_name = json.loads(clicked_policy_id)["index"]
-    
+
     new_cards = [create_policy_card(name, info, name == policy_name) for name, info in POLICIES.items()]
     return policy_name, new_cards
 
@@ -415,37 +452,40 @@ def update_policy_selection(n_clicks):
     [Output("main-chart", "figure"), Output("status-banner", "children"), Output("status-banner", "className"),
      Output("simulation-data", "data"), Output("results-summary", "children"), Output("quick-stats", "children")],
     Input("run-btn", "n_clicks"),
-    [State("selected-policy", "data"), State("seed-input", "value"), State("simulation-history", "data")],
+    [State("selected-policy", "data"), State("seed-input", "value"), State("simulation-history", "data"), State("chart-tabs", "value")],
     prevent_initial_call=True,
 )
-def run_simulation(n_clicks, policy_name, seed_value, history):
+def run_simulation(n_clicks, policy_name, seed_value, history, active_tab):
     if not n_clicks: raise PreventUpdate
-    
+
     try:
         if not policy_name or policy_name not in POLICIES: raise ValueError(f"Invalid policy: {policy_name}")
         policy_cls = POLICIES[policy_name]["class"]
         seed = seed_value if seed_value is not None else random.randint(0, 1_000_000)
-        
+
         result = runner.run(policy_cls(), seed=seed)
         saved_data = _save_run(result, policy_name)
         history = (history or []) + [saved_data]
-        
-        # Determine chart to display based on current tab (or default to progression)
-        line_fig = create_enhanced_line_chart(result)
-        
+
+        # Display the correct chart based on the currently active tab
+        if active_tab == 'progression': fig = create_enhanced_line_chart(result)
+        elif active_tab == 'final': fig = create_enhanced_bar_chart(result)
+        elif active_tab == 'decisions': fig = create_decision_tree_chart(result)
+        else: fig = create_enhanced_line_chart(result) # Default case
+
         status_content = html.Div([html.Span("✅", className="status-icon"), html.Span(f"Simulation completed! Policy: {policy_name}", className="status-text"), html.Span(f"Seed: {seed}", className="status-detail")])
         status_class = "status-banner success-banner"
-        
+
         final_traits = result.get("final", {}).get("normalized", {})
         decisions_made = sum(1 for e in result["trace"] if not e.get("end"))
-        
+
         summary_cards = [
             create_metric_card("Decisions Made", decisions_made, "Total choices"),
             create_metric_card("Dominant Trait", max(final_traits, key=final_traits.get, default="N/A"), f"Score: {max(final_traits.values(), default=0):.1f}"),
             create_metric_card("Simulation Seed", seed, "For reproducibility"),
             create_metric_card("Final Traits", len(final_traits), "Measured attributes")
         ]
-        
+
         avg_decisions = sum(h["decisions_made"] for h in history) / len(history) if history else 0
         quick_stats = [
             create_metric_card("Simulations Run", len(history), "Total tests completed", "up"),
@@ -453,9 +493,9 @@ def run_simulation(n_clicks, policy_name, seed_value, history):
             create_metric_card("Success Rate", "100%", "Completion rate"),
             create_metric_card("Last Run", datetime.now().strftime("%H:%M:%S"), "Just now")
         ]
-        
-        return line_fig, status_content, status_class, result, summary_cards, quick_stats
-        
+
+        return fig, status_content, status_class, result, summary_cards, quick_stats
+
     except Exception as e:
         error_fig = get_initial_charts()[0]
         error_fig.add_annotation(text=f"Simulation Error: {str(e)}", xref="paper", yref="paper", x=0.5, y=0.5, font=dict(size=16, color='#EF4444'), showarrow=False)
@@ -472,12 +512,12 @@ def run_simulation(n_clicks, policy_name, seed_value, history):
 def update_chart_content(active_tab, simulation_data):
     if not simulation_data:
         return [dcc.Graph(id="main-chart", figure=get_initial_charts()[0], className="main-chart", config={'displayModeBar': False})]
-    
+
     if active_tab == "progression": fig = create_enhanced_line_chart(simulation_data)
     elif active_tab == "final": fig = create_enhanced_bar_chart(simulation_data)
     elif active_tab == "decisions": fig = create_decision_tree_chart(simulation_data)
     else: fig = get_initial_charts()[0]
-    
+
     return [dcc.Graph(id="main-chart", figure=fig, className="main-chart", config={'displayModeBar': False})]
 
 if __name__ == "__main__":
@@ -488,14 +528,14 @@ if __name__ == "__main__":
         time.sleep(2)
         print("\n🌐 Opening dashboard in your browser...")
         webbrowser.open('http://127.0.0.1:8050/')
-    
+
     browser_thread = threading.Thread(target=open_browser)
     browser_thread.daemon = True
     browser_thread.start()
-    
+
     print("🎯 Dashboard URL: http://127.0.0.1:8050/")
     print("="*60)
-    
+
     try:
         app.run(debug=True, use_reloader=False)
     except KeyboardInterrupt:
