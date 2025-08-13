@@ -246,9 +246,9 @@ body, html {
 
 /* Policy Selection */
 .policy-grid {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
     margin-bottom: var(--spacing-xl);
 }
 
@@ -256,14 +256,16 @@ body, html {
     background: var(--bg-secondary);
     border: 2px solid var(--border-subtle);
     border-radius: var(--radius-md);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     cursor: pointer;
     transition: all var(--transition-normal);
     position: relative;
     overflow: hidden;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    text-align: center;
+    min-height: 120px;
 }
 
 .policy-card::before {
@@ -292,35 +294,47 @@ body, html {
     flex: 1;
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .policy-icon {
-    font-size: 1.5rem;
-    margin-bottom: var(--spacing-sm);
-}
-
-.policy-name {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
+    font-size: 1.8rem;
     margin-bottom: var(--spacing-xs);
 }
 
+.policy-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.2;
+}
+
 .policy-description {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--text-accent);
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .policy-checkmark {
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: var(--primary);
     font-weight: 700;
     opacity: 0;
     transition: opacity var(--transition-normal);
-    position: relative;
-    z-index: 1;
+    position: absolute;
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    z-index: 2;
 }
 
 .policy-card[style*="border: 2px solid #3B82F6"] .policy-checkmark {
@@ -670,6 +684,135 @@ html {
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-medium);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-strong);
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+    .policy-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .policy-card {
+        min-height: 80px;
+        padding: var(--spacing-sm) var(--spacing-md);
+        flex-direction: row;
+        text-align: left;
+    }
+    
+    .policy-content {
+        align-items: flex-start;
+        text-align: left;
+        flex-direction: row;
+        gap: var(--spacing-sm);
+    }
+    
+    .policy-icon {
+        font-size: 1.25rem;
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+    
+    .policy-name {
+        font-size: 0.875rem;
+        margin-bottom: var(--spacing-xs);
+    }
+    
+    .policy-description {
+        font-size: 0.75rem;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+}
+
+@media (max-width: 1200px) {
+    .main-content {
+        grid-template-columns: 350px 1fr;
+        gap: var(--spacing-xl);
+    }
+}
+
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        padding: 0 var(--spacing-lg) var(--spacing-xl);
+    }
+    
+    .left-panel {
+        position: static;
+        order: 2;
+    }
+    
+    .right-panel {
+        order: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .policy-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .policy-card {
+        min-height: 100px;
+        padding: var(--spacing-lg);
+        flex-direction: row;
+        text-align: left;
+    }
+    
+    .policy-content {
+        align-items: flex-start;
+        text-align: left;
+        flex-direction: row;
+        gap: var(--spacing-md);
+    }
+    
+    .policy-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0;
+    }
+    
+    .policy-name {
+        font-size: 1rem;
+    }
+    
+    .policy-description {
+        font-size: 0.875rem;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: var(--spacing-lg);
+    }
+    
+    .header h1 {
+        font-size: 1.75rem;
+    }
+    
+    .main-content {
+        padding: 0 var(--spacing-md) var(--spacing-lg);
+    }
+    
+    .control-panel {
+        padding: var(--spacing-lg);
+    }
 }
 
 ::-webkit-scrollbar-track {

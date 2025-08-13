@@ -29,7 +29,10 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT / "src"))
 
 from testing import runner
-from testing.policies import random_policy, hubris_forward, control_fear
+from testing.policies import (
+    random_policy, hubris_forward, control_fear, 
+    deception_avarice, reckless_chaotic, balanced_human
+)
 
 DATA_DIR = ROOT / "data" / "test_results"
 
@@ -48,6 +51,21 @@ POLICIES = {
         "class": control_fear.ControlFearPolicy,
         "description": "Cautious approach emphasizing control",
         "icon": "🛡️"
+    },
+    "Deception & Avarice": {
+        "class": deception_avarice.DeceptionAvaricePolicy,
+        "description": "Seeks profit and advantage through cunning",
+        "icon": "🐍"
+    },
+    "Reckless Chaotic": {
+        "class": reckless_chaotic.RecklessChaoticPolicy,
+        "description": "Impulsive, high variance decision maker",
+        "icon": "🌪️"
+    },
+    "Balanced Human": {
+        "class": balanced_human.BalancedHumanPolicy,
+        "description": "Moderate choices with occasional inconsistencies",
+        "icon": "⚖️"
     },
 }
 
