@@ -540,3 +540,18 @@ Data Integrity: JSON results saved to /data/test_results/ remain intact; reloadi
 
 Documentation: /docs/dashboard.md explains how to install dependencies, run the dashboard, and interpret the UI.
 
+
+Sprint 15 — Calibrator & Optimization
+Goal: Implement bounded, auditable calibration and output a signed "best" config.
+
+Deliverables:
+- src/calibrator/config_schema.json – schema for policy multipliers and master guards.
+- src/calibrator/calibrator.py – applies multipliers (0.8–2.0), anti-streak dampening, decay, scene caps, and ε-nudge.
+- src/calibrator/optimizer.py – search with composite objective (balance↑ + policy deviation↓ + intent lock).
+- configs/calibrator_v1.json – baseline knobs.
+- snapshots/calibration_YYYYMMDD.json – winning config + KPIs + hash.
+- tests/test_calibrator_bounds.py, tests/test_optimizer_objective.py.
+- CLI: python -m src.calibrator.optimizer --in data/derived/runs_agg.csv --config configs/calibrator_v1.json --out snapshots/calibration_YYYYMMDD.json
+
+Definition of Done
+Composite score ≥ +15% vs baseline; major-streak <20%; tie margin >0.05; no single trait >35% (aggregate); snapshot written; tests pass.

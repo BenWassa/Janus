@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "multipliers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0.8,
+        "maximum": 2.0
+      }
+    },
+    "anti_streak": {"type": "number", "minimum": 0.0, "maximum": 0.15},
+    "decay": {"type": "number", "minimum": 0.0, "maximum": 0.03},
+    "scene_cap": {"type": "number", "minimum": 0.0, "maximum": 0.5},
+    "act_cap": {"type": "number", "minimum": 0.0, "maximum": 1.5},
+    "epsilon": {"type": "number", "minimum": 0.0, "maximum": 0.03}
+  },
+  "required": ["multipliers", "anti_streak", "decay", "scene_cap", "act_cap", "epsilon"]
+}
