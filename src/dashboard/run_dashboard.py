@@ -412,16 +412,6 @@ def create_decision_tree_chart(result: Dict[str, Any]):
     )
     return fig
 
-    fig.update_layout(
-        title=dict(text="<b>Decision Flow & Trait Impact</b>", font=dict(size=20, color='#F1F5F9'), x=0.5),
-        showlegend=False, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-        xaxis=dict(visible=False, range=[-1.4, 1.4]),
-        yaxis=dict(visible=False, range=[-num_steps + 0.5, 0.5]), # Padding
-        margin=dict(l=20, r=20, t=80, b=20),
-        height=max(600, num_steps * 100)  # INCREASED: More vertical space per step
-    )
-    return fig
-
 def create_enhanced_bar_chart(result: Dict[str, Any]):
     """Create an enhanced bar chart for final scores."""
     final = result.get("final", {}).get("normalized", {})
