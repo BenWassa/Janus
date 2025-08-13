@@ -288,69 +288,66 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
     # Build trait time series
     trait_series = {}
     for entry in result["trace"]:
-        # Build trait time series
-        trait_series = {}
-        for entry in result["trace"]:
-            if entry.get("end"):
-                continue
-            step = entry["step"]
-            for trait, total in entry["totals"].items():
-                trait_series.setdefault(trait, []).append((step, total))
+        if entry.get("end"):
+            continue
+        step = entry["step"]
+        for trait, total in entry["totals"].items():
+            trait_series.setdefault(trait, []).append((step, total))
 
-        if not trait_series:
-            return get_initial_charts()[0]
+    if not trait_series:
+        return get_initial_charts()[0]
 
-        # Rank traits by their final value (last step)
-        trait_final_totals = {trait: series[-1][1] for trait, series in trait_series.items() if series}
-        sorted_traits = sorted(trait_final_totals, key=trait_final_totals.get, reverse=True)
+    # Rank traits by their final value (last step)
+    trait_final_totals = {trait: series[-1][1] for trait, series in trait_series.items() if series}
+    sorted_traits = sorted(trait_final_totals, key=trait_final_totals.get, reverse=True)
 
-        # Custom color palette
-        colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
+    # Custom color palette
+    colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
 
-        fig = go.Figure()
-        for i, trait in enumerate(sorted_traits):
-            series = trait_series[trait]
-            steps = [s for s, _ in series]
-            totals = [t for _, t in series]
-            fig.add_trace(go.Scatter(
-                x=steps,
-                y=totals,
-                mode='lines',
-                name=trait,
-                line=dict(color=colors[i % len(colors)], width=3)
-            ))
+    fig = go.Figure()
+    for i, trait in enumerate(sorted_traits):
+        series = trait_series[trait]
+        steps = [s for s, _ in series]
+        totals = [t for _, t in series]
+        fig.add_trace(go.Scatter(
+            x=steps,
+            y=totals,
+            mode='lines',
+            name=trait,
+            line=dict(color=colors[i % len(colors)], width=3)
+        ))
 
-        fig.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='#E2E8F0', family="Inter"),
-            title=dict(
-                text="Trait Evolution Over Time",
-                font=dict(size=20, color='#F1F5F9'),
-                x=0.5, xanchor='center'
-            ),
-            legend=dict(
-                bgcolor='rgba(30,41,59,0.8)',
-                bordercolor='rgba(255,255,255,0.1)',
-                borderwidth=1,
-                font=dict(color='#E2E8F0'),
-                traceorder='normal'
-            ),
-            hovermode='x unified',
-            margin=dict(l=60, r=60, t=80, b=60),
-            height=500
-        )
-        fig.update_xaxes(
-            gridcolor='rgba(255,255,255,0.1)',
-            title_font=dict(color='#CBD5E1'),
-            tickfont=dict(color='#94A3B8')
-        )
-        fig.update_yaxes(
-            gridcolor='rgba(255,255,255,0.1)',
-            title_font=dict(color='#CBD5E1'),
-            tickfont=dict(color='#94A3B8')
-        )
-        return fig
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#E2E8F0', family="Inter"),
+        title=dict(
+            text="Trait Evolution Over Time",
+            font=dict(size=20, color='#F1F5F9'),
+            x=0.5, xanchor='center'
+        ),
+        legend=dict(
+            bgcolor='rgba(30,41,59,0.8)',
+            bordercolor='rgba(255,255,255,0.1)',
+            borderwidth=1,
+            font=dict(color='#E2E8F0'),
+            traceorder='normal'
+        ),
+        hovermode='x unified',
+        margin=dict(l=60, r=60, t=80, b=60),
+        height=500
+    )
+    fig.update_xaxes(
+        gridcolor='rgba(255,255,255,0.1)',
+        title_font=dict(color='#CBD5E1'),
+        tickfont=dict(color='#94A3B8')
+    )
+    fig.update_yaxes(
+        gridcolor='rgba(255,255,255,0.1)',
+        title_font=dict(color='#CBD5E1'),
+        tickfont=dict(color='#94A3B8')
+    )
+    return fig
     fig.update_yaxes(
         gridcolor='rgba(255,255,255,0.1)',
         title_font=dict(color='#CBD5E1'),
