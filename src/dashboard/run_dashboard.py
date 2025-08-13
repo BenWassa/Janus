@@ -106,6 +106,7 @@ def get_initial_charts():
 
 def create_policy_card(policy_name, policy_info, is_selected=False):
     """Create a modern policy selection card."""
+    print(f"🎯 Creating policy card for: {policy_name}")  # Debug
     border_color = "#3B82F6" if is_selected else "rgba(255,255,255,0.1)"
     bg_color = "rgba(59,130,246,0.1)" if is_selected else "#1E293B"
     
@@ -177,7 +178,8 @@ app.layout = html.Div([
                 html.Div([
                     create_policy_card(name, info, name == "Seeded Random") 
                     for name, info in POLICIES.items()
-                ], className="policy-grid", id="policy-selection"),
+                ], className="policy-grid", id="policy-selection", 
+                   style={"border": "2px solid red", "padding": "10px"}),  # Debug styling
                 
                 # Advanced Settings
                 html.Div([
