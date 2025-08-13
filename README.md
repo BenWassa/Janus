@@ -50,8 +50,14 @@ Production deployment configuration, build processes, and release management too
 ### 📁 `/scripts/` - Launcher Scripts
 Convenient batch files for running the game in different modes. [See scripts README](scripts/README.md) for usage.
 
-### 📁 `/tools/` - Development Tools  
+### 📁 `/tools/` - Development Tools
 Testing harnesses and development utilities. [See tools README](tools/README.md) for available tools.
+
+### 📁 `/configs/` - Configuration Files
+JSON configuration snapshots and calibration settings.
+
+### 📁 `/reports/` - Project Reports
+Sprint summaries and analytics. [See reports README](reports/README.md) for contents.
 
 ### 📁 `/outputs/` - Generated Files
 Telemetry logs, test results, and other generated content. [See outputs README](outputs/README.md) for file types.
@@ -67,9 +73,10 @@ Telemetry logs, test results, and other generated content. [See outputs README](
 2. **Test the System**: Use `tools/test_harness.py` to validate psychological profiling accuracy.
 3. **Play the Prototype**: Try the v1 pilot in `/versions/v1-prototype/` to experience the core concept.
 4. **Explore the Code**: Review `/src/` modules to understand the architecture.
-5. **Read the Docs**: Check `/docs/` for comprehensive design and technical documentation.
-6. **Run Tests**: Execute test scripts in `/tests/` to verify system functionality.
-7. **Launch the Testing Dashboard**:
+5. **Review the Development Quick Start**: See `docs/development/quick_start.md`.
+6. **Read the Docs**: Check `/docs/` for comprehensive design and technical documentation.
+7. **Run Tests**: Execute test scripts in `/tests/` to verify system functionality.
+8. **Launch the Testing Dashboard**:
    ```bash
    python src/dashboard/run_dashboard.py
    ```

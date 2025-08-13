@@ -39,7 +39,9 @@ For quick access to key information:
 - **Save Format**: `technical/save_format.md`
 - **Latest Playtest**: `testing/sprint8_playtest_report.md`
 - **Development Status**: `development/commission_sprints.md`
- - **Testing Dashboard & Calibration Monitor**: `development/dashboard.md`
+- **Testing Dashboard & Calibration Monitor**: `development/dashboard.md`
+- **Development Quick Start**: `development/quick_start.md`
+- **Project Structure Overview**: `technical/project_structure.md`
 
 ## Writing Guidelines
 

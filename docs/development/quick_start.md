@@ -71,9 +71,9 @@
 
 ## Documentation
 
-- `PROJECT_STRUCTURE.md` - Detailed architecture overview
-- `CONTRIBUTING.md` - Development guidelines and ethics
-- `docs/` - Comprehensive documentation
+- [Project Structure](../technical/project_structure.md) - Detailed architecture overview
+- [CONTRIBUTING.md](../../CONTRIBUTING.md) - Development guidelines and ethics
+- [Docs Overview](../README.md) - Comprehensive documentation
 - Each module has its own README with specific guidance
 
 Ready to build something amazing! 🎮🧠
