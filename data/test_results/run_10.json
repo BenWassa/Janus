@@ -1,0 +1,1339 @@
+{
+  "timestamp": "2025-08-13T11:37:07.988002",
+  "policy": "Control & Fear",
+  "decisions_made": 37,
+  "trait_progression": [
+    {
+      "run_id": "run_55829",
+      "step": 1,
+      "scene_id": "mirror_pool",
+      "choice_id": "wait_silently",
+      "text": "Stand motionless until the water calms itself.",
+      "primary": "Rigidity",
+      "pw": 0.2,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {
+        "Rigidity": 0.2
+      },
+      "totals": {
+        "Hubris": 0.0,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 2,
+      "scene_id": "whisper_gallery",
+      "choice_id": "ignore_whispers",
+      "text": "Pass by without acknowledging the voices.",
+      "primary": "Cynicism",
+      "pw": 0.2,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {
+        "Cynicism": 0.2
+      },
+      "totals": {
+        "Hubris": 0.0,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 3,
+      "scene_id": "shattered_clock",
+      "choice_id": "fix_gears",
+      "text": "Realign the gears with painstaking care.",
+      "primary": "Control",
+      "pw": 0.2,
+      "secondary": "Rigidity",
+      "sw": 0.0,
+      "delta": {
+        "Control": 0.2
+      },
+      "totals": {
+        "Hubris": 0.0,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.2
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 4,
+      "scene_id": "twin_scholar",
+      "choice_id": "cede_floor",
+      "text": "Applaud politely and leave the hall.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.0,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.2
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 5,
+      "scene_id": "confessing_mirror",
+      "choice_id": "praise_reflection",
+      "text": "Offer a self-assured smile to the mirror.",
+      "primary": "Hubris",
+      "pw": 0.2,
+      "secondary": "Deception",
+      "sw": 0.0,
+      "delta": {
+        "Hubris": 0.2
+      },
+      "totals": {
+        "Hubris": 0.2,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.2
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 6,
+      "scene_id": "wandering_doppelganger",
+      "choice_id": "block_path",
+      "text": "Square your shoulders and block its path.",
+      "primary": "Hubris",
+      "pw": 0.2,
+      "secondary": "Control",
+      "sw": 0.0,
+      "delta": {
+        "Hubris": 0.2
+      },
+      "totals": {
+        "Hubris": 0.4,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.2
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 7,
+      "scene_id": "frozen_echo",
+      "choice_id": "overpower_echo",
+      "text": "Speak over the echo to assert your voice.",
+      "primary": "Control",
+      "pw": 0.2,
+      "secondary": "Hubris",
+      "sw": 0.0,
+      "delta": {
+        "Control": 0.2
+      },
+      "totals": {
+        "Hubris": 0.4,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.4
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 8,
+      "scene_id": "mask_market",
+      "choice_id": "remove_mask",
+      "text": "Remove your mask to speak sincerely.",
+      "primary": "Fear",
+      "pw": 0.5,
+      "secondary": "Hubris",
+      "sw": 0.0,
+      "delta": {
+        "Fear": 0.5
+      },
+      "totals": {
+        "Hubris": 0.4,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.4,
+        "Fear": 0.5
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 9,
+      "scene_id": "echo_parlor",
+      "choice_id": "hum_a_tune",
+      "text": "Hum a fragment of song and listen for an answer.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.4,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.4,
+        "Fear": 0.5
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 10,
+      "scene_id": "labyrinth_library",
+      "choice_id": "browse_and_leave",
+      "text": "Browse aimlessly then leave the maze unchanged.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.4,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.4,
+        "Fear": 0.5
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 11,
+      "scene_id": "phantom_mentor",
+      "choice_id": "decline_offer",
+      "text": "Decline, fearing who you might become without it.",
+      "primary": "Fear",
+      "pw": 0.2,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {
+        "Fear": 0.2
+      },
+      "totals": {
+        "Hubris": 0.4,
+        "Avarice": 0.0,
+        "Deception": 0.0,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.4,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 12,
+      "scene_id": "riddle_pond",
+      "choice_id": "answer_riddle",
+      "text": "Answer with a clever twist that feels like a lie.",
+      "primary": "Deception",
+      "pw": 0.5,
+      "secondary": "Hubris",
+      "sw": 0.2,
+      "delta": {
+        "Deception": 0.5,
+        "Hubris": 0.2
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.4,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 13,
+      "scene_id": "wounded_boar",
+      "choice_id": "bind_wound",
+      "text": "Kneel and bind its wound despite the gore.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.2,
+        "Cynicism": 0.2,
+        "Control": 0.4,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 14,
+      "scene_id": "caged_lion",
+      "choice_id": "tighten_bars",
+      "text": "Wedge new bolts with deliberate calm.",
+      "primary": "Control",
+      "pw": 0.2,
+      "secondary": "Rigidity",
+      "sw": 0.1,
+      "delta": {
+        "Control": 0.2,
+        "Rigidity": 0.1
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.30000000000000004,
+        "Cynicism": 0.2,
+        "Control": 0.6000000000000001,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 15,
+      "scene_id": "trembling_hare",
+      "choice_id": "shelter_hare",
+      "text": "Cup your cloak around it and carry it to safety.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.30000000000000004,
+        "Cynicism": 0.2,
+        "Control": 0.6000000000000001,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 16,
+      "scene_id": "shadow_wolves",
+      "choice_id": "stand_down",
+      "text": "Lower your gaze and let them pass through.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.30000000000000004,
+        "Cynicism": 0.2,
+        "Control": 0.6000000000000001,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 17,
+      "scene_id": "coiled_serpent",
+      "choice_id": "leave_offering",
+      "text": "Leave a token meal and back away slowly.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.30000000000000004,
+        "Cynicism": 0.2,
+        "Control": 0.6000000000000001,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 18,
+      "scene_id": "rampaging_bull",
+      "choice_id": "grab_horns",
+      "text": "Seize its horns and wrestle it to the ground.",
+      "primary": "Control",
+      "pw": 0.2,
+      "secondary": "Hubris",
+      "sw": 0.0,
+      "delta": {
+        "Control": 0.2
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.0,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.30000000000000004,
+        "Cynicism": 0.2,
+        "Control": 0.8,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 19,
+      "scene_id": "jealous_raven",
+      "choice_id": "snatch_treasure",
+      "text": "Grab the brightest jewel while the bird preens.",
+      "primary": "Envy",
+      "pw": 0.8,
+      "secondary": "Avarice",
+      "sw": 0.0,
+      "delta": {
+        "Envy": 0.8
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.30000000000000004,
+        "Cynicism": 0.2,
+        "Control": 0.8,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 20,
+      "scene_id": "sleeping_dragon",
+      "choice_id": "tiptoe_past",
+      "text": "Ease past on silent feet, disturbing nothing.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.30000000000000004,
+        "Cynicism": 0.2,
+        "Control": 0.8,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 21,
+      "scene_id": "verdict_pit",
+      "choice_id": "grant_mercy",
+      "text": "Raise a hand and spare it despite the jeers.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.30000000000000004,
+        "Cynicism": 0.2,
+        "Control": 0.8,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 22,
+      "scene_id": "feeding_pit",
+      "choice_id": "ration_food",
+      "text": "Measure out portions and make them wait.",
+      "primary": "Control",
+      "pw": 0.4,
+      "secondary": "Rigidity",
+      "sw": 0.1,
+      "delta": {
+        "Control": 0.4,
+        "Rigidity": 0.1
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.4,
+        "Cynicism": 0.2,
+        "Control": 1.2000000000000002,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 23,
+      "scene_id": "blood_vow",
+      "choice_id": "seal_oath",
+      "text": "Prick your finger and seal the pact.",
+      "primary": "Control",
+      "pw": 0.2,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {
+        "Control": 0.2
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.4,
+        "Cynicism": 0.2,
+        "Control": 1.4000000000000001,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 24,
+      "scene_id": "mirror_chimera",
+      "choice_id": "reach_out",
+      "text": "Touch the glassy mane and watch the image soften.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.4,
+        "Cynicism": 0.2,
+        "Control": 1.4000000000000001,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 25,
+      "scene_id": "sealed_letter",
+      "choice_id": "deliver_unopened",
+      "text": "Deliver it to the intended door without a glance.",
+      "primary": "Rigidity",
+      "pw": 0.2,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {
+        "Rigidity": 0.2
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.2,
+        "Control": 1.4000000000000001,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 26,
+      "scene_id": "siren_fruit",
+      "choice_id": "walk_past",
+      "text": "Resist and walk past as the scent fades behind you.",
+      "primary": "Control",
+      "pw": 0.2,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {
+        "Control": 0.2
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.2,
+        "Control": 1.6,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 27,
+      "scene_id": "oathbound_statue",
+      "choice_id": "scratch_name",
+      "text": "Carve nonsense letters and laugh at the echo.",
+      "primary": "Cynicism",
+      "pw": 0.2,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {
+        "Cynicism": 0.2
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.6,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 28,
+      "scene_id": "curtain_conclave",
+      "choice_id": "announce_self",
+      "text": "Draw the curtain aside and greet them plainly.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.6,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 29,
+      "scene_id": "storm_door",
+      "choice_id": "walk_away",
+      "text": "Let the storm howl without you.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.6,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 30,
+      "scene_id": "luring_key",
+      "choice_id": "leave_key",
+      "text": "Let it sway and continue down the hall.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 0.8,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.6,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 31,
+      "scene_id": "envy_shrine",
+      "choice_id": "deface_names",
+      "text": "Scratch your own name over theirs.",
+      "primary": "Envy",
+      "pw": 0.8,
+      "secondary": "Hubris",
+      "sw": 0.0,
+      "delta": {
+        "Envy": 0.8
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 1.6,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.6,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 32,
+      "scene_id": "tattered_standard",
+      "choice_id": "raise_banner",
+      "text": "Lift it high and promise to keep it aloft.",
+      "primary": "Control",
+      "pw": 0.2,
+      "secondary": "Hubris",
+      "sw": 0.0,
+      "delta": {
+        "Control": 0.2
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 1.6,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.8,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 33,
+      "scene_id": "clandestine_feast",
+      "choice_id": "watch_from_door",
+      "text": "Remain in the doorway until the feast grows cold.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 1.6,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.8,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 34,
+      "scene_id": "whistling_chasm",
+      "choice_id": "listen_wind",
+      "text": "Lean close and listen until the wind stills.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 1.6,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.8,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 35,
+      "scene_id": "whisper_court",
+      "choice_id": "listen_only",
+      "text": "Hear every argument and offer none of your own.",
+      "primary": "Apathy",
+      "pw": 0.0,
+      "secondary": null,
+      "sw": 0.0,
+      "delta": {},
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.5,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 1.6,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.8,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 36,
+      "scene_id": "tempting_contract",
+      "choice_id": "sign_name",
+      "text": "Sign quickly before doubt returns.",
+      "primary": "Deception",
+      "pw": 0.2,
+      "secondary": "Avarice",
+      "sw": 0.0,
+      "delta": {
+        "Deception": 0.2
+      },
+      "totals": {
+        "Hubris": 0.6000000000000001,
+        "Avarice": 0.0,
+        "Deception": 0.7,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 1.6,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.8,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "step": 37,
+      "scene_id": "echoing_well",
+      "choice_id": "lie_to_well",
+      "text": "Tell it a secret you know is false and listen to the echo.",
+      "primary": "Deception",
+      "pw": 0.5,
+      "secondary": "Hubris",
+      "sw": 0.2,
+      "delta": {
+        "Deception": 0.5,
+        "Hubris": 0.2
+      },
+      "totals": {
+        "Hubris": 0.8,
+        "Avarice": 0.0,
+        "Deception": 1.2,
+        "Control & Perfectionism": 0.0,
+        "Wrath": 0.0,
+        "Fear & Insecurity": 0.0,
+        "Impulsivity": 0.0,
+        "Envy": 1.6,
+        "Apathy & Sloth": 0.0,
+        "Pessimism & Cynicism": 0.0,
+        "Moodiness & Indirectness": 0.0,
+        "Rigidity": 0.6000000000000001,
+        "Cynicism": 0.4,
+        "Control": 1.8,
+        "Fear": 0.7
+      },
+      "flags": [
+        "scene_cap_ok",
+        "major_spacing_ok"
+      ],
+      "end": false
+    },
+    {
+      "run_id": "run_55829",
+      "end": true,
+      "normalized": {
+        "Hubris": 11,
+        "Deception": 16,
+        "Envy": 22,
+        "Rigidity": 8,
+        "Cynicism": 5,
+        "Control": 25,
+        "Fear": 9
+      },
+      "top3": [
+        "Control",
+        "Envy",
+        "Deception"
+      ],
+      "ending_id": null,
+      "payoffs": {}
+    }
+  ],
+  "final_traits": {
+    "Hubris": 11,
+    "Deception": 16,
+    "Envy": 22,
+    "Rigidity": 8,
+    "Cynicism": 5,
+    "Control": 25,
+    "Fear": 9
+  },
+  "final_reveal": [
+    "Control",
+    "Envy",
+    "Deception"
+  ],
+  "metadata": {
+    "total_steps": 38,
+    "completion_status": "success"
+  }
+}

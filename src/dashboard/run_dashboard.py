@@ -300,6 +300,9 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
     # Rank traits by their final value (last step)
     trait_final_totals = {trait: series[-1][1] for trait, series in trait_series.items() if series}
     sorted_traits = sorted(trait_final_totals, key=trait_final_totals.get, reverse=True)
+    
+    # Debug: Print trait ranking
+    print(f"🔍 Trait ranking (final values): {[(trait, trait_final_totals[trait]) for trait in sorted_traits[:5]]}")
 
     # Custom color palette
     colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
@@ -353,6 +356,110 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
         title_font=dict(color='#CBD5E1'),
         tickfont=dict(color='#94A3B8')
     )
+    return fig
+
+def create_decision_tree_chart(result: Dict[str, Any]):
+    """Create a decision tree visualization showing choices made during simulation."""
+    decisions = []
+    for entry in result["trace"]:
+        if entry.get("end"):
+            continue
+        # Check if this entry has decision data (step, choice_id, text)
+        if "choice_id" in entry and "text" in entry:
+            decisions.append({
+                "step": entry["step"],
+                "choice": entry["choice_id"],
+                "description": entry["text"],
+                "scene": entry.get("scene_id", "Unknown"),
+                "primary": entry.get("primary", "Unknown")
+            })
+    
+    if not decisions:
+        # Return empty chart with message
+        fig = go.Figure()
+        fig.add_annotation(
+            text="No decision data available",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, xanchor='center', yanchor='middle',
+            font=dict(size=16, color='#64748B'),
+            showarrow=False
+        )
+        fig.update_layout(
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            height=500,
+            title="Decision Tree"
+        )
+        return fig
+    
+    # Create decision flow visualization
+    fig = go.Figure()
+    
+    # Add decision points as scatter plot
+    steps = [d["step"] for d in decisions]
+    choices = [d["choice"] for d in decisions]
+    descriptions = [d["description"][:50] + "..." if len(d["description"]) > 50 else d["description"] for d in decisions]
+    
+    # Color by decision type or use alternating colors
+    colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']
+    node_colors = [colors[i % len(colors)] for i in range(len(decisions))]
+    
+    fig.add_trace(go.Scatter(
+        x=steps,
+        y=[1] * len(steps),  # All on same horizontal line
+        mode='markers+text',
+        marker=dict(
+            size=20,
+            color=node_colors,
+            line=dict(color='white', width=2)
+        ),
+        text=choices,
+        textposition='top center',
+        textfont=dict(size=10, color='#E2E8F0'),
+        hovertemplate='<b>Step %{x}</b><br>' +
+                     'Choice: %{text}<br>' +
+                     'Description: %{customdata}<br>' +
+                     '<extra></extra>',
+        customdata=descriptions,
+        name='Decisions'
+    ))
+    
+    # Add connecting lines between decisions
+    for i in range(len(steps) - 1):
+        fig.add_trace(go.Scatter(
+            x=[steps[i], steps[i+1]],
+            y=[1, 1],
+            mode='lines',
+            line=dict(color='rgba(255,255,255,0.3)', width=2),
+            showlegend=False,
+            hoverinfo='skip'
+        ))
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='#E2E8F0', family="Inter"),
+        title=dict(
+            text="Decision Tree - Choice Progression",
+            font=dict(size=20, color='#F1F5F9'),
+            x=0.5, xanchor='center'
+        ),
+        xaxis=dict(
+            title="Step",
+            gridcolor='rgba(255,255,255,0.1)',
+            title_font=dict(color='#CBD5E1'),
+            tickfont=dict(color='#94A3B8')
+        ),
+        yaxis=dict(
+            showticklabels=False,
+            showgrid=False,
+            range=[0.5, 1.5]
+        ),
+        margin=dict(l=60, r=60, t=80, b=60),
+        height=500,
+        showlegend=False
+    )
+    
     return fig
 
 def create_enhanced_bar_chart(result: Dict[str, Any]):
@@ -544,15 +651,7 @@ def update_chart_content(active_tab, simulation_data):
     elif active_tab == "final":
         fig = create_enhanced_bar_chart(simulation_data)
     else:  # decisions
-        # Placeholder for decision tree visualization
-        fig = get_initial_charts()[0]
-        fig.add_annotation(
-            text="Decision Tree Visualization Coming Soon",
-            xref="paper", yref="paper",
-            x=0.5, y=0.5, xanchor='center', yanchor='middle',
-            font=dict(size=16, color='#64748B'),
-            showarrow=False
-        )
+        fig = create_decision_tree_chart(simulation_data)
     
     return [dcc.Graph(id="main-chart", figure=fig, 
                      className="main-chart", config={'displayModeBar': False})]
