@@ -1,0 +1,11 @@
+{
+  "multipliers": {
+    "courage": 1.0,
+    "wisdom": 1.0
+  },
+  "anti_streak": 0.15,
+  "decay": 0.03,
+  "scene_cap": 0.5,
+  "act_cap": 1.5,
+  "epsilon": 0.03
+}

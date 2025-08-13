@@ -51,37 +51,6 @@ All runs load; zero non-canonical traits; runs_agg.csv count ≥ sum of decision
 
 
 
-Sprint 15 — Calibrator & Optimization
-Purpose
-Implement bounded, auditable calibration and output a signed “best” config.
-
-Scope & Deliverables
-
-Code
-
-src/calibrator/config_schema.json – schema for policy multipliers and master guards.
-
-src/calibrator/calibrator.py – applies: multipliers (0.8–2.0), anti-streak (~15% dampen next 2 same-trait decisions after double-major), decay (λ≤0.03 per-step or 0.95 per-act), scene caps (0.5 per scene; 1.5 per act, tapered), ε-nudge (0–0.03 near-ties only).
-
-src/calibrator/optimizer.py – grid/Bayesian search with composite objective: balance↑ + policy deviation↓ + intent lock (each policy’s signature trait remains Top-2).
-
-Configs & Artifacts
-
-configs/calibrator_v1.json – baseline knobs.
-
-snapshots/calibration_YYYYMMDD.json – winning config + KPIs + hash.
-
-Tests
-
-tests/test_calibrator_bounds.py, tests/test_optimizer_objective.py.
-
-CLI
-
-python -m src.calibrator.optimizer --in data/derived/runs_agg.csv --config configs/calibrator_v1.json --out snapshots/calibration_YYYYMMDD.json
-
-Definition of Done
-
-Composite score ≥ +15% vs baseline; major-streak <20%; tie margin >0.05; no single trait >35% (aggregate); snapshot written; tests pass.
 
 
 
