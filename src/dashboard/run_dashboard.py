@@ -316,7 +316,111 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
     )
     return fig
 
+import textwrap # Make sure to have this import at the top of your file
 
+def create_decision_tree_chart(result: Dict[str, Any]):
+    """
+    Create an enhanced, ascending decision flow timeline with automatic text wrapping
+    to prevent horizontal collision.
+    """
+    trace = result.get("trace", [])
+    decisions = [entry for entry in trace if not entry.get("end")]
+    decisions.sort(key=lambda d: d.get('step', 0))
+
+    if not decisions:
+        fig = go.Figure()
+        fig.add_annotation(text="No decision data available.", xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False)
+        return fig
+
+    TRAIT_COLORS = {
+        'Control': '#3B82F6', 'Fear': '#F59E0B', 'Deception': '#10B981', 'Hubris': '#EF4444',
+        'Envy': '#8B5CF6', 'Avarice': '#EC4899', 'Rigidity': '#64748B', 'Cynicism': '#A1A1AA',
+        'Wrath': '#DC2626', 'Apathy & Sloth': '#78716C', 'Impulsivity': '#F97316',
+        'Pessimism & Cynicism': '#A1A1AA', 'Moodiness & Indirectness': '#D946EF', 'default': '#94A3B8'
+    }
+    
+    # --- KEY FIX: Helper function to wrap long text for HTML display ---
+    def wrap_text(text, width=45):
+        """Wraps text to a specified width and joins with <br> for HTML."""
+        return '<br>'.join(textwrap.wrap(text, width=width))
+    # ----------------------------------------------------------------
+
+    fig = go.Figure()
+    num_steps = len(decisions)
+    spacing_multiplier = 1.5
+    y_positions = [-i * spacing_multiplier for i in range(num_steps)]
+
+    fig.add_trace(go.Scatter(
+        x=[0] * num_steps, y=y_positions,
+        mode='lines', line=dict(color='rgba(148, 163, 184, 0.3)', width=1.5), hoverinfo='none'
+    ))
+
+    for i, d in enumerate(decisions):
+        y_pos = y_positions[i]
+        primary_trait = d.get('primary', 'None')
+        color = TRAIT_COLORS.get(primary_trait, TRAIT_COLORS['default'])
+
+        fig.add_trace(go.Scatter(
+            x=[0], y=[y_pos], mode='markers',
+            marker=dict(size=14, color=color, line=dict(width=2, color='rgba(255, 255, 255, 0.2)')),
+            hoverinfo='none', showlegend=False
+        ))
+        
+        fig.add_annotation(
+            x=-1.2, y=y_pos, text=f"<b>#{d.get('step', i+1)}</b>",
+            xref="x", yref="y", showarrow=False, align="right", xanchor="right", font=dict(color="#94A3B8", size=12)
+        )
+        
+        fig.add_annotation(
+            x=-0.1, y=y_pos, text=f"<b>{d['scene_id']}</b>",
+            xref="x", yref="y", showarrow=False, align="right", xanchor="right", font=dict(color="#CBD5E1", size=12)
+        )
+
+        # --- USE THE WRAPPED TEXT ---
+        choice_text_wrapped = wrap_text(d['text'])
+        fig.add_annotation(
+            x=0.1, y=y_pos + 0.2, text=choice_text_wrapped,
+            xref="x", yref="y", showarrow=False, align="left", xanchor="left", font=dict(color="#F1F5F9", size=13)
+        )
+        # ---------------------------
+
+        delta_val = d.get('delta', {}).get(primary_trait, 0.0)
+        impact_text = f"<b>{delta_val:+.1f} {primary_trait}</b>" if delta_val != 0 else "<i>No trait change</i>"
+        fig.add_annotation(
+            x=0.1, y=y_pos - 0.25, text=impact_text,
+            xref="x", yref="y", showarrow=False, align="left", xanchor="left", font=dict(color=color, size=12)
+        )
+
+        totals = d.get('totals', {})
+        if totals:
+            sorted_totals = sorted(totals.items(), key=lambda item: item[1], reverse=True)[:3]
+            top3_text = "<br>".join([f"<span style='color:{TRAIT_COLORS.get(k, TRAIT_COLORS['default'])}'>●</span> {k}: {v:.1f}" for k, v in sorted_totals])
+            fig.add_annotation(
+                x=1.5, y=y_pos, text=top3_text, # Pushed further right for more space
+                xref="x", yref="y", showarrow=False, align="right", xanchor="right",
+                font=dict(color="#94A3B8", size=11),
+                bordercolor="rgba(148, 163, 184, 0.2)", borderwidth=1, borderpad=6, bgcolor="rgba(30, 41, 59, 0.6)"
+            )
+
+    fig.update_layout(
+        title=dict(text="<b>Decision Flow & Trait Impact</b>", font=dict(size=20, color='#F1F5F9'), x=0.5),
+        showlegend=False, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(visible=False, range=[-1.4, 1.7]), # Expanded range to fit the moved box
+        yaxis=dict(visible=False, range=[y_positions[-1] - spacing_multiplier, y_positions[0] + spacing_multiplier]),
+        margin=dict(l=40, r=40, t=80, b=20),
+        height=max(600, num_steps * 100)
+    )
+    return fig
+
+    fig.update_layout(
+        title=dict(text="<b>Decision Flow & Trait Impact</b>", font=dict(size=20, color='#F1F5F9'), x=0.5),
+        showlegend=False, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(visible=False, range=[-1.4, 1.4]),
+        yaxis=dict(visible=False, range=[-num_steps + 0.5, 0.5]), # Padding
+        margin=dict(l=20, r=20, t=80, b=20),
+        height=max(600, num_steps * 100)  # INCREASED: More vertical space per step
+    )
+    return fig
 
 def create_enhanced_bar_chart(result: Dict[str, Any]):
     """Create an enhanced bar chart for final scores."""
