@@ -669,3 +669,53 @@ Definition of Done
 * Endings are recognizably tied to player decisions.
 * At least 3 distinct archetypes possible per run.
 
+
+---
+
+## **Sprint 22 – Hero’s Chronicle & Psychological Payoff**
+
+**Goal:**
+Generate a personalised endgame summary that recaps key choices, assigns an archetype, and delivers a final symbolic scene.
+
+**Tasks for LLM:**
+
+1. **Enhance Trait Scoring Engine**
+
+   * Every scene choice must include a `traits_impact` dict to adjust scores.
+   * Update `trait_scores` live during play.
+
+2. **Decision Recap Generator**
+
+   * At game end, select 3–4 decisions with highest narrative weight (based on state flags).
+   * Render them in narrative form before profile output.
+
+3. **Archetype Generator**
+
+   * Create a mapping of top 1–2 traits to one of at least 5 archetypes.
+   * Example mapping:
+
+     * High `self_reflection` + high `restraint` → “The Harmonizer”
+     * High `aggression` + low `restraint` → “The Challenger”
+
+4. **Final Symbolic Scene**
+
+   * Pull symbol variations based on state flags and dominant traits.
+   * Combine into 3–5 sentence epilogue.
+
+5. **Output Structure:**
+
+   ```
+   === Hero’s Chronicle ===
+   [Decision Recap]
+   [Archetype Name & Description]
+   [Final Symbolic Epilogue]
+   ```
+
+**Example Archetype Output:**
+
+```python
+print("=== Hero’s Chronicle ===")
+print("You spared the chimera, refused the contract, and took the dangling key.")
+print("The Harmonizer: You resist chaos, seek balance, and avoid dominance.")
+print("As you leave the labyrinth, the chimera walks beside you. The storm has passed, but the mirror pool still waits.")
+```

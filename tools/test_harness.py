@@ -15,9 +15,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 from engine import (
     default_state, load_scenarios, apply_choice_effects,
     StateManager,
-    show_final_reflection, Telemetry
+    generate_decision_recap, generate_final_epilogue,
+    Telemetry
 )
-from modules.reveal import load_reveals, pick_reveal
+from modules.scoring import top_archetype
 
 
 class TestHarness:
@@ -161,14 +162,13 @@ class TestHarness:
             # Final analysis
             results["final_traits"] = dict(state["memory"]["trait_scores"])
             
-            # Get final reveal
-            reveals_path = self.data_path / "payoffs" / "endgame_reveals.json"
-            if reveals_path.exists():
-                reveal_data = load_reveals(reveals_path)
-                reveal = pick_reveal(state["memory"]["trait_scores"], reveal_data)
-                results["final_reveal"] = reveal["text"]
-            else:
-                results["final_reveal"] = "No reveal data available"
+            # Generate final chronicle summary
+            recap = generate_decision_recap(state)
+            archetype_name, archetype_desc = top_archetype(state_mgr.trait_scores)
+            epilogue = generate_final_epilogue(state_mgr)
+            results["final_reveal"] = "\n".join(
+                part for part in [recap, f"{archetype_name}: {archetype_desc}", epilogue] if part
+            )
             
             if verbose:
                 print(f"\n{'='*40}")
