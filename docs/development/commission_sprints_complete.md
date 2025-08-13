@@ -541,6 +541,52 @@ Data Integrity: JSON results saved to /data/test_results/ remain intact; reloadi
 Documentation: /docs/dashboard.md explains how to install dependencies, run the dashboard, and interpret the UI.
 
 
+
+
+Sprint 14 — Data Ingestion & Analytics Baseline
+Purpose
+Create a single, canonical dataset from all runs and produce baseline calibration KPIs.
+
+Scope & Deliverables
+
+Canonical Trait Map (resolve duplicates):
+
+“Control & Perfectionism”→Control; “Apathy & Sloth”→Apathy; “Pessimism & Cynicism”/“Cynicism”→Cynicism; “Moodiness & Indirectness”→Moodiness.
+
+Code
+
+src/analytics/canonical.py – mapping + validators (raise on non-canonical).
+
+src/analytics/ingest_runs.py – load & normalize all data/test_results/run_*.json (support both dashboard and CLI run schemas).
+
+src/analytics/baseline_metrics.py – KPIs: entropy, policy-bias heatmap, scene pressure, major-streaks, tie margins, dominance curves.
+
+Artifacts
+
+data/derived/runs_agg.csv (long format: run, policy, step, scene_id, choice_id, primary/secondary, pw/sw, delta, totals, final_normalized, top3).
+
+reports/baseline_metrics.md (numbers only).
+
+Tests
+
+tests/test_canonical.py (no duplicate/non-canonical traits).
+
+tests/test_ingest_schema.py (schema coverage; spot-check parity with source).
+
+CLI
+
+python -m src.analytics.ingest_runs --runs-dir data/test_results --out data/derived/runs_agg.csv
+
+python -m src.analytics.baseline_metrics --in data/derived/runs_agg.csv --report reports/baseline_metrics.md
+
+Definition of Done
+
+All runs load; zero non-canonical traits; runs_agg.csv count ≥ sum of decisions across runs; baseline KPIs rendered; tests pass.
+
+
+
+
+
 Sprint 15 — Calibrator & Optimization
 Goal: Implement bounded, auditable calibration and output a signed "best" config.
 
@@ -555,3 +601,6 @@ Deliverables:
 
 Definition of Done
 Composite score ≥ +15% vs baseline; major-streak <20%; tie margin >0.05; no single trait >35% (aggregate); snapshot written; tests pass.
+
+
+
