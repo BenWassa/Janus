@@ -2,42 +2,43 @@
 
 Comprehensive documentation for the Project Janus psychological RPG system.
 
-## Key Documents
-- `commission_sprints.md`
-- `commissioning_context.md`
-- `game_logic_module.md`
-- `psychology_profiling_module.md`
-- `utility_functions.md`
-- `vision_hamartia_system.md`
-- `save_format.md`
-- `sprint8_playtest_report.md`
-- `sprint1_trait_glossary_and_tagging_api.md`
-
 ## Documentation Structure
 
-### Game Design Documents
-- Core mechanics and systems
-- Narrative design principles
-- Character development guidelines
-- User experience specifications
+### 📁 `/design/` - Core Design & Vision
+Foundational design philosophy, psychology research, and system architecture.
+- Vision documents and design principles
+- Game logic and mechanics design
+- Psychological framework documentation
+- [See design README](design/README.md) for details
 
-### Technical Documentation
-- API references
-- Code architecture guides
-- Database schemas
-- Integration patterns
+### 📁 `/technical/` - Implementation Details
+Technical specifications, APIs, and architecture documentation.
+- Save file format and data structures
+- Utility functions and APIs
+- Technical implementation guides
+- [See technical README](technical/README.md) for details
 
-### Psychology Documentation
-- Assessment methodologies
-- Trait calculation algorithms
-- Validation studies
-- Ethical guidelines
+### 📁 `/development/` - Project Management
+Sprint planning, commissioning context, and development processes.
+- Sprint documentation and task breakdowns
+- Commissioning requirements and context
+- Development dashboard and tracking
+- [See development README](development/README.md) for details
 
-### User Documentation
-- Player guides
-- Administrator manuals
-- Content creator resources
-- Troubleshooting guides
+### 📁 `/testing/` - Quality Assurance
+Testing strategies, playtest reports, and validation documentation.
+- Playtest results and user feedback
+- Testing framework documentation
+- Quality assurance procedures
+- [See testing README](testing/README.md) for details
+
+## Quick Reference
+
+For quick access to key information:
+- **System Vision**: `design/vision_hamartia_system.md`
+- **Save Format**: `technical/save_format.md`
+- **Latest Playtest**: `testing/sprint8_playtest_report.md`
+- **Development Status**: `development/commission_sprints.md`
 
 ## Writing Guidelines
 
@@ -54,7 +55,15 @@ Comprehensive documentation for the Project Janus psychological RPG system.
 - Address ethical considerations
 
 ### Technical Documentation Requirements
-- Code examples with explanations
-- Clear API specifications
-- Architecture diagrams where helpful
-- Version compatibility notes
+- Include code examples
+- Document all APIs and interfaces
+- Provide troubleshooting guidance
+- Maintain version compatibility notes
+
+## Contributing to Documentation
+
+1. Place new documents in the appropriate category folder
+2. Update the relevant README file
+3. Follow established naming conventions
+4. Include cross-references where helpful
+5. Test all code examples before committing
