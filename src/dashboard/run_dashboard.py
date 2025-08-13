@@ -360,19 +360,46 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
 
 def create_decision_tree_chart(result: Dict[str, Any]):
     """Create a decision tree visualization showing choices made during simulation."""
+    print(f"🔍 Decision tree called with data type: {type(result)}")
+    print(f"🔍 Decision tree data keys: {list(result.keys()) if result else 'None'}")
+    
+    if not result:
+        print("🔍 No result data provided")
+        return go.Figure().add_annotation(
+            text="No simulation data available",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=20, color="gray")
+        )
+    
+    # The decision data is in 'trait_progression', not 'trace'
+    trait_progression = result.get("trait_progression", [])
+    print(f"🔍 Trait progression entries: {len(trait_progression)}")
+    
+    if not trait_progression:
+        # Maybe it's in a different key? Let's check
+        for key, value in result.items():
+            if isinstance(value, list) and len(value) > 0:
+                print(f"🔍 Found list in key '{key}' with {len(value)} items")
+                if isinstance(value[0], dict) and "choice_id" in value[0]:
+                    print(f"🔍 Key '{key}' contains decision data!")
+                    trait_progression = value
+                    break
+    
     decisions = []
-    for entry in result["trace"]:
+    for entry in trait_progression:
         if entry.get("end"):
             continue
-        # Check if this entry has decision data (step, choice_id, text)
-        if "choice_id" in entry and "text" in entry:
-            decisions.append({
-                "step": entry["step"],
-                "choice": entry["choice_id"],
-                "description": entry["text"],
-                "scene": entry.get("scene_id", "Unknown"),
-                "primary": entry.get("primary", "Unknown")
-            })
+        # Extract decision data from trait progression entries
+        decisions.append({
+            "step": entry["step"],
+            "choice": entry["choice_id"],
+            "description": entry["text"],
+            "scene": entry.get("scene_id", "Unknown"),
+            "primary": entry.get("primary", "Unknown")
+        })
+    
+    print(f"🔍 Found {len(decisions)} decisions")
     
     if not decisions:
         # Return empty chart with message
