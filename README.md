@@ -18,7 +18,8 @@ At the end of your quest, you receive your Hero's Chronicle:
 - Covert psychological scoring system
 - Replayable scenarios with different personality outcomes
 - Modular design for adding new quests, dilemmas, and scoring frameworks
-- Dash-powered testing dashboard for running simulations and visualising trait progression
+- Dash-powered testing dashboard with calibration monitor for tuning policy multipliers and visualising trait progression
+- Bounded calibration tools for optimizing policy multipliers and generating configuration snapshots
 
 ## Project Structure
 
@@ -30,7 +31,8 @@ Engine entry point and reusable modules.
 - `engine.py` – main game loop
 - `modules/` – trait tagging, save system, telemetry utilities
 - `cli/` – command-line entry points and helpers
-- `dashboard/` – Dash-powered simulation dashboard
+- `dashboard/` – Dash-powered simulation dashboard and calibration interface
+- `calibrator/` – tuning utilities and optimizer for policy multipliers
 - `testing/` – automated test harness and policies
 
 ### 📁 `/versions/` - Development Iterations
@@ -71,7 +73,7 @@ Telemetry logs, test results, and other generated content. [See outputs README](
    ```bash
    python src/dashboard/run_dashboard.py
    ```
-   Use the web UI to choose a policy, run simulations, and view trait charts.
+   Use the web UI to choose a policy, run simulations, view trait charts, and adjust calibration settings in the **Calibration** tab.
 
 ## Vision
 Future versions may expand into adaptive NPC behavior, multiplayer "party dynamics" profiling, and ethically designed research modules for psychological studies.

@@ -1,7 +1,7 @@
 # Project Janus – Sprint Report
 
 ## Overview
-This document summarizes the work completed across thirteen development sprints and the current state of the Project Janus repository.
+This document summarizes the work completed across sixteen development sprints and the current state of the Project Janus repository.
 
 ## Sprint Accomplishments
 1. **Sprint 1 – Trait glossary and tagging API.** Introduced psychological weighting for quest choices, enabling traits to be tracked throughout gameplay.
@@ -17,6 +17,9 @@ This document summarizes the work completed across thirteen development sprints 
 11. **Sprint 11 – End-to-end trait reveal pass.** Verified the full trait-tracking loop and ensured reveal coverage for all trait constellations.
 12. **Sprint 12 – Alpha/Beta test setup.** Introduced last-choice HUD details, expanded telemetry logging, and added a packaging script for tester builds.
 13. **Sprint 13 – Testing dashboard and control panel.** Delivered a Dash-powered dashboard for running archetype simulations and visualising trait progression.
+14. **Sprint 14 – Data ingestion & analytics baseline.** Added canonical trait mapping, run ingestion scripts, and baseline calibration metrics.
+15. **Sprint 15 – Calibrator & optimization.** Implemented bounded calibration utilities, optimizer, and configuration snapshot output.
+16. **Sprint 16 – Dashboard "Personality Mixer."** Integrated a calibration tab with live slider readouts for policy multipliers and master controls.
 
 ## Repository Status
 - Source code and data are organized under clearly defined directories (`src/`, `data/`, `versions/`, etc.).
@@ -28,3 +31,4 @@ This document summarizes the work completed across thirteen development sprints 
 - Expand scenario library and refine psychological mappings.
 - Continue playtesting to validate trait balance.
 - Iterate on the testing dashboard and integrate future codex features.
+- Refine calibration workflow and analytics pipeline.
