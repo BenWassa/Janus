@@ -15,7 +15,9 @@
             "primary_trait": "Wrath",
             "primary_weight": 0.1,
             "secondary_trait": "Impulsivity",
-            "secondary_weight": 0.1
+            "secondary_weight": 0.1,
+            "set_flag": "beast",
+            "flag_value": "slain"
           },
         {
           "choice_id": "bind_wound",
@@ -23,7 +25,9 @@
           "primary_trait": "Apathy",
           "primary_weight": 0.0,
           "secondary_trait": null,
-          "secondary_weight": 0.0
+          "secondary_weight": 0.0,
+          "set_flag": "beast",
+          "flag_value": "spared"
         }
       ],
       "callbacks": [

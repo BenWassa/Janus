@@ -13,7 +13,8 @@ from typing import Any, Dict, List, Tuple
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from engine import (
-    default_state, load_scenarios, apply_choice_effects, 
+    default_state, load_scenarios, apply_choice_effects,
+    StateManager,
     show_final_reflection, Telemetry
 )
 from modules.reveal import load_reveals, pick_reveal
@@ -126,9 +127,10 @@ class TestHarness:
                 results["decisions_made"].append(decision_record)
                 
                 # Apply choice effects
-                traits_before = dict(state["player"]["traits"])
-                apply_choice_effects(state, chosen_choice, telemetry, debug_mode=True)
-                traits_after = dict(state["player"]["traits"])
+                state_mgr = StateManager(state)
+                traits_before = dict(state["memory"]["trait_scores"])
+                apply_choice_effects(state, chosen_choice, state_mgr, telemetry, debug_mode=True)
+                traits_after = dict(state["memory"]["trait_scores"])
                 
                 # Record trait changes
                 trait_changes = {}
@@ -157,13 +159,13 @@ class TestHarness:
                         print("No trait changes (decoy choice)")
             
             # Final analysis
-            results["final_traits"] = dict(state["player"]["traits"])
+            results["final_traits"] = dict(state["memory"]["trait_scores"])
             
             # Get final reveal
             reveals_path = self.data_path / "payoffs" / "endgame_reveals.json"
             if reveals_path.exists():
                 reveal_data = load_reveals(reveals_path)
-                reveal = pick_reveal(state["player"]["traits"], reveal_data)
+                reveal = pick_reveal(state["memory"]["trait_scores"], reveal_data)
                 results["final_reveal"] = reveal["text"]
             else:
                 results["final_reveal"] = "No reveal data available"
