@@ -15,8 +15,7 @@ import random
 from pathlib import Path
 from typing import Dict, Any
 
-from dash import Dash, dcc, html, Input, Output, State, callback_context, ALL
-from dash.exceptions import PreventUpdate
+from dash import Dash, dcc, html, Input, Output, State, callback_context
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -433,7 +432,6 @@ def run_simulation(n_clicks, policy_name, seed_value, history):
         saved_data = _save_run(result, policy_name)
         
         # Update history
-        history = history or []
         history.append(saved_data)
         
         # Create enhanced charts
