@@ -1,6 +1,6 @@
-# Testing Dashboard
+# Testing Dashboard & Calibration Monitor
 
-An interactive dashboard for running Janus simulation policies and visualising trait progression.
+An interactive dashboard for running Janus simulation policies, visualising trait progression, and experimenting with calibration settings.
 
 ## Setup
 
@@ -21,5 +21,11 @@ python src/dashboard/run_dashboard.py
 ### Features
 
 - Choose between built-in policies and run simulations with a click
-- View line charts of trait progression and bar charts of final scores
+- Tabbed charts for trait progression, final scores, and decision trees
+- Quick stats summarising recent runs
+- Dedicated "Calibration" tab with a mixer interface for policy multipliers
 - Each run is saved under `data/test_results/` for later inspection
+
+### Calibration Monitor
+
+Open the **Calibration** tab to access the experimental "Personality Mixer." Use the sliders to adjust policy multipliers and master controls such as decay, anti-streak, and epsilon. Readouts update in real time while providing a foundation for future calibration tooling.
