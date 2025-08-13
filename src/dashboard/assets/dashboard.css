@@ -247,10 +247,9 @@ body, html {
 /* Policy Selection */
 .policy-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: var(--spacing-sm);
     margin-bottom: var(--spacing-xl);
-    width: 100%;
 }
 
 .policy-card {
@@ -267,7 +266,6 @@ body, html {
     align-items: center;
     text-align: center;
     min-height: 120px;
-    width: 100%;
 }
 
 .policy-card::before {
@@ -702,7 +700,7 @@ html {
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
     .policy-grid {
         grid-template-columns: 1fr;
         gap: var(--spacing-sm);
