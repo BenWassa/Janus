@@ -3,6 +3,7 @@ import subprocess
 import sys
 import os
 from datetime import datetime
+import textwrap
 
 # Ensure required packages are installed
 def install_requirements():
@@ -315,8 +316,6 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
         yaxis=dict(gridcolor='rgba(255,255,255,0.1)', title_font=dict(color='#CBD5E1'))
     )
     return fig
-
-import textwrap # Make sure to have this import at the top of your file
 
 def create_decision_tree_chart(result: Dict[str, Any]):
     """
