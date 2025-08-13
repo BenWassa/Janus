@@ -16,3 +16,10 @@ def test_top_archetype():
     name, desc = top_archetype({"Avarice": 3.0, "Fear": 1.0})
     assert name == "The Collector"
     assert "glitters" in desc
+
+
+def test_combo_archetype():
+    traits = {"self_reflection": 2.0, "restraint": 1.5, "aggression": 0.5}
+    name, desc = top_archetype(traits)
+    assert name == "The Harmonizer"
+    assert "balance" in desc

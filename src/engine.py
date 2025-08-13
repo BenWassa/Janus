@@ -13,9 +13,8 @@ from typing import Any, Dict, List, Optional
 from modules.tagging import tag
 from modules.save_system import load_game, save_game
 from modules.telemetry import Telemetry
-from modules.reveal import load_reveals, pick_reveal
 from modules.state_manager import StateManager
-from modules.scoring import normalize_scores, top_archetype
+from modules.scoring import top_archetype
 from modules.symbols import describe as describe_symbol
 
 
@@ -30,6 +29,7 @@ def default_state() -> Dict[str, Any]:
         "memory": {
             "state_flags": {"mirror": None, "beast": None, "storm": None},
             "trait_scores": {},
+            "decision_log": [],
         },
     }
 
@@ -133,26 +133,34 @@ def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], state_mg
                          telemetry: Telemetry, debug_mode: bool = False) -> None:
     """Apply the psychological and state effects of a choice."""
 
-    # Normalize to canonical tag format if needed
-    if "tags" not in choice:
-        tag(
-            choice,
-            choice.get("primary_trait"),
-            choice.get("primary_weight", 0.0),
-            choice.get("secondary_trait"),
-            choice.get("secondary_weight", 0.0),
-        )
-
-    for t in choice.get("tags", []):
-        trait = t.get("trait")
-        weight = t.get("weight", 0.0)
-        if trait:
+    # Trait scoring
+    impacts = choice.get("traits_impact")
+    if impacts:
+        for trait, weight in impacts.items():
             state_mgr.add_trait(trait, weight)
+    else:
+        # Normalize to canonical tag format if needed
+        if "tags" not in choice:
+            tag(
+                choice,
+                choice.get("primary_trait"),
+                choice.get("primary_weight", 0.0),
+                choice.get("secondary_trait"),
+                choice.get("secondary_weight", 0.0),
+            )
+
+        for t in choice.get("tags", []):
+            trait = t.get("trait")
+            weight = t.get("weight", 0.0)
+            if trait:
+                state_mgr.add_trait(trait, weight)
     
     # Handle state flag setting
     flag_name = choice.get("set_flag")
     if flag_name:
         state_mgr.set_flag(flag_name, choice.get("flag_value", True))
+        recap = choice.get("recap", choice.get("text", "")).strip()
+        state["memory"]["decision_log"].append(recap)
 
     # Record the choice
     last_tags = choice.get("tags", [])
@@ -335,43 +343,39 @@ def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any], s
     return True
 
 
-def show_final_reflection(state: Dict[str, Any], data_path: Path) -> None:
-    """Show the final psychological reflection."""
-    print("\n" + "="*60)
-    print("FINAL REFLECTION")
-    print("="*60)
+def generate_decision_recap(state: Dict[str, Any]) -> str:
+    """Return a short recap of pivotal decisions based on state flags."""
+    decisions = state["memory"].get("decision_log", [])
+    if not decisions:
+        return ""
+    selected = decisions[:4]
+    parts = [d.rstrip('.') for d in selected]
+    return "You " + ", then you ".join(parts) + "."
 
-    reveals_path = data_path / "payoffs" / "endgame_reveals.json"
-    traits = state["memory"].get("trait_scores", {})
-    scores = normalize_scores(traits)
-    archetype_name, archetype_desc = top_archetype(traits)
 
-    if reveals_path.exists():
-        reveal_data = load_reveals(reveals_path)
-        reveal = pick_reveal(traits, reveal_data)
-        print("\n" + reveal["text"])
-    elif traits:
-        # Fallback reflection if reveal data is missing
-        print(f"\nYour journey reveals these prominent traits:")
-        top_traits = sorted(traits.items(), key=lambda x: x[1], reverse=True)[:3]
-        for trait, value in top_traits:
-            print(f"  {trait}: {value:.1f}")
+def generate_final_epilogue(state_mgr: StateManager) -> str:
+    """Compose a symbolic epilogue using stored flags and trait scores."""
+    parts: List[str] = []
+    traits = state_mgr.trait_scores
+    for symbol, value in state_mgr.state_flags.items():
+        if value:
+            desc = describe_symbol(symbol, traits)
+            if desc:
+                parts.append(desc)
+    return " ".join(parts)
 
-    # Archetype and detailed scores
-    print(f"\nYou are {archetype_name}: {archetype_desc}")
-    if scores:
-        print("\nTrait scores:")
-        for trait, score in sorted(scores.items(), key=lambda i: i[1], reverse=True):
-            print(f"  {trait}: {score:.0%}")
-    else:
-        print("No dominant traits emerged during your journey.")
 
-    # Symbolic callback
-    storm = state["memory"].get("state_flags", {}).get("storm")
-    if storm == "entered":
-        print("\nYou stepped through the storm's door, embracing the unknown.")
-    elif storm == "avoided":
-        print("\nYou left the storm door unopened, its thunder fading behind you.")
+def show_heros_chronicle(state: Dict[str, Any], state_mgr: StateManager) -> None:
+    """Output the final Hero's Chronicle summary."""
+    print("\n=== Hero's Chronicle ===")
+    recap = generate_decision_recap(state)
+    if recap:
+        print(recap)
+    archetype_name, archetype_desc = top_archetype(state_mgr.trait_scores)
+    print(f"{archetype_name}: {archetype_desc}")
+    epilogue = generate_final_epilogue(state_mgr)
+    if epilogue:
+        print(epilogue)
 
 
 def main(argv: Any = None) -> int:
@@ -417,11 +421,11 @@ def main(argv: Any = None) -> int:
         save_game(state, args.save)
     
     telemetry.save()
-    
+
     if not args.no_hud:
         show_hud(state, args.debug)
-    
-    show_final_reflection(state, data_path)
+
+    show_heros_chronicle(state, state_mgr)
     
     return 0
 
