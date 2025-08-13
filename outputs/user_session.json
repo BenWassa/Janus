@@ -1,0 +1,38 @@
+[
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "challenge_claim",
+    "primary_trait": "Envy",
+    "primary_weight": 0.8,
+    "secondary_trait": "Hubris",
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "hum_a_tune",
+    "primary_trait": "Apathy",
+    "primary_weight": 0.0,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "block_path",
+    "primary_trait": "Hubris",
+    "primary_weight": 0.2,
+    "secondary_trait": "Control",
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "listen_echo",
+    "primary_trait": "Apathy",
+    "primary_weight": 0.0,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  }
+]
