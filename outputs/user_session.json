@@ -2,6 +2,15 @@
   {
     "event": "choice",
     "scene_id": "unknown",
+    "choice_id": "wait_silently",
+    "primary_trait": "Rigidity",
+    "primary_weight": 0.2,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
     "choice_id": "challenge_claim",
     "primary_trait": "Envy",
     "primary_weight": 0.8,
@@ -11,11 +20,11 @@
   {
     "event": "choice",
     "scene_id": "unknown",
-    "choice_id": "hum_a_tune",
-    "primary_trait": "Apathy",
-    "primary_weight": 0.0,
-    "secondary_trait": null,
-    "secondary_weight": 0.0
+    "choice_id": "reorder_shelves",
+    "primary_trait": "Control",
+    "primary_weight": 0.5,
+    "secondary_trait": "Rigidity",
+    "secondary_weight": 0.2
   },
   {
     "event": "choice",
@@ -29,10 +38,73 @@
   {
     "event": "choice",
     "scene_id": "unknown",
-    "choice_id": "listen_echo",
+    "choice_id": "ration_food",
+    "primary_trait": "Control",
+    "primary_weight": 0.4,
+    "secondary_trait": "Rigidity",
+    "secondary_weight": 0.1
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "grant_mercy",
     "primary_trait": "Apathy",
     "primary_weight": 0.0,
     "secondary_trait": null,
     "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "stand_down",
+    "primary_trait": "Apathy",
+    "primary_weight": 0.0,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "reach_out",
+    "primary_trait": "Apathy",
+    "primary_weight": 0.0,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "tear_contract",
+    "primary_trait": "Control",
+    "primary_weight": 0.2,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "snatch_key",
+    "primary_trait": "Impulsivity",
+    "primary_weight": 0.2,
+    "secondary_trait": "Avarice",
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "walk_away",
+    "primary_trait": "Apathy",
+    "primary_weight": 0.0,
+    "secondary_trait": null,
+    "secondary_weight": 0.0
+  },
+  {
+    "event": "choice",
+    "scene_id": "unknown",
+    "choice_id": "read_secret",
+    "primary_trait": "Deception",
+    "primary_weight": 0.2,
+    "secondary_trait": "Hubris",
+    "secondary_weight": 0.1
   }
 ]
