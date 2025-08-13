@@ -351,120 +351,188 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
         tickfont=dict(color='#94A3B8')
     )
     return fig
-    fig.update_yaxes(
-        gridcolor='rgba(255,255,255,0.1)',
-        title_font=dict(color='#CBD5E1'),
-        tickfont=dict(color='#94A3B8')
-    )
-    return fig
+
+# --- Helpers for the Decision Flow chart ------------------------------------
+def _first(d: Dict[str, Any], *keys: str, default: str = "—"):
+    """Return the first present/non-empty value for any of the given keys."""
+    for k in keys:
+        v = d.get(k)
+        if v not in (None, "", [], {}):
+            return v
+    return default
+
+_CANONICAL_COLORS = {
+    # Canonical trait names used elsewhere in the project
+    'Hubris': '#EF4444',
+    'Avarice': '#EC4899',
+    'Deception': '#10B981',
+    'Control & Perfectionism': '#3B82F6',
+    'Wrath': '#DC2626',
+    'Fear & Insecurity': '#F59E0B',
+    'Impulsivity': '#F97316',
+    'Envy': '#8B5CF6',
+    'Apathy & Sloth': '#78716C',
+    'Pessimism & Cynicism': '#A1A1AA',
+    'Moodiness & Indirectness': '#D946EF',
+    'Rigidity': '#64748B',
+}
+
+# Accept common short labels as aliases (keeps colors consistent)
+_ALIAS_TO_CANON = {
+    'Control': 'Control & Perfectionism',
+    'Fear': 'Fear & Insecurity',
+    'Pessimism': 'Pessimism & Cynicism',
+    'Cynicism': 'Pessimism & Cynicism',
+    'Moodiness': 'Moodiness & Indirectness',
+}
+
+def _normalize_trait(name: str) -> str:
+    return _ALIAS_TO_CANON.get(name, name)
+
+def _color_for_trait(name: str) -> str:
+    canon = _normalize_trait(name)
+    return _CANONICAL_COLORS.get(canon, '#94A3B8')  # fallback gray
+
+def _compute_delta(curr: Dict[str, float], prev: Dict[str, float]) -> Dict[str, float]:
+    keys = set(curr) | set(prev)
+    return {k: round(curr.get(k, 0.0) - prev.get(k, 0.0), 3) for k in keys}
+
+
 
 def create_decision_tree_chart(result: Dict[str, Any]):
-    """Create an enhanced decision flow timeline."""
-    trait_progression = result.get("trace", [])
-    if not trait_progression:
+    """Vertical decision flow with robust field fallback + auto delta derivation."""
+    trace = result.get("trace", []) or []
+    decisions = [e for e in trace if not e.get("end")]
+    if not decisions:
         fig = go.Figure()
-        fig.add_annotation(text="No decision data available to build flow chart.", xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False)
+        fig.add_annotation(
+            text="No decision data available to build flow chart.",
+            xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False
+        )
         return fig
 
-    decisions = [entry for entry in trait_progression if not entry.get("end")]
+    # Build per-step prev/next totals so we can derive deltas if not provided
+    prev_totals = {}
+    derived = []
+    for d in decisions:
+        totals = d.get("totals", {}) or {}
+        explicit_delta = d.get("delta") or d.get("deltas")
+        delta = explicit_delta if isinstance(explicit_delta, dict) else _compute_delta(totals, prev_totals)
 
-    # Define consistent colors for traits
-    TRAIT_COLORS = {
-        'Control': '#3B82F6', 'Fear': '#F59E0B', 'Deception': '#10B981', 
-        'Hubris': '#EF4444', 'Envy': '#8B5CF6', 'Avarice': '#EC4899',
-        'Rigidity': '#64748B', 'Cynicism': '#A1A1AA', 'Wrath': '#DC2626',
-        'Apathy & Sloth': '#78716C', 'Impulsivity': '#F97316', 
-        'Pessimism & Cynicism': '#A1A1AA', 'Moodiness & Indirectness': '#D946EF',
-        'default': '#94A3B8'
-    }
+        # Choose the "impact" trait: greatest positive; if none, greatest negative
+        impact_trait, impact_change = None, 0.0
+        if delta:
+            pos = max(delta.items(), key=lambda kv: kv[1])
+            if pos[1] > 0:
+                impact_trait, impact_change = pos
+            else:
+                impact_trait, impact_change = min(delta.items(), key=lambda kv: kv[1])
+
+        if impact_trait is None:
+            impact_trait = d.get("primary") or "—"
+            impact_change = delta.get(impact_trait, 0.0) if isinstance(delta, dict) else 0.0
+
+        derived.append({
+            "step": d.get("step"),
+            "scene": _first(d, "scene_id", "sceneId", "scene"),
+            "choice": _first(d, "choice_id", "choiceId", "choice", "text"),
+            "text": d.get("text") or "",
+            "totals": totals,
+            "impact_trait": impact_trait,
+            "impact_change": impact_change,
+        })
+        prev_totals = totals
 
     fig = go.Figure()
-    
-    num_steps = len(decisions)
 
-    # 1. Add connecting lines
+    n = len(derived)
+
+    # Soft background lanes (scene | choice | impact)
+    bands = [(-0.95, -0.25), (-0.15, 0.15), (0.25, 0.9)]
+    band_colors = ["rgba(148,163,184,0.05)", "rgba(59,130,246,0.05)", "rgba(16,185,129,0.05)"]
+    for (x0, x1), color in zip(bands, band_colors):
+        fig.add_shape(type="rect", x0=x0, x1=x1, y0=-0.5, y1=n-0.5, xref="x", yref="y",
+                      line=dict(width=0), fillcolor=color, layer="below")
+
+    # Backbone
     fig.add_trace(go.Scatter(
-        x=[0] * num_steps,
-        y=[-i for i in range(num_steps)],
-        mode='lines',
-        line=dict(color='rgba(255,255,255,0.2)', width=1),
-        hoverinfo='none'
+        x=[0, 0], y=[-0.5, n-0.5], mode="lines",
+        line=dict(color="rgba(255,255,255,0.25)", width=1.5),
+        hoverinfo="none", showlegend=False
     ))
 
-    # 2. Add decision nodes and all annotations
-    for i, d in enumerate(decisions):
-        y_pos = -i
-        primary_trait = d.get('primary', 'None')
-        color = TRAIT_COLORS.get(primary_trait, TRAIT_COLORS['default'])
+    # Nodes + annotations
+    for i, item in enumerate(derived):
+        y = i
+        color = _color_for_trait(item["impact_trait"])
 
-        # Add the main node
+        # Node
         fig.add_trace(go.Scatter(
-            x=[0], y=[y_pos],
-            mode='markers',
-            marker=dict(size=12, color=color, line=dict(width=2, color=TRAIT_COLORS['default'])),
-            hoverinfo='none',
+            x=[0], y=[y], mode="markers",
+            marker=dict(size=12, color=color, line=dict(width=2, color="rgba(255,255,255,0.15)")),
+            name=str(item["step"]),
+            hovertemplate=(
+                "<b>Step %{customdata[0]}</b><br>"
+                "Scene: %{customdata[1]}<br>"
+                "Choice: %{customdata[2]}<br>"
+                "Impact: %{customdata[3]} %{customdata[4]}<br>"
+                "<extra></extra>"
+            ),
+            customdata=[
+                item["step"],
+                item["scene"],
+                (item["choice"] or item["text"] or "—"),
+                f"{item['impact_change']:+.2f}",
+                _normalize_trait(item["impact_trait"]),
+            ],
             showlegend=False
         ))
 
-        # Annotation: Scene ID (Left)
-        fig.add_annotation(
-            x=-0.1, y=y_pos,
-            text=f"<b>{d['scene_id']}</b>",
-            xref="x", yref="y",
-            showarrow=False, align="right", xanchor="right",
-            font=dict(color="#CBD5E1", size=11)
-        )
+        # Scene (left)
+        fig.add_annotation(x=-0.8, y=y, xref="x", yref="y", showarrow=False, xanchor="left",
+                           text=f"<b>{item['scene']}</b>",
+                           font=dict(size=11, color="#CBD5E1"))
 
-        # Annotation: Choice Text (Right, Main)
-        fig.add_annotation(
-            x=0.1, y=y_pos + 0.15,
-            text=f"{d['text']}",
-            xref="x", yref="y",
-            showarrow=False, align="left", xanchor="left",
-            font=dict(color="#F1F5F9", size=12)
-        )
-        
-        # Annotation: Trait Impact (Right, Sub)
-        delta_val = d.get('delta', {}).get(primary_trait, 0.0)
-        impact_text = f"<b>{delta_val:+.1f} {primary_trait}</b>" if delta_val != 0 else f"<i>No trait change</i>"
-        fig.add_annotation(
-            x=0.1, y=y_pos - 0.2,
-            text=impact_text,
-            xref="x", yref="y",
-            showarrow=False, align="left", xanchor="left",
-            font=dict(color=color, size=11)
-        )
+        # Choice (center-right)
+        choice_text = item["text"] or item["choice"] or "—"
+        fig.add_annotation(x=0.05, y=y, xref="x", yref="y", showarrow=False, xanchor="left",
+                           text=choice_text, align="left",
+                           font=dict(size=12, color="#F1F5F9"))
 
-        # Annotation: Top 3 Traits (Far Right)
-        totals = d.get('totals', {})
+        # Impact pill (right of choice)
+        arrow = "▲" if item["impact_change"] > 0 else ("▼" if item["impact_change"] < 0 else "•")
+        impact_html = f"<span style='font-weight:600'>{arrow} {item['impact_change']:+.2f} {_normalize_trait(item['impact_trait'])}</span>"
+        fig.add_annotation(x=0.65, y=y, xref="x", yref="y", showarrow=False, xanchor="left",
+                           text=impact_html, font=dict(size=11, color=color),
+                           bordercolor=color, borderwidth=1, borderpad=4,
+                           bgcolor="rgba(17,24,39,0.6)")
+
+        # Top-3 (far right)
+        totals = item["totals"] or {}
         if totals:
-            sorted_totals = sorted(totals.items(), key=lambda item: item[1], reverse=True)
-            top3_text = "<br>".join([f"{k}: {v:.1f}" for k, v in sorted_totals[:3]])
-            fig.add_annotation(
-                x=1.2, y=y_pos,
-                text=top3_text,
-                xref="x", yref="y",
-                showarrow=False, align="right", xanchor="right",
-                font=dict(color="#94A3B8", size=10),
-                bordercolor=TRAIT_COLORS['default'], borderwidth=1, borderpad=4, bgcolor="rgba(30,41,59,0.5)"
-            )
+            top3 = sorted(totals.items(), key=lambda kv: kv[1], reverse=True)[:3]
+            lines = [f"<span style='color:{_color_for_trait(k)}'>■</span> {k}: {v:.1f}" for k, v in top3]
+            fig.add_annotation(x=1.15, y=y, xref="x", yref="y", showarrow=False, xanchor="left",
+                               text="<br>".join(lines),
+                               font=dict(size=10, color="#94A3B8"),
+                               bordercolor="rgba(148,163,184,0.35)", borderwidth=1, borderpad=4,
+                               bgcolor="rgba(30,41,59,0.55)")
 
+        # Step label (far left)
+        fig.add_annotation(x=-1.05, y=y, xref="x", yref="y", showarrow=False, xanchor="right",
+                           text=f"#{item['step']}", font=dict(size=10, color="#94A3B8"))
 
     fig.update_layout(
-        title=dict(
-            text="<b>Decision Flow & Trait Impact</b>",
-            font=dict(size=20, color='#F1F5F9'),
-            x=0.5, xanchor='center'
-        ),
+        title=dict(text="<b>Decision Flow & Trait Impact</b>",
+                   font=dict(size=20, color="#F1F5F9"), x=0.5, xanchor="center"),
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
         showlegend=False,
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        xaxis=dict(visible=False, range=[-1.3, 1.3]),
-        yaxis=dict(visible=False, range=[-num_steps, 1]),
-        margin=dict(l=20, r=20, t=80, b=20),
-        height=max(500, num_steps * 60) # Dynamically adjust height
+        margin=dict(l=16, r=24, t=72, b=16),
+        height=max(520, n * 72),
     )
-
+    fig.update_xaxes(visible=False, range=[-1.2, 1.3])
+    fig.update_yaxes(visible=False, range=[-0.75, n-0.25])
     return fig
 
 def create_enhanced_bar_chart(result: Dict[str, Any]):
