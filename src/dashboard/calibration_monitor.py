@@ -112,6 +112,12 @@ def register_callbacks(app) -> None:
     """
 
     for _, key in POLICY_CHANNELS:
-        app.callback(
-            Output(f"readout-{key}", "children"), Input(f"fader-{key}", "value")
-        )(lambda value, _key=key: f"{value:.2f}")
+        @app.callback(
+            Output(f"readout-{key}", "children"), 
+            Input(f"fader-{key}", "value"),
+            prevent_initial_call=True
+        )
+        def update_readout(value, key=key):
+            if value is None:
+                return "1.0"
+            return f"{value:.2f}"

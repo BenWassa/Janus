@@ -196,7 +196,7 @@ def _compute_quick_stats(history):
 INITIAL_HISTORY = _load_history()
 INITIAL_QUICK_STATS = _compute_quick_stats(INITIAL_HISTORY)
 
-app = Dash(external_stylesheets=['/assets/dashboard.css'])
+app = Dash(external_stylesheets=['/assets/dashboard.css'], suppress_callback_exceptions=True)
 app.title = "Janus Dashboard"
 calibration_monitor.register_callbacks(app)
 
