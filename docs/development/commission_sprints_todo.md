@@ -13,21 +13,6 @@
 
 ---
 
-## **Sprint 18 – Expanded Choice Architecture**
-
-**Objective:** Move beyond binary decision-making to offer richer, psychologically distinct options.
-**Rationale:** Current scenes default to two polar choices; this restricts nuance and weakens psychological inference.
-**Deliverables:**
-
-* **Choice Framework Upgrade** — support for 3–4 options per scene.
-* **Option Tagging Integration** — each choice tagged to one or more *existing* psychological traits.
-* **Illusion of Choice Mechanic** — minimum 1 “locked fate” option per act for narrative realism.
-  **Success Metrics:**
-* ≥80% of core scenes have ≥3 options.
-* All options carry trait tags compatible with existing scoring engine.
-
----
-
 ## **Sprint 19 – Psychological Payoff System Upgrade**
 
 **Objective:** Replace vague ending text with a concrete, data-driven psychological profile delivered in narrative form.

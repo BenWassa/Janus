@@ -105,13 +105,19 @@ def display_scene(scene: Dict[str, Any]) -> None:
 def get_player_choice(choices: List[Dict[str, Any]]) -> int:
     """Get player's choice from available options."""
     for i, choice in enumerate(choices, 1):
-        print(f"{i}. {choice['text']}")
+        text = choice['text']
+        if choice.get('locked'):
+            text += " [Locked]"
+        print(f"{i}. {text}")
     
     while True:
         try:
             selection = input(f"\nChoose 1-{len(choices)}: ").strip()
             choice_idx = int(selection) - 1
             if 0 <= choice_idx < len(choices):
+                if choices[choice_idx].get('locked'):
+                    print("That path is sealed. Choose another option.")
+                    continue
                 return choice_idx
         except ValueError:
             pass
@@ -122,20 +128,22 @@ def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], state_mg
                          telemetry: Telemetry, debug_mode: bool = False) -> None:
     """Apply the psychological and state effects of a choice."""
     player_traits = state["player"]["traits"]
-    
-    # Apply primary trait effect
-    primary_trait = choice.get("primary_trait")
-    primary_weight = choice.get("primary_weight", 0.0)
-    
-    if primary_trait and primary_weight > 0:
-        player_traits[primary_trait] = player_traits.get(primary_trait, 0.0) + primary_weight
-    
-    # Apply secondary trait effect
-    secondary_trait = choice.get("secondary_trait")
-    secondary_weight = choice.get("secondary_weight", 0.0)
-    
-    if secondary_trait and secondary_weight > 0:
-        player_traits[secondary_trait] = player_traits.get(secondary_trait, 0.0) + secondary_weight
+
+    # Normalize to canonical tag format if needed
+    if "tags" not in choice:
+        tag(
+            choice,
+            choice.get("primary_trait"),
+            choice.get("primary_weight", 0.0),
+            choice.get("secondary_trait"),
+            choice.get("secondary_weight", 0.0),
+        )
+
+    for t in choice.get("tags", []):
+        trait = t.get("trait")
+        weight = t.get("weight", 0.0)
+        if trait and weight > 0:
+            player_traits[trait] = player_traits.get(trait, 0.0) + weight
     
     # Handle state flag setting
     flag_name = choice.get("set_flag")
@@ -143,12 +151,13 @@ def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], state_mg
         state_mgr.set_flag(flag_name, choice.get("flag_value", True))
 
     # Record the choice
+    last_tags = choice.get("tags", [])
     state["last_choice"] = {
         "id": choice.get("choice_id", "unknown"),
-        "primary_trait": primary_trait,
-        "primary_weight": primary_weight,
-        "secondary_trait": secondary_trait,
-        "secondary_weight": secondary_weight,
+        "primary_trait": last_tags[0]["trait"] if last_tags else None,
+        "primary_weight": last_tags[0]["weight"] if last_tags else 0.0,
+        "secondary_trait": last_tags[1]["trait"] if len(last_tags) > 1 else None,
+        "secondary_weight": last_tags[1]["weight"] if len(last_tags) > 1 else 0.0,
     }
     
     # Log to telemetry
@@ -156,19 +165,14 @@ def apply_choice_effects(state: Dict[str, Any], choice: Dict[str, Any], state_mg
         "event": "choice",
         "scene_id": choice.get("scene_id", "unknown"),
         "choice_id": choice.get("choice_id", "unknown"),
-        "primary_trait": primary_trait,
-        "primary_weight": primary_weight,
-        "secondary_trait": secondary_trait,
-        "secondary_weight": secondary_weight,
+        "tags": last_tags,
     })
     
     # Show choice feedback based on mode
-    if debug_mode and (primary_trait or secondary_trait):
+    if debug_mode and last_tags:
         print(f"\n[DEBUG] Choice effects:")
-        if primary_trait and primary_weight > 0:
-            print(f"  +{primary_weight} {primary_trait}")
-        if secondary_trait and secondary_weight > 0:
-            print(f"  +{secondary_weight} {secondary_trait}")
+        for t in last_tags:
+            print(f"  +{t['weight']} {t['trait']}")
 
 
 def apply_scene_callbacks(scene: Dict[str, Any], state_mgr: StateManager) -> None:
@@ -205,8 +209,17 @@ def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any], s
     # Select 3-4 scenes to play through
     num_scenes = min(4, len(available_scenes))
     selected_scenes = random.sample(available_scenes, num_scenes) if len(available_scenes) > num_scenes else available_scenes
-    
+
+    locked_added = False
     for scene in selected_scenes:
+        if not locked_added:
+            scene.setdefault("choices", []).append({
+                "choice_id": "locked_fate",
+                "text": "Attempt to escape your fate",
+                "locked": True
+            })
+            locked_added = True
+
         apply_scene_callbacks(scene, state_mgr)
 
         if show_hud_flag:
@@ -218,6 +231,13 @@ def run_act(act_num: int, scenes: List[Dict[str, Any]], state: Dict[str, Any], s
         if not choices:
             print("No choices available. Moving on...")
             continue
+        while len(choices) < 3:
+            choices.append({
+                "choice_id": f"wait_{len(choices)}",
+                "text": "Hesitate, letting the moment pass.",
+                "primary_trait": "Apathy",
+                "primary_weight": 0.0
+            })
             
         choice_idx = get_player_choice(choices)
         chosen = choices[choice_idx]

@@ -614,3 +614,14 @@ Deliverables:
 Definition of Done
 Mixer renders within the dashboard and slider readouts update via callbacks.
 
+Sprint 18 – Expanded Choice Architecture
+Goal: Move beyond binary decision-making to offer richer, psychologically distinct options.
+
+Deliverables:
+- Choice Framework Upgrade — support for 3–4 options per scene.
+- Option Tagging Integration — each choice tagged to one or more existing psychological traits.
+- Illusion of Choice Mechanic — minimum 1 "locked fate" option per act for narrative realism.
+
+Definition of Done
+≥80% of core scenes have ≥3 options; all options carry trait tags compatible with existing scoring engine.
+
