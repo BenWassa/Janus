@@ -604,3 +604,13 @@ Composite score ≥ +15% vs baseline; major-streak <20%; tie margin >0.05; no si
 
 
 
+Sprint 16 — Dashboard "Personality Mixer" (Calibration Monitor)
+Goal: Deliver a mixer-style calibration interface for tuning policy multipliers and master controls.
+
+Deliverables:
+- src/dashboard/calibration_monitor.py – basic mixer layout with policy faders and master controls.
+- Integration into src/dashboard/run_dashboard.py with a dedicated "Calibration" tab.
+
+Definition of Done
+Mixer renders within the dashboard and slider readouts update via callbacks.
+
