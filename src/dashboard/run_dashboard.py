@@ -1,6 +1,16 @@
 import json
-import random
+import subprocess
 import sys
+import os
+
+# Ensure required packages are installed
+def install_requirements():
+    req_path = os.path.join(os.path.dirname(__file__), 'requirements.txt')
+    if os.path.exists(req_path):
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', req_path])
+
+install_requirements()
+import random
 from pathlib import Path
 from typing import Dict, Any
 
@@ -87,4 +97,4 @@ def run_simulation(n_clicks: int, policy_name: str):
     return _build_figures(result)
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run(debug=True)
