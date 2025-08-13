@@ -341,19 +341,18 @@ def create_enhanced_line_chart(result: Dict[str, Any]):
     return fig
 
 def create_enhanced_bar_chart(result: Dict[str, Any]):
-    """Create an enhanced bar chart for final scores."""
+    """Create an enhanced bar chart for final scores, legend sorted by trait total descending."""
     final = result.get("final", {}).get("normalized", {})
-    
     if not final:
         return get_initial_charts()[1]
-    
-    # Sort by values for better visualization
+
+    # Sort traits by value descending
     sorted_traits = sorted(final.items(), key=lambda x: x[1], reverse=True)
     traits, values = zip(*sorted_traits)
-    
+
     fig = go.Figure(data=[
         go.Bar(
-            x=list(traits), 
+            x=list(traits),
             y=list(values),
             marker=dict(
                 color=values,
@@ -365,7 +364,7 @@ def create_enhanced_bar_chart(result: Dict[str, Any]):
             textfont=dict(color='white', size=12, family='Inter')
         )
     ])
-    
+
     fig.update_layout(
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
@@ -380,8 +379,10 @@ def create_enhanced_bar_chart(result: Dict[str, Any]):
         margin=dict(l=60, r=60, t=80, b=60),
         height=500
     )
-    
+
     fig.update_xaxes(
+        categoryorder='array',  # Ensures custom order
+        categoryarray=list(traits),  # Use sorted order
         gridcolor='rgba(255,255,255,0.1)',
         title_font=dict(color='#CBD5E1'),
         tickfont=dict(color='#94A3B8')
@@ -391,7 +392,7 @@ def create_enhanced_bar_chart(result: Dict[str, Any]):
         title_font=dict(color='#CBD5E1'),
         tickfont=dict(color='#94A3B8')
     )
-    
+
     return fig
 
 # Callback for policy selection
