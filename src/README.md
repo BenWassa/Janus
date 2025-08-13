@@ -5,6 +5,9 @@ Core engine entry point and reusable modules.
 ## Components
 - **engine.py** – Minimal game loop with save/load, HUD toggle, telemetry logging, and endgame trait reveal. The HUD displays current trait totals and details of the last choice.
 - **modules/** – Reusable engine modules (`tagging.py`, `save_system.py`, `telemetry.py`, `reveal.py`).
+- **cli/** – Command-line helpers and entry points.
+- **dashboard/** – Dash-powered interface for running simulation policies and visualising trait progression.
+- **testing/** – Harness utilities, policies, and metrics for automated runs.
 
 ## Engine CLI
 

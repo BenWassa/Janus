@@ -39,6 +39,7 @@ For quick access to key information:
 - **Save Format**: `technical/save_format.md`
 - **Latest Playtest**: `testing/sprint8_playtest_report.md`
 - **Development Status**: `development/commission_sprints.md`
+- **Testing Dashboard**: `development/dashboard.md`
 
 ## Writing Guidelines
 
