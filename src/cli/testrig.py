@@ -3,34 +3,27 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 from typing import List
 
-from ..testing.runner import run
 from ..testing.policies import POLICIES
-
-
-def _write_trace(out_file: Path, trace: List[dict]) -> None:
-    out_file.parent.mkdir(parents=True, exist_ok=True)
-    with out_file.open("w", encoding="utf-8") as fh:
-        for step in trace:
-            json.dump(step, fh)
-            fh.write("\n")
+from .run_writer import write_run
+from .build_index import build_index
 
 
 def cmd_run(args: argparse.Namespace) -> None:
-    policy_cls = POLICIES[args.policy]
-    finals = []
     for i in range(args.runs):
-        policy = policy_cls()
         seed = args.seed + i if args.seed is not None else i
-        result = run(policy, seed, args.max_steps)
-        run_id = f"{args.policy}_seed{seed}_{i:03d}"
-        _write_trace(Path(args.output) / f"{run_id}.jsonl", result["trace"])
-        finals.append(result["final"])
+        write_run(
+            policy_name=args.policy,
+            seed=seed,
+            max_steps=args.max_steps,
+            dominance_threshold=args.dominance_threshold,
+            output_dir=Path(args.output),
+        )
 
-    print(f"Completed {len(finals)} runs for policy '{args.policy}'.")
+    build_index(Path(args.output))
+    print(f"Completed {args.runs} runs for policy '{args.policy}'.")
 
 
 def cmd_suite(args: argparse.Namespace) -> None:
@@ -41,6 +34,7 @@ def cmd_suite(args: argparse.Namespace) -> None:
             seed=args.seed,
             runs=args.runs,
             max_steps=args.max_steps,
+            dominance_threshold=args.dominance_threshold,
             output=args.output,
         )
         cmd_run(run_args)
@@ -55,7 +49,8 @@ def build_parser() -> argparse.ArgumentParser:
     run_p.add_argument("--seed", type=int, default=0)
     run_p.add_argument("--runs", type=int, default=1)
     run_p.add_argument("--max-steps", type=int, default=100)
-    run_p.add_argument("--output", default="tests/artifacts")
+    run_p.add_argument("--dominance-threshold", type=int, default=80)
+    run_p.add_argument("--output", default="data/test_results")
     run_p.set_defaults(func=cmd_run)
 
     suite_p = sub.add_parser("suite", help="run a suite of policies")
@@ -64,7 +59,8 @@ def build_parser() -> argparse.ArgumentParser:
     suite_p.add_argument("--seed", type=int, default=0)
     suite_p.add_argument("--runs", type=int, default=1)
     suite_p.add_argument("--max-steps", type=int, default=100)
-    suite_p.add_argument("--output", default="tests/artifacts")
+    suite_p.add_argument("--dominance-threshold", type=int, default=80)
+    suite_p.add_argument("--output", default="data/test_results")
     suite_p.set_defaults(func=cmd_suite)
 
     return parser
