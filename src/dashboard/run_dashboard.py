@@ -142,6 +142,60 @@ def create_metric_card(title, value, subtitle="", trend=None):
         html.P(subtitle, className="metric-subtitle") if subtitle else None
     ], className="metric-card")
 
+
+def _load_history():
+    """Load saved simulation runs from disk."""
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    history = []
+    for path in sorted(
+        DATA_DIR.glob("run_*.json"),
+        key=lambda p: int(p.stem.split("_")[1]),
+    ):
+        try:
+            with path.open("r", encoding="utf-8") as fh:
+                run = json.load(fh)
+            run.setdefault(
+                "timestamp", datetime.fromtimestamp(path.stat().st_mtime).isoformat()
+            )
+            history.append(run)
+        except Exception:
+            continue
+    return history
+
+
+def _compute_quick_stats(history):
+    """Create quick stats cards from run history."""
+    if not history:
+        return [
+            create_metric_card("Simulations Run", "0", "Total tests completed"),
+            create_metric_card("Avg Decisions", "—", "Per simulation"),
+            create_metric_card("Success Rate", "—", "Completion rate"),
+            create_metric_card("Last Run", "Never", "Most recent run"),
+        ]
+
+    avg_decisions = sum(h.get("decisions_made", 0) for h in history) / len(history)
+    successes = sum(
+        1
+        for h in history
+        if h.get("metadata", {}).get("completion_status", "success") == "success"
+    )
+    success_rate = successes / len(history) * 100
+    last_timestamp = max(
+        datetime.fromisoformat(h["timestamp"]) for h in history if h.get("timestamp")
+    )
+    return [
+        create_metric_card("Simulations Run", len(history), "Total tests completed", "up"),
+        create_metric_card("Avg Decisions", f"{avg_decisions:.1f}", "Per simulation"),
+        create_metric_card("Success Rate", f"{success_rate:.0f}%", "Completion rate"),
+        create_metric_card(
+            "Last Run", last_timestamp.strftime("%H:%M:%S"), "Most recent run"
+        ),
+    ]
+
+
+INITIAL_HISTORY = _load_history()
+INITIAL_QUICK_STATS = _compute_quick_stats(INITIAL_HISTORY)
+
 app = Dash(external_stylesheets=['/assets/dashboard.css'])
 app.title = "Janus Dashboard"
 calibration_monitor.register_callbacks(app)
@@ -161,12 +215,7 @@ app.layout = html.Div([
 
         # Quick Stats Row
         html.Div([
-            html.Div(id="quick-stats", children=[
-                create_metric_card("Simulations Run", "0", "Total tests completed"),
-                create_metric_card("Avg Decisions", "—", "Per simulation"),
-                create_metric_card("Success Rate", "—", "Completion percentage"),
-                create_metric_card("Last Run", "Never", "Most recent test")
-            ])
+            html.Div(id="quick-stats", children=INITIAL_QUICK_STATS)
         ], className="stats-grid")
     ], className="dashboard-header"),
 
@@ -260,7 +309,7 @@ app.layout = html.Div([
     # Hidden data stores
     dcc.Store(id="selected-policy", data="Seeded Random"),
     dcc.Store(id="simulation-data", data={}),
-    dcc.Store(id="simulation-history", data=[])
+    dcc.Store(id="simulation-history", data=INITIAL_HISTORY)
 ], className="app-container")
 
 def _save_run(result: Dict[str, Any], policy_name: str) -> None:
@@ -490,14 +539,7 @@ def run_simulation(n_clicks, policy_name, seed_value, history, active_tab):
             create_metric_card("Simulation Seed", seed, "For reproducibility"),
             create_metric_card("Final Traits", len(final_traits), "Measured attributes")
         ]
-
-        avg_decisions = sum(h["decisions_made"] for h in history) / len(history) if history else 0
-        quick_stats = [
-            create_metric_card("Simulations Run", len(history), "Total tests completed", "up"),
-            create_metric_card("Avg Decisions", f"{avg_decisions:.1f}", "Per simulation"),
-            create_metric_card("Success Rate", "100%", "Completion rate"),
-            create_metric_card("Last Run", datetime.now().strftime("%H:%M:%S"), "Just now")
-        ]
+        quick_stats = _compute_quick_stats(history)
 
         return fig, status_content, status_class, result, summary_cards, quick_stats
 
