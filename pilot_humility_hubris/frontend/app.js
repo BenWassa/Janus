@@ -8,6 +8,8 @@ const journal = []; // poetic echo lines
 const path = [];    // record of choices
 let sceneIndex = 0;
 let choicesLocked = false; // Flag to prevent multiple choices
+let quickMode = false;
+const CHOICE_PAUSE = 1500; // ms delay before advancing
 
 // DOM refs
 const start = document.getElementById('start');
@@ -20,6 +22,7 @@ const sceneTitle = document.getElementById('sceneTitle');
 const sceneSubtitle = document.getElementById('sceneSubtitle');
 const sceneText = document.getElementById('sceneText');
 const decision = document.getElementById('decision');
+const consequence = document.getElementById('consequence');
 const traitBar = document.getElementById('traitBar');
 const sigilRepo = document.getElementById('sigils');
 const tarotSpread = document.getElementById('tarotSpread');
@@ -30,6 +33,10 @@ const loadBtn = document.getElementById('load');
 const portrait = document.getElementById('portrait');
 const journalEl = document.getElementById('journal');
 const reading = document.getElementById('reading');
+const quickToggle = document.getElementById('quick');
+const ambienceToggle = document.getElementById('ambience');
+const constellationCanvas = document.getElementById('constellation');
+if (quickToggle) quickMode = quickToggle.checked;
 
 const downloadBtn = document.getElementById('download');
 const againBtn = document.getElementById('again');
@@ -37,7 +44,7 @@ const againBtn = document.getElementById('again');
 // Quick runtime integrity check for required/optional DOM hooks
 function integrityCheck(){
   const required = ['start','play','game','sceneCard','decision'];
-  const optional = ['reflection','traitBar','sigils','tarotSpread','portrait','journal','reading','restart','save','load','download','again','constellation'];
+  const optional = ['reflection','traitBar','sigils','tarotSpread','portrait','journal','reading','restart','save','load','download','again','constellation','quick','ambience','consequence'];
   const missingRequired = required.filter(id => !document.getElementById(id));
   const missingOptional = optional.filter(id => !document.getElementById(id));
   if(missingRequired.length) console.warn('[IntegrityCheck] Missing required DOM ids:', missingRequired.join(', '));
@@ -53,6 +60,13 @@ if (againBtn) againBtn.addEventListener('click', resetAll);
 if (downloadBtn) downloadBtn.addEventListener('click', downloadRitual);
 if (saveBtn) saveBtn.addEventListener('click', saveState);
 if (loadBtn) loadBtn.addEventListener('click', loadState);
+if (quickToggle) quickToggle.addEventListener('change', () => { quickMode = quickToggle.checked; });
+if (ambienceToggle && constellationCanvas) {
+  ambienceToggle.addEventListener('change', () => {
+    constellationCanvas.style.display = ambienceToggle.checked ? 'block' : 'none';
+  });
+  constellationCanvas.style.display = 'none';
+}
 
 // Keyboard shortcuts (1/2) - Now for the new simple choice buttons
 document.addEventListener('keydown', (e)=>{
@@ -169,6 +183,11 @@ function renderScene(){
   sceneText.textContent = s.text;
 
   decision.innerHTML = ''; // Clear previous choices
+  if (consequence){
+    consequence.textContent = '';
+    consequence.style.display = 'none';
+  }
+  decision.style.display = 'flex';
   sceneCard.classList.add('dissolve');
   void sceneCard.offsetWidth; // Trigger reflow for animation
   setTimeout(()=> sceneCard.classList.remove('dissolve'), 1000); // Match CSS dissolve duration
@@ -217,15 +236,21 @@ function handleChoice(opt, point){
 
   updateAtmosphere();
 
-  // Next scene or reflection
-  setTimeout(() => { // Delay transition for visual feedback to play out
+  if (consequence){
+    consequence.textContent = opt.whisper;
+    consequence.style.display = 'block';
+  }
+  decision.style.display = 'none';
+
+  const delay = quickMode ? 0 : CHOICE_PAUSE;
+  setTimeout(() => {
     sceneIndex++;
     if (sceneIndex < scenes.length) {
       renderScene();
     } else {
       showReflection();
     }
-  }, 1000); // Match scene transition duration for smooth flow
+  }, delay);
 }
 
 function updateAtmosphere(){
@@ -311,140 +336,24 @@ function determineArchetype(){
 }
 
 function renderPortraitAndReading(){
-  if (!portrait) return; // graceful guard
+  if (!portrait) return;
   portrait.innerHTML = '';
-  const svg = document.createElementNS(svgNS, 'svg');
-  svg.setAttribute('viewBox','0 0 300 300');
-
-  // Compute local portrait hue from top traits (do not read or write root CSS)
-  const sorted = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
-  const topTraitKeys = sorted.filter(([k,v]) => Math.abs(v) > 0.1).slice(0,3).map(([k])=>k);
-  const topForHue = sorted.filter(([k,v]) => Math.abs(v) > 0.1).slice(0,2);
-  let totalWeight = 0, hueSum = 0;
-  if(topForHue.length){
-    topForHue.forEach(([k,v])=>{ const weight = Math.abs(v); hueSum += TRAIT_COLORS[k][0] * weight; totalWeight += weight; });
-  }
-  const portraitHue = totalWeight ? Math.round(hueSum/totalWeight) : 215;
-  const accentHue = (portraitHue + 20) % 360;
-  const stopA = `hsl(${portraitHue},70%,52%)`;
-  const stopB = `hsl(${(portraitHue+30)%360},78%,48%)`;
-
-  // Background aura gradient (inline stops)
-  const defs = document.createElementNS(svgNS, 'defs');
-  const grad = document.createElementNS(svgNS, 'radialGradient');
-  grad.id = 'aura';
-  grad.innerHTML = `\n    <stop offset="0%" stop-color="${stopA}" stop-opacity="0.55"/>\n    <stop offset="100%" stop-color="rgba(0,0,0,0)"/>\n  `;
-  defs.appendChild(grad);
-  svg.appendChild(defs);
-
-  const aura = document.createElementNS(svgNS, 'circle');
-  aura.setAttribute('cx','150'); aura.setAttribute('cy','110'); aura.setAttribute('r','100');
-  aura.setAttribute('fill','url(#aura)');
-  svg.appendChild(aura);
-
-  // Abstract silhouette with trait distortion (using the top trait for primary visual)
-  const head = document.createElementNS(svgNS, 'circle');
-  head.setAttribute('cx','150'); head.setAttribute('cy','100'); head.setAttribute('r','32');
-  head.setAttribute('fill','rgba(255,255,255,0.25)'); head.setAttribute('stroke','rgba(255,255,255,0.3)');
-  let bodyPath = 'M110,180 Q150,150 190,180 L190,240 Q150,260 110,240 Z';
-  if(topTraitKeys.includes('Rigidity')) bodyPath = 'M110,180 L150,150 190,180 190,240 L110,240 Z'; // More angular
-  else if(topTraitKeys.includes('Impulsivity')) bodyPath = 'M110,180 Q150,140 190,180 Q150,260 110,240 Z'; // More fluid
-  else if(topTraitKeys.includes('Control')) bodyPath = 'M110,180 Q150,160 190,180 L190,220 Q150,240 110,220 Z'; // Broader base
-  else if(topTraitKeys.includes('Fear')) bodyPath = 'M120,190 Q150,170 180,190 L180,230 Q150,240 120,230 Z'; // Slightly smaller, hunched
-  const body = document.createElementNS(svgNS, 'path');
-  body.setAttribute('d', bodyPath);
-  body.setAttribute('fill','rgba(255,255,255,0.12)');
-  body.setAttribute('stroke','rgba(255,255,255,0.25)');
-  svg.appendChild(head); svg.appendChild(body);
-
-  // Adornments for dominant traits (use local accent colors, avoid root vars)
-  const crownFill = `hsla(${accentHue},70%,55%,0.35)`;
-  const crownStroke = `hsla(${accentHue},70%,55%,0.6)`;
-  const adornStroke = `hsla(${accentHue},70%,55%,0.5)`;
-
-  topTraitKeys.forEach(traitKey => {
-    switch (traitKey) {
-      case 'Hubris': // Crown of light
-        const crown = document.createElementNS(svgNS, 'path');
-        crown.setAttribute('d','M118,78 L132,58 L150,80 L168,58 L182,78 Z');
-        crown.setAttribute('fill', crownFill);
-        crown.setAttribute('stroke', crownStroke);
-        crown.classList.add('adornment-animation');
-        svg.appendChild(crown);
-        break;
-      case 'Fear': // Cloak/Shadowed form
-        const cloak = document.createElementNS(svgNS, 'path');
-        cloak.setAttribute('d','M80,180 Q150,160 220,180 L220,240 Q150,260 80,240 Z');
-        cloak.setAttribute('fill','rgba(0,0,0,0.25)');
-        cloak.setAttribute('stroke','rgba(0,0,0,0.4)');
-        svg.appendChild(cloak);
-        break;
-      case 'Avarice': // Gems/Coins around body
-        const coin1 = document.createElementNS(svgNS, 'circle'); coin1.setAttribute('cx', '125'); coin1.setAttribute('cy', '190'); coin1.setAttribute('r', '5'); coin1.setAttribute('fill', 'gold'); svg.appendChild(coin1);
-        const coin2 = document.createElementNS(svgNS, 'circle'); coin2.setAttribute('cx', '175'); coin2.setAttribute('cy', '195'); coin2.setAttribute('r', '6'); coin2.setAttribute('fill', 'gold'); svg.appendChild(coin2);
-        break;
-      case 'Deception': // Shifting lines around head
-        const deceptionLine = document.createElementNS(svgNS, 'path');
-        deceptionLine.setAttribute('d','M100,110 Q150,90 200,110');
-        deceptionLine.setAttribute('stroke', adornStroke);
-        deceptionLine.setAttribute('stroke-dasharray','5 5');
-        deceptionLine.setAttribute('fill','none');
-        deceptionLine.classList.add('adornment-animation');
-        svg.appendChild(deceptionLine);
-        break;
-      case 'Wrath': // Fiery eyes/glow
-        const eyeGlow = document.createElementNS(svgNS, 'circle');
-        eyeGlow.setAttribute('cx','140'); eyeGlow.setAttribute('cy','95'); eyeGlow.setAttribute('r','3');
-        eyeGlow.setAttribute('fill','hsla(0,100%,70%,0.8)');
-        eyeGlow.classList.add('adornment-animation');
-        const eyeGlow2 = eyeGlow.cloneNode(); eyeGlow2.setAttribute('cx','160');
-        svg.appendChild(eyeGlow); svg.appendChild(eyeGlow2);
-        break;
-      case 'Control': // Geometric patterns
-        const controlPattern = document.createElementNS(svgNS, 'rect');
-        controlPattern.setAttribute('x','140'); controlPattern.setAttribute('y','130'); controlPattern.setAttribute('width','20'); controlPattern.setAttribute('height','20');
-        controlPattern.setAttribute('fill','none'); controlPattern.setAttribute('stroke','rgba(255,255,255,0.3)');
-        svg.appendChild(controlPattern);
-        break;
-      case 'Impulsivity': // Burst lines
-        const burst = document.createElementNS(svgNS, 'line');
-        burst.setAttribute('x1','150'); burst.setAttribute('y1','100'); burst.setAttribute('x2','165'); burst.setAttribute('y2','85');
-        burst.setAttribute('stroke', adornStroke);
-        burst.classList.add('adornment-animation');
-        const burst2 = burst.cloneNode(); burst2.setAttribute('x2','135'); burst2.setAttribute('y2','85');
-        svg.appendChild(burst); svg.appendChild(burst2);
-        break;
-      case 'Rigidity': // Solid lines, perhaps a grid
-        const gridLine1 = document.createElementNS(svgNS, 'line'); gridLine1.setAttribute('x1', '130'); gridLine1.setAttribute('y1', '120'); gridLine1.setAttribute('x2', '170'); gridLine1.setAttribute('y2', '120'); gridLine1.setAttribute('stroke', 'rgba(255,255,255,0.2)'); svg.appendChild(gridLine1);
-        const gridLine2 = gridLine1.cloneNode(); gridLine2.setAttribute('y1', '140'); gridLine2.setAttribute('y2', '140'); svg.appendChild(gridLine2);
-        break;
-      case 'Apathy': // Fading or desaturated effect (achieved via overall color, but can add subtle overlay)
-        const apathyOverlay = document.createElementNS(svgNS, 'rect'); apathyOverlay.setAttribute('x','0'); apathyOverlay.setAttribute('y','0'); apathyOverlay.setAttribute('width','300'); apathyOverlay.setAttribute('height','300'); apathyOverlay.setAttribute('fill','rgba(0,0,0,0.1)');
-        svg.appendChild(apathyOverlay);
-        break;
-      case 'Cynicism': // Distorted/broken patterns
-        const cynicShard = document.createElementNS(svgNS, 'path'); cynicShard.setAttribute('d', 'M140,95 L160,95 L155,105 Z'); cynicShard.setAttribute('fill', 'rgba(255,255,255,0.1)'); cynicShard.setAttribute('stroke', 'rgba(255,255,255,0.2)');
-        svg.appendChild(cynicShard);
-        break;
-      case 'Envy': // Reaching tendrils
-        const tendril = document.createElementNS(svgNS, 'path'); tendril.setAttribute('d', 'M150,100 C130,120 170,120 150,140'); tendril.setAttribute('stroke', 'hsl(120,70%,40%)'); tendril.setAttribute('fill', 'none'); tendril.classList.add('adornment-animation');
-        svg.appendChild(tendril);
-        break;
-      case 'Moodiness': // Swirling mist
-        const mist = document.createElementNS(svgNS, 'circle'); mist.setAttribute('cx', '150'); mist.setAttribute('cy', '100'); mist.setAttribute('r', '20'); mist.setAttribute('fill', 'rgba(180,150,200,0.1)');
-        svg.appendChild(mist);
-        break;
-    }
-  });
-
-  portrait.appendChild(svg);
-
-  // Archetype reading
   const arche = determineArchetype();
-  const title = `Mythic Persona: ${arche.name}`;
-  const topTraitsFormatted = topTraitKeys.length > 0 ? `Dominant inclinations: ${topTraitKeys.join(', ')}.` : '';
-  const narrative = arche.lines.map(l=>`<div>• ${l}</div>`).join('') + `<div class="trait-summary">${topTraitsFormatted}</div>`;
-  if (reading) reading.innerHTML = `<div class="badge">Cosmic Constellation Narrative</div><h2 class="title" style="margin-top:8px;">${title}</h2><div class="scene-text">${narrative}</div>`;
+  const card = document.createElement('div');
+  card.className = 'archetype-card';
+  const title = document.createElement('h2');
+  title.textContent = arche.name;
+  card.appendChild(title);
+  arche.lines.slice(0,2).forEach(l=>{
+    const p = document.createElement('p');
+    p.textContent = l;
+    card.appendChild(p);
+  });
+  portrait.appendChild(card);
+  if (reading){
+    const lines = arche.lines.map(l=>`<div>• ${l}</div>`).join('');
+    reading.innerHTML = `<div class="badge">Cosmic Constellation Narrative</div><h2 class="title" style="margin-top:8px;">Mythic Persona: ${arche.name}</h2><div class="scene-text">${lines}</div>`;
+  }
 }
 
 function downloadRitual(){
@@ -516,7 +425,7 @@ function echoRipple(x, y){
 // If the canvas is removed from the DOM this entire block will skip safely.
 // -----------------------------
 {
-  const canvas = document.getElementById('constellation');
+  const canvas = constellationCanvas;
   if (!canvas || !canvas.getContext) {
     console.info('[Constellation] canvas not found or unsupported; skipping constellation rendering.');
   } else {
