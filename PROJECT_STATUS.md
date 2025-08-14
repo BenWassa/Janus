@@ -17,10 +17,10 @@ Project Janus is a retro-inspired text RPG where player choices both guide the s
 - `python -m pytest` → **17 passed**, 2 warnings (deprecated `datetime.utcnow`).
 
 ## Recent Activity
-- `568cab1` – fix: update version to v2.1-alpha
+- `0807e5d` – merge: assess project state and document findings
 
 ## Sprint Progress
-Sixteen sprints delivered:
+Twenty-two sprints delivered:
 1. Trait glossary and tagging API.
 2. Act 1 "Mirrors" scenarios.
 3. Act 2 "Beasts" scenarios.
@@ -36,7 +36,13 @@ Sixteen sprints delivered:
 13. Testing dashboard and control panel.
 14. Data ingestion & analytics baseline.
 15. Calibrator & optimization utilities.
-16. Dashboard "Personality Mixer" with live slider readouts.
+ 16. Dashboard "Personality Mixer" with live slider readouts.
+17. Persistent state & narrative callbacks.
+18. Expanded choice architecture with multi-option scenes.
+19. Psychological payoff system upgrade for trait-based archetypes.
+20. Story spine & continuity pass linking acts through stateful interludes.
+21. Internal mythos & meaning mapping via symbol–trait links.
+22. Hero’s Chronicle endgame with personalized summaries.
 
 ## Next Steps
 - Gather feedback from alpha/beta testers.
