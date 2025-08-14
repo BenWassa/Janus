@@ -30,16 +30,17 @@ const loadBtn = document.getElementById('load');
 const portrait = document.getElementById('portrait');
 const journalEl = document.getElementById('journal');
 const reading = document.getElementById('reading');
-const downloadBtn = document.getElementById('download');
-const againBtn = document = document.getElementById('again');
 
-// Entry
-playBtn.addEventListener('click', startGame);
-restart.addEventListener('click', resetAll);
-againBtn.addEventListener('click', resetAll);
-downloadBtn.addEventListener('click', downloadRitual);
-saveBtn.addEventListener('click', saveState);
-loadBtn.addEventListener('click', loadState);
+const downloadBtn = document.getElementById('download');
+const againBtn = document.getElementById('again');
+
+// Entry - attach listeners only if elements exist to avoid runtime errors in trimmed DOMs
+if (playBtn) playBtn.addEventListener('click', startGame);
+if (restart) restart.addEventListener('click', resetAll);
+if (againBtn) againBtn.addEventListener('click', resetAll);
+if (downloadBtn) downloadBtn.addEventListener('click', downloadRitual);
+if (saveBtn) saveBtn.addEventListener('click', saveState);
+if (loadBtn) loadBtn.addEventListener('click', loadState);
 
 // Keyboard shortcuts (1/2) - Now for the new simple choice buttons
 document.addEventListener('keydown', (e)=>{
