@@ -22,7 +22,7 @@ This document summarizes the work completed across sixteen development sprints a
 16. **Sprint 16 – Dashboard "Personality Mixer."** Integrated a calibration tab with live slider readouts for policy multipliers and master controls.
 
 ## Repository Status
-- Source code and data are organized under clearly defined directories (`src/`, `data/`, `versions/`, etc.).
+- Source code and data are organized under clearly defined directories (`src/`, `data/`, `archive/versions/`, etc.).
 - Readme files in each module describe usage and integration points and have been reviewed for accuracy.
 - Playtest artifacts and trait payoff libraries are stored under `data/` for iterative tuning.
 

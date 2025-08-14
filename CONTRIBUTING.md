@@ -13,7 +13,7 @@ cd Janus
 ```
 
 ### 2. Prototyping New Features
-- Start in `versions/v0-experiments/experiments/`
+- Start in `archive/versions/v0-experiments/experiments/`
 - Create focused, small experiments
 - Document your findings
 - Test concepts thoroughly
@@ -25,7 +25,7 @@ cd Janus
 - Add comprehensive tests
 
 ### 4. Version Development
-- Work in appropriate version directory (`versions/`)
+- Work in appropriate version directory (`archive/versions/`)
 - Use shared components from `src/`
 - Maintain version-specific documentation
 - Test integration thoroughly

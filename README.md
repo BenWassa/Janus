@@ -3,7 +3,7 @@ A retro-inspired text RPG where your story shapes — and secretly reveals — y
 
 **Current Version:** `v2-alpha` (see [`VERSION`](VERSION)).
 
-For an overview of all milestone builds, see [`versions/README.md`](versions/README.md).
+For an overview of all milestone builds, see [`archive/versions/README.md`](archive/versions/README.md).
 
 ## Project Overview
 Project Janus blends the charm of a classic text-based fantasy adventure with the intrigue of hidden psychological profiling. Every choice you make — in quests, dialogues, and moral dilemmas — subtly shapes your journey and reveals the inner contours of your character.
@@ -35,9 +35,6 @@ Engine entry point and reusable modules.
 - `calibrator/` – tuning utilities and optimizer for policy multipliers
 - `testing/` – automated test harness and policies
 
-### 📁 `/versions/` - Development Iterations
-Version-specific implementations showing project evolution. See [`versions/README.md`](versions/README.md) for details on each milestone.
-
 ### 📁 `/tests/` - Quality Assurance
 Testing scripts and fixtures. [See tests README](tests/README.md) for procedures.
 
@@ -59,8 +56,15 @@ JSON configuration snapshots and calibration settings.
 ### 📁 `/reports/` - Project Reports
 Sprint summaries and analytics. [See reports README](reports/README.md) for contents.
 
+### 📁 `/archive/` - Archived Assets
+Legacy versions and sample outputs kept for reference.
+- `versions/` – historical milestone builds
+- `outputs/` – sample telemetry logs and test results
+- `snapshots/` – deprecated calibration snapshots
+
+
 ### 📁 `/outputs/` - Generated Files
-Telemetry logs, test results, and other generated content. [See outputs README](outputs/README.md) for file types.
+Telemetry logs and test results produced during development. Sample output files have been moved to `archive/outputs/`.
 
 ## Getting Started
 1. **Run the Alpha Build**
@@ -71,7 +75,7 @@ Telemetry logs, test results, and other generated content. [See outputs README](
    scripts/run_alpha_debug.bat    # Developer mode (shows traits)
    ```
 2. **Test the System**: Use `tools/test_harness.py` to validate psychological profiling accuracy.
-3. **Play the Prototype**: Try the v1 pilot in `/versions/v1-prototype/` to experience the core concept.
+3. **Play the Prototype**: Try the v1 pilot in `/archive/versions/v1-prototype/` to experience the core concept.
 4. **Explore the Code**: Review `/src/` modules to understand the architecture.
 5. **Review the Development Quick Start**: See `docs/development/quick_start.md`.
 6. **Read the Docs**: Check `/docs/` for comprehensive design and technical documentation.

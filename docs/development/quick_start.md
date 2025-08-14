@@ -3,20 +3,20 @@
 ## Quick Start
 
 1. **Choose your development approach:**
-   - Start prototyping in `versions/v0-experiments/experiments/`
-   - Work on a specific version in `versions/`
+   - Start prototyping in `archive/versions/v0-experiments/experiments/`
+   - Work on a specific version in `archive/versions/`
    - Develop shared components in `src/`
 
 2. **For prototyping (recommended first step):**
    ```bash
-   cd versions/v0-experiments/experiments
+   cd archive/versions/v0-experiments/experiments
    python experiment_main.py
    ```
 
 3. **Project structure at a glance:**
    ```
    src/           # Shared, reusable components
-   versions/      # Version-specific implementations (includes experiments)
+   archive/versions/      # Version-specific implementations (includes experiments)
    data/          # Game content (JSON files)
    tests/         # Testing suite
    deployment/    # Production builds
@@ -26,7 +26,7 @@
 ## Development Workflow
 
 ### Phase 1: Prototyping
-- Work in `versions/v0-experiments/experiments/`
+- Work in `archive/versions/v0-experiments/experiments/`
 - Test concepts quickly
 - Validate psychological assessment ideas
 
@@ -36,7 +36,7 @@
 - Comprehensive testing
 
 ### Phase 3: Version Implementation
-- Create version-specific features in `versions/`
+- Create version-specific features in `archive/versions/`
 - Use shared components from `src/`
 - Version-specific content and mechanics
 
@@ -64,7 +64,7 @@
 
 ## Next Steps
 
-1. **Start prototyping**: Run the experiment in `versions/v0-experiments/experiments/experiment_main.py`
+1. **Start prototyping**: Run the experiment in `archive/versions/v0-experiments/experiments/experiment_main.py`
 2. **Design your first quest**: Create content in `data/quests/`
 3. **Implement core systems**: Build game engine components in `src/modules/`
 4. **Add psychological assessment**: Develop profiling algorithms in `src/modules/`

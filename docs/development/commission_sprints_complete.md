@@ -222,7 +222,7 @@ Edit
 /src/modules/   → Logical engine modules (tagging, payoffs, telemetry, etc.)
 /data/          → Scenario scripts, trait libraries, payoff templates
 /data/playtests → Logs, run summaries, feedback artifacts
-/versions/      → Archived builds with date stamps
+/archive/versions/      → Archived builds with date stamps
 /docs/          → README.md, design docs, sprint reports
 /tests/         → Automated or manual test scripts
 Audit Steps:
