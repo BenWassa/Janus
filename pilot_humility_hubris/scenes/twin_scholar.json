@@ -1,0 +1,25 @@
+{
+  "id": "twin_scholar",
+  "act": "Act I · Mirrors",
+  "title": "Twin Scholar",
+  "subtitle": "Someone identical to you presents a thesis claiming your life’s work.",
+  "text": "Their footnotes are perfect. Their voice is yours.",
+  "thread": "mirrors",
+  "options": [
+    {
+      "id": "dissect",
+      "label": "Publicly dissect their argument until they falter.",
+      "whisper": "You answered threat with edge.",
+      "delta": {"Hubris": 0.5, "Wrath": 0.2},
+      "require_flags": ["disturbed_pool"],
+      "next": null
+    },
+    {
+      "id": "applaud",
+      "label": "Applaud politely and leave the hall.",
+      "whisper": "You passed through without contest.",
+      "delta": {"Hubris": -0.4, "Apathy": 0.2},
+      "next": null
+    }
+  ]
+}

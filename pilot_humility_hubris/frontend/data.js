@@ -206,3 +206,16 @@ export const CARD_GLYPHS = {
     'abandoned_stage': '<path d="M3 15 H17 L10 5 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 12 Q10 8 15 12" stroke="currentColor" stroke-width="1.5" fill="none"/>', // Performance/Narrative
     'default': '<circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2"/><line x1="7" y1="10" x2="13" y2="10" stroke="currentColor" stroke-width="1.5"/>' // Generic placeholder
 };
+export const SCENE_SCHEMA_VERSION = 1;
+
+// Load scenes from external JSON files adhering to docs/scene-schema.md
+export async function loadScenes() {
+  const indexRes = await fetch('../scenes/index.json');
+  const index = await indexRes.json();
+  const scenes = [];
+  for (const file of index.scenes) {
+    const res = await fetch(`../scenes/${file}`);
+    scenes.push(await res.json());
+  }
+  return scenes;
+}

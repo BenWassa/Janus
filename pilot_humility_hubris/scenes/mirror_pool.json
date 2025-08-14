@@ -1,0 +1,26 @@
+{
+  "id": "mirror_pool",
+  "act": "Act I · Mirrors",
+  "title": "Mirror Pool",
+  "subtitle": "A still pool mirrors the sky; your reflection waits for a ripple.",
+  "text": "The surface holds your outline with too much patience.",
+  "thread": "mirrors",
+  "set_flags": ["saw_mirror_pool"],
+  "options": [
+    {
+      "id": "disturb",
+      "label": "Disturb the surface and watch your face fracture.",
+      "whisper": "You broke the stillness first.",
+      "delta": {"Hubris": 0.6, "Impulsivity": 0.2},
+      "next": "twin_scholar",
+      "set_flags": ["disturbed_pool"]
+    },
+    {
+      "id": "wait",
+      "label": "Stand motionless until the water calms itself.",
+      "whisper": "You let the world settle before you moved.",
+      "delta": {"Hubris": -0.6, "Rigidity": 0.2},
+      "next": "twin_scholar"
+    }
+  ]
+}
