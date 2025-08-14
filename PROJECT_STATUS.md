@@ -36,7 +36,7 @@ Twenty-two sprints delivered:
 13. Testing dashboard and control panel.
 14. Data ingestion & analytics baseline.
 15. Calibrator & optimization utilities.
- 16. Dashboard "Personality Mixer" with live slider readouts.
+16. Dashboard "Personality Mixer" with live slider readouts.
 17. Persistent state & narrative callbacks.
 18. Expanded choice architecture with multi-option scenes.
 19. Psychological payoff system upgrade for trait-based archetypes.
