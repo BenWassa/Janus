@@ -11,7 +11,7 @@ Janus/
 ├── src/                        # Core source code
 │   ├── engine.py               # Main game loop
 │   └── modules/                # Reusable engine modules (tagging, telemetry, save system)
-├── versions/                   # Version-specific implementations
+├── archive/versions/                   # Version-specific implementations
 │   ├── v0-experiments/         # Research and prototype experiments
 │   ├── v1-prototype/           # Initial prototype version
 │   ├── v2-alpha/               # Alpha release version
@@ -33,11 +33,11 @@ Janus/
 ## 🔄 Development Workflow
 
 ### 1. Prototyping Phase
-- Work in `versions/v0-experiments/experiments/` for new features
+- Work in `archive/versions/v0-experiments/experiments/` for new features
 - Validate concepts before moving to versioned development
 
 ### 2. Version Development
-- Each version in `versions/` represents a milestone
+- Each version in `archive/versions/` represents a milestone
 - Import shared components from `src/`
 - Version-specific features go in respective version directories
 
@@ -71,9 +71,9 @@ Game content is separated from code in the `data/` directory:
 
 ## 🚀 Getting Started
 
-1. Start prototyping in `versions/v0-experiments/`
+1. Start prototyping in `archive/versions/v0-experiments/`
 2. Move stable features to `src/` for reuse
-3. Create version-specific implementations in `versions/`
+3. Create version-specific implementations in `archive/versions/`
 4. Test thoroughly using `tests/`
 5. Deploy stable versions through `deployment/`
 
