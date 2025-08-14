@@ -34,6 +34,18 @@ const reading = document.getElementById('reading');
 const downloadBtn = document.getElementById('download');
 const againBtn = document.getElementById('again');
 
+// Quick runtime integrity check for required/optional DOM hooks
+function integrityCheck(){
+  const required = ['start','play','game','sceneCard','decision'];
+  const optional = ['reflection','traitBar','sigils','tarotSpread','portrait','journal','reading','restart','save','load','download','again','constellation'];
+  const missingRequired = required.filter(id => !document.getElementById(id));
+  const missingOptional = optional.filter(id => !document.getElementById(id));
+  if(missingRequired.length) console.warn('[IntegrityCheck] Missing required DOM ids:', missingRequired.join(', '));
+  if(missingOptional.length) console.info('[IntegrityCheck] Missing optional DOM ids (UI will degrade gracefully):', missingOptional.join(', '));
+  return { missingRequired, missingOptional };
+}
+integrityCheck();
+
 // Entry - attach listeners only if elements exist to avoid runtime errors in trimmed DOMs
 if (playBtn) playBtn.addEventListener('click', startGame);
 if (restart) restart.addEventListener('click', resetAll);
