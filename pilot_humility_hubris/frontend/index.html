@@ -127,8 +127,21 @@
     @keyframes ripple { from { transform: scale(0.6); opacity: 0.8; } to { transform: scale(40); opacity: 0; } }
 
     /* Scene transition */
-    .dissolve { animation: dissolve 420ms ease both; }
-    @keyframes dissolve { from { opacity: 0; filter: blur(8px); transform: translateY(8px); } to { opacity: 1; filter: blur(0); transform: translateY(0); } }
+    .dissolve { animation: dissolve 700ms ease both; }
+    @keyframes dissolve {
+      0%   { opacity: 0; filter: blur(12px) hue-rotate(-15deg); transform: translateY(20px) scale(0.98); }
+      50%  { filter: blur(4px) hue-rotate(10deg); transform: translateY(-4px) scale(1.02); }
+      100% { opacity: 1; filter: blur(0) hue-rotate(0deg); transform: translateY(0) scale(1); }
+    }
+
+    /* Tarot spread */
+    .tarot-spread { display: flex; gap: 6px; height: 36px; }
+    .tarot-card {
+      width: 24px; height: 32px; border: 1px solid rgba(255,255,255,0.18);
+      background: hsla(var(--bg-hue),40%,60%,0.12); transform: rotateY(90deg);
+      transition: transform 600ms ease;
+    }
+    .tarot-card.reveal { transform: rotateY(0deg); }
 
     /* Reflection */
     .reflect-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; }
@@ -225,6 +238,10 @@
           <div style="margin-top:16px;">
             <h4 class="subtitle" style="margin:0 0 6px 0;">Glyph Repository</h4>
             <div id="sigils"></div>
+          </div>
+          <div style="margin-top:16px;">
+            <h4 class="subtitle" style="margin:0 0 6px 0;">The Thread of Fate</h4>
+            <div id="tarotSpread" class="tarot-spread"></div>
           </div>
         </section>
       </div>
@@ -332,6 +349,29 @@
     Envy:[120,70,40],
     Cynicism:[210,20,50]
   };
+  const ARCHETYPES = {
+    'Apathy,Cynicism': {
+      name: 'The Wanderer',
+      lines: [
+        'Distance grants safety and perspective.',
+        'Beware the comfort of perpetual detachment.'
+      ]
+    },
+    'Hubris,Rigidity': {
+      name: 'The Sentinel',
+      lines: [
+        'You hold the line between order and ambition.',
+        'Structure serves you, until you serve it.'
+      ]
+    },
+    'Deception,Impulsivity': {
+      name: 'The Trickster',
+      lines: [
+        'Your steps spark and vanish in equal measure.',
+        'Freedom is your ally; consistency your trial.'
+      ]
+    }
+  };
   const journal = []; // poetic echo lines
   const path = [];    // record of choices
   let sceneIndex = 0;
@@ -349,6 +389,7 @@
   const decision = document.getElementById('decision');
   const traitBar = document.getElementById('traitBar');
   const sigilRepo = document.getElementById('sigils');
+  const tarotSpread = document.getElementById('tarotSpread');
   const modeSelect = document.getElementById('mode');
   const restart = document.getElementById('restart');
   const portrait = document.getElementById('portrait');
@@ -378,6 +419,7 @@
     game.style.display = '';
     TRAIT_KEYS.forEach(k=> traits[k] = 0);
     sigilRepo.innerHTML = '';
+    tarotSpread.innerHTML = '';
     sceneIndex = 0; journal.length = 0; path.length = 0;
     renderScene();
     updateAtmosphere();
@@ -397,8 +439,8 @@
     sceneText.textContent = s.text;
 
     decision.innerHTML = '';
-    decision.classList.add('dissolve');
-    setTimeout(()=> decision.classList.remove('dissolve'), 460);
+    sceneCard.classList.add('dissolve');
+    setTimeout(()=> sceneCard.classList.remove('dissolve'), 720);
 
     const mode = modeSelect.value;
     if (mode === 'orbit') renderOrbit(s.options);
@@ -497,6 +539,7 @@
     }
     path.push({ scene: scenes[sceneIndex].id, choice: opt.id, delta: opt.delta });
     journal.push(`• ${opt.whisper}`);
+    addTarotCard();
 
     updateAtmosphere();
 
@@ -542,6 +585,16 @@
     journalEl.textContent = journal.join('\n');
   }
 
+  function determineArchetype(){
+    const keys = Object.entries(traits)
+      .sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]))
+      .slice(0,2)
+      .map(([k])=>k)
+      .sort()
+      .join(',');
+    return ARCHETYPES[keys] || { name: 'The Unshaped', lines: ['Your pattern resists simple names.'] };
+  }
+
   function renderPortraitAndReading(){
     portrait.innerHTML = '';
     const svgNS = 'http://www.w3.org/2000/svg';
@@ -564,61 +617,46 @@
     aura.setAttribute('fill','url(#aura)');
     svg.appendChild(aura);
 
-    // Abstract silhouette (neutral)
-    const head = document.createElementNS(svgNS, 'circle'); head.setAttribute('cx','150'); head.setAttribute('cy','100'); head.setAttribute('r','32'); head.setAttribute('fill','rgba(255,255,255,0.25)'); head.setAttribute('stroke','rgba(255,255,255,0.3)');
-    const body = document.createElementNS(svgNS, 'path'); body.setAttribute('d','M110,180 Q150,150 190,180 L190,240 Q150,260 110,240 Z'); body.setAttribute('fill','rgba(255,255,255,0.12)'); body.setAttribute('stroke','rgba(255,255,255,0.25)');
+    // Determine dominant traits for silhouette/adornments
+    const sorted = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
+    const topTraits = sorted.slice(0,2).map(([k])=>k);
+
+    // Abstract silhouette with trait distortion
+    const head = document.createElementNS(svgNS, 'circle');
+    head.setAttribute('cx','150'); head.setAttribute('cy','100'); head.setAttribute('r','32');
+    head.setAttribute('fill','rgba(255,255,255,0.25)'); head.setAttribute('stroke','rgba(255,255,255,0.3)');
+    let bodyPath = 'M110,180 Q150,150 190,180 L190,240 Q150,260 110,240 Z';
+    if(topTraits[0] === 'Rigidity') bodyPath = 'M110,180 L150,150 190,180 190,240 110,240 Z';
+    else if(topTraits[0] === 'Impulsivity') bodyPath = 'M110,180 Q150,140 190,180 Q150,260 110,240 Z';
+    const body = document.createElementNS(svgNS, 'path');
+    body.setAttribute('d', bodyPath);
+    body.setAttribute('fill','rgba(255,255,255,0.12)');
+    body.setAttribute('stroke','rgba(255,255,255,0.25)');
     svg.appendChild(head); svg.appendChild(body);
 
-    // Trait-driven adornment based on Hubris
-    const hubris = traits.Hubris || 0;
-    if (hubris > 0.35) {
-      // Crown of light (Hubris‑lean)
-      const crown = document.createElementNS(svgNS, 'path');
-      crown.setAttribute('d','M118,78 L132,58 L150,80 L168,58 L182,78 Z');
-      crown.setAttribute('fill','rgba(255,215,130,0.35)');
-      crown.setAttribute('stroke','rgba(255,225,170,0.6)');
-      svg.appendChild(crown);
-    } else if (hubris < -0.35) {
-      // Halo (Humility‑lean)
-      const halo = document.createElementNS(svgNS, 'ellipse');
-      halo.setAttribute('cx','150'); halo.setAttribute('cy','72'); halo.setAttribute('rx','44'); halo.setAttribute('ry','10');
-      halo.setAttribute('fill','none'); halo.setAttribute('stroke','rgba(180,220,255,0.7)'); halo.setAttribute('stroke-width','3');
-      svg.appendChild(halo);
-    } else {
-      // Mask (Equilibrium‑tense)
-      const mask = document.createElementNS(svgNS, 'rect');
-      mask.setAttribute('x','134'); mask.setAttribute('y','90'); mask.setAttribute('width','32'); mask.setAttribute('height','12');
-      mask.setAttribute('fill','rgba(255,255,255,0.22)'); mask.setAttribute('rx','3');
-      svg.appendChild(mask);
+    // Adornments for dominant traits
+    if(topTraits.includes('Impulsivity')){
+      const swirl = document.createElementNS(svgNS,'path');
+      swirl.setAttribute('d','M60,220 Q150,170 240,220');
+      swirl.setAttribute('stroke','rgba(255,255,255,0.25)');
+      swirl.setAttribute('stroke-width','3');
+      swirl.setAttribute('fill','none');
+      svg.appendChild(swirl);
+    }
+    if(topTraits.includes('Rigidity')){
+      const bars = document.createElementNS(svgNS,'path');
+      bars.setAttribute('d','M120,180 L120,240 M180,180 L180,240');
+      bars.setAttribute('stroke','rgba(255,255,255,0.25)');
+      bars.setAttribute('fill','none');
+      svg.appendChild(bars);
     }
 
     portrait.appendChild(svg);
 
-    // Reading text (neutral, non-judgmental)
-    const t = hubris;
-    let title, lines;
-    if (t >= 0.55) {
-      title = 'Mythic Persona: The Crowned Ember';
-      lines = [
-        'You walked where heat collects, and doors opened from their own desire.',
-        'Your thread favors edge and ignition; the world answers decisiveness with shape.',
-        'Guard the line between radiance and consumption. Flame lights—also burns.'
-      ];
-    } else if (t <= -0.55) {
-      title = 'Mythic Persona: The Quiet Well';
-      lines = [
-        'You learned the weight of stillness and let echoes arrive before replies.',
-        'Your thread keeps space open; in restraint, signals become voices.',
-        'Guard the line between depth and retreat. Wells nourish—also drown.'
-      ];
-    } else {
-      title = 'Mythic Persona: The Tightrope Listener';
-      lines = [
-        'You balanced invitation with interruption, earning a moving center.',
-        'Your thread braids patience to poise; choices land without noise.',
-        'Guard the line between composure and delay. Balance guides—also stalls.'
-      ];
-    }
+    // Archetype reading
+    const arche = determineArchetype();
+    const title = `Mythic Persona: ${arche.name}`;
+    const lines = [...arche.lines, `Dominant traits: ${topTraits.join(' & ')}`];
     reading.innerHTML = `<div class="badge">Cosmic Constellation Narrative</div><h2 class="title" style="margin-top:8px;">${title}</h2><div class="scene-text">${lines.map(l=>`<div>• ${l}</div>`).join('')}</div>`;
   }
 
@@ -643,6 +681,13 @@
     }
     node.classList.add('active');
     setTimeout(()=> node.classList.remove('active'), 800);
+  }
+
+  function addTarotCard(){
+    const card = document.createElement('div');
+    card.className = 'tarot-card';
+    tarotSpread.appendChild(card);
+    requestAnimationFrame(()=> card.classList.add('reveal'));
   }
 
   function echoRipple(x, y){
