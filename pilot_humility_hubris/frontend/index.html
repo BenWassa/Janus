@@ -204,7 +204,7 @@
       <div class="card start-card">
         <div class="badge">Alpha · Multi‑Trait Prototype</div>
         <h1 class="start-title">Enter the Labyrinth</h1>
-        <p class="start-blurb">Make a series of small choices. The world will shift around you. Nothing is scored, but something is revealed.<br/>
+        <p class="start-blurb">Make a series of small choices. The world will shift around you. Multiple traits accumulate quietly; reflections, not verdicts.<br/>
         <em>Controls:</em> Click choices · Press <strong>1/2</strong> to choose · Switch decision UI anytime.</p>
         <div class="actions" style="justify-content:center; margin-top:12px;">
           <button id="play">Begin</button>
@@ -225,7 +225,7 @@
 
       <section class="card" id="statusCard">
         <h3 class="title">Atmosphere</h3>
-        <div class="subtitle">The world reflects your leanings. Nothing is final.</div>
+        <div class="subtitle">Many traits stir beneath the surface; the world reflects your leanings—reflections, not verdicts.</div>
         <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
           <span class="badge">Humility</span>
           <div style="flex:1; height:8px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:999px; overflow:hidden;">
@@ -609,7 +609,9 @@
       traits[k] = clamp((traits[k]||0) + v, -1, 1);
       if(Math.abs(v) >= 0.4) showSigil(k);
     }
-    path.push({ scene: scenes[sceneIndex].id, choice: opt.id, delta: opt.delta });
+    const sceneId = scenes[sceneIndex].id;
+    path.push({ scene: sceneId, choice: opt.id, delta: opt.delta });
+    console.log('[Telemetry]', { scene: sceneId, choice: opt.id, delta: opt.delta || {}, traits: { ...traits } });
     journal.push(`• ${opt.whisper}`);
     addTarotCard();
 
