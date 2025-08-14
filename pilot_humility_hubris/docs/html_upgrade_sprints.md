@@ -2,7 +2,6 @@
 
 These sprints prioritize progressive enhancement, starting with refining existing features before integrating more complex ones, and finally expanding content and ensuring robustness.
 
----
 
 #### **Sprint 1: Core UX/UI Polish & Refinement**
 
@@ -20,7 +19,6 @@ These sprints prioritize progressive enhancement, starting with refining existin
 *   **Task 1.4: Cross-Device Responsiveness & CSS Optimization**
     *   Thoroughly test on various screen sizes (mobile, tablet, desktop) and ensure all UI elements scale gracefully and remain functional. Optimize CSS for performance and readability.
 
----
 
 #### **Sprint 2: Multi-Trait System & Initial Ambiguous Feedback**
 
@@ -38,7 +36,6 @@ These sprints prioritize progressive enhancement, starting with refining existin
 *   **Task 2.4: Initial `Whisper Panel` Decision Interface**
     *   Implement `Whisper Panel` as a selectable option in the `modeSelect`. Initially, it can display one choice at a time as a "whisper" text with "Accept" / "Reject" buttons, cycling through options on rejection. Focus on the poetic presentation.
 
----
 
 #### **Sprint 3: Scene Navigation & Advanced Reflection**
 
@@ -53,7 +50,6 @@ These sprints prioritize progressive enhancement, starting with refining existin
 *   **Task 3.4: Enhance `Mythic Persona Portrait` (Multi-Trait)**
     *   Expand the `renderPortraitAndReading` function to generate more complex and varied SVG adornments/distortions based on the player's *dominant archetype* and specific high-scoring traits. The silhouette itself could also subtly change (e.g., more angular for "Rigidity", more fluid for "Impulsivity").
 
----
 
 #### **Sprint 4: Final Reflection Formats & Content Expansion**
 
@@ -68,7 +64,6 @@ These sprints prioritize progressive enhancement, starting with refining existin
 *   **Task 4.4: Basic Save/Load System**
     *   Implement `localStorage` based save/load functionality for the current `trait` object, `journal`, `path`, and `sceneIndex`. Add "Save" and "Load" buttons to the HUD. This is a simplified version for prototype purposes.
 
----
 
 #### **Sprint 5: Testing, Polish, and Documentation**
 
@@ -83,6 +78,155 @@ These sprints prioritize progressive enhancement, starting with refining existin
 *   **Task 5.4: Basic Telemetry Logging**
     *   Implement a simple console logging system that records `scene ID`, `choice ID`, `deltas applied`, and the resulting `trait` state after each choice. This will serve as a basic form of the "telemetry" mentioned in the `README.md` for internal analysis.
 
----
 
 This roadmap provides a clear path to significantly upgrading the Project Janus prototype, moving it closer to the vision of a "symbolic introspection platform" with deep psychological integration.
+
+---
+
+### Sprints 6–11: Major Overhaul (continue numbering after Sprint 5)
+
+These sprints focus on converting the prototype into a coherent, story-first play experience with pragmatic art direction, stronger narrative systems, playtest instrumentation, and polish.
+
+---
+
+#### **Sprint 6: Narrative Engine & Content Pipeline (2–3 weeks)**
+
+**Goal:** Build a small, robust narrative engine and authoring pipeline so content can express continuity, callbacks, and reproducible runs.
+
+Backlog
+- Define a scene JSON schema that supports continuity (persistent flags, thread IDs, callback hooks, delta weight tiers).
+- Implement a validation/preview script that loads `scenes/` JSON, validates schema, and renders a quick-play preview for a single run.
+- Author 8–12 curated micro-scenes that demonstrate thread callbacks and emotional escalation.
+- Add deterministic replay support (store seed + path so a run can be replayed exactly).
+
+Deliverables
+- `docs/scene-schema.md` (spec), `tools/validate_scenes.py` or JS validator, 8–12 new scene files, preview script.
+
+Acceptance criteria
+- Scenes pass validation; preview shows scene transitions and at least 2 callback examples in a sample run.
+
+Risks
+- Content authoring can be slow; mitigate by restricting scope to micro-scenes and using the preview tool to rapidly iterate.
+
+Files to touch
+- `pilot_humility_hubris/frontend/data.js`, new `tools/` script(s), `docs/scene-schema.md`.
+
+Quick win
+- Convert an existing two-scene sequence into the new schema and wire it to the preview script.
+
+---
+
+#### **Sprint 7: UX & Interaction Overhaul (2 weeks)**
+
+**Goal:** Make choices and consequences clear, remove noisy decorative affordances, and prioritize readable pacing and microcopy.
+
+Backlog
+- Replace the complex SVG portrait with a text-first archetype card (title, 2 evocative lines) by default.
+- Rework choice UI to include a short consequence line (one sentence) that displays after selection before transitioning.
+- Add adjustable pacing (short pause after choice; quick mode toggle for rapid testing).
+- Run accessibility checks (font sizes, contrast, keyboard navigation).
+
+Deliverables
+- Updated `renderScene()` and `renderPortraitAndReading()` implementations, pacing controls, accessibility report.
+
+Acceptance criteria
+- In internal tests, players report that they can consistently understand consequence text within 3 seconds of making a choice.
+
+Risks
+- Removing decorative visuals may feel austere; keep an optional ambience toggle to re-enable for demos.
+
+Files to touch
+- `pilot_humility_hubris/frontend/app.js`, `style.css`, and `index.html` (HUD controls).
+
+Quick win
+- I can patch `renderPortraitAndReading()` to show a simple archetype card now (text-only). Say “Do it now” to apply.
+
+---
+
+#### **Sprint 8: Visual Language & Asset Pack (2–3 weeks)**
+
+**Goal:** Replace ad-hoc SVGs with a small coherent asset pack and restrained motion that supports story rather than distracts.
+
+Backlog
+- Create 8–12 simple portrait motifs (silhouettes / two-color emblems) as compact SVGs.
+- Define final palette and typography and centralize tokens in `style.css`.
+- Replace aggressive animations with subtle, semantic motion (emphasis only).
+
+Deliverables
+- `frontend/assets/portraits/` SVGs, updated `style.css` tokens, a short design readme.
+
+Acceptance criteria
+- New assets reduce player confusion in A/B tests and improve perceived coherence.
+
+Risks
+- Creating assets costs time — reuse low-fi silhouettes first and iterate.
+
+Files to touch
+- `pilot_humility_hubris/frontend/style.css`, new `frontend/assets/*`.
+
+---
+
+#### **Sprint 9: Trait-to-Narrative Systems (2 weeks)**
+
+**Goal:** Make traits actionable and narratively meaningful (micro-events, callbacks, sigil lore) rather than abstract numbers.
+
+Backlog
+- Create a trait-to-narrative map that translates trait thresholds into short micro-events or microcopy hooks.
+- Implement contextual microcopy that explains *why* a trait moved after a choice (1-line feedback tied to the current scene).
+- Convert sigils into unlockable micro-memories (tooltip text + emblem) that can be inspected from the reflection screen.
+
+Deliverables
+- `pilot_humility_hubris/frontend/trait_texts.js`, updated `app.js` for contextual feedback, sigil inspection UI.
+
+Acceptance criteria
+- Playthroughs show at least 2 narrative callbacks triggered by trait thresholds in a sample run.
+
+Risks
+- Mapping traits to satisfying prose is iterative; plan rapid copy reviews with 3–5 internal readers.
+
+---
+
+#### **Sprint 10: Instrumentation & End-to-End Tests (2 weeks)**
+
+**Goal:** Add lightweight front-end test automation and telemetry to measure play metrics and regressions.
+
+Backlog
+- Add a small Playwright or Puppeteer harness that validates: start → make 3 choices → reach reflection.
+- Add opt-in local telemetry (JSON file or localStorage log) capturing sceneId, choiceId, deltas, timestamp.
+- Add visual snapshot checks for the reflection screen.
+
+Deliverables
+- `tests/front_end_playwright/` or `tools/playwright/` scripts, telemetry logger, snapshot artifacts.
+
+Acceptance criteria
+- Smoke tests run locally and telemetry captures at least path + deltas for a sample of runs.
+
+Risks
+- Test flakiness; start with deterministic runs and increase coverage gradually.
+
+---
+
+#### **Sprint 11: Playtest Batch & Polishing (2 weeks)**
+
+**Goal:** Run small-batch playtests, analyze results, and prioritize concrete UX/content fixes.
+
+Backlog
+- Run 15–30 remote playtests with a short survey (3 questions: clarity, entertainment, coherence).
+- Aggregate telemetry and tag the top 5 friction points.
+- Implement top-3 fixes (likely UX pacing, microcopy, or small content edits).
+
+Deliverables
+- Playtest report, prioritized bug/feature list, 3 PRs implementing fixes.
+
+Acceptance criteria
+- Visible improvement in satisfaction metrics and at least one measurable uplift in run completion rate after fixes.
+
+Risks
+- Low playtest participation; incentivize with short tasks and a clear test script.
+
+---
+
+## Immediate next steps (apply now)
+- Patch `renderPortraitAndReading()` to a simple narrative card (text-first) and add an `Ambience` toggle to hide the constellation canvas by default. This is low-risk and will make playtests focus on story.
+
+If you want, I can apply the low-risk UI patch now (I already prepared a similar change earlier). Say “Apply portrait patch” and I will edit `pilot_humility_hubris/frontend/app.js` and confirm via a quick smoke check.
