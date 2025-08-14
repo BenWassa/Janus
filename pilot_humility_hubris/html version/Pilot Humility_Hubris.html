@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Janus — Prototype</title>
+  <style>
+    :root {
+      --bg-hue: 250;          /* atmospheric hue, updated by JS */
+      --bg-sat: 18%;
+      --bg-light: 8%;
+      --accent: 72, 92%, 62%; /* HSL, updated by JS */
+      --glass: hsla(0,0%,100%,0.06);
+      --glass-strong: hsla(0,0%,100%,0.12);
+      --text: 0,0%,96%;
+      --muted: 0,0%,75%;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color: hsl(var(--text));
+      background: radial-gradient(1200px 800px at 20% 10%, hsla(var(--bg-hue), 50%, 16%, 0.6), transparent),
+                  linear-gradient(145deg, hsla(var(--bg-hue), 40%, 10%, 1), hsla(calc(var(--bg-hue) + 40), 45%, 7%, 1));
+      transition: background 600ms ease;
+      overflow: hidden;
+    }
+
+    .app {
+      position: relative; height: 100%; width: 100%;
+    }
+
+    /* Constellation canvas */
+    #constellation {
+      position: fixed; right: 12px; bottom: 12px; width: 280px; height: 180px; opacity: 0.8; filter: drop-shadow(0 0 6px rgba(0,0,0,0.25));
+    }
+
+    /* Top HUD */
+    .hud {
+      position: fixed; left: 0; right: 0; top: 0; height: 64px;
+      display: flex; align-items: center; justify-content: space-between; padding: 12px 16px;
+      backdrop-filter: blur(10px); background: linear-gradient(to bottom, rgba(0,0,0,0.28), rgba(0,0,0,0.05));
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .hud .brand { font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.92; }
+    .hud .controls { display: flex; gap: 10px; align-items: center; }
+    .pill {
+      background: var(--glass); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 12px; backdrop-filter: blur(6px);
+      display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow);
+    }
+    select, button { 
+      color: hsl(var(--text)); background: transparent; border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; padding: 8px 10px; 
+    }
+    button { cursor: pointer; }
+
+    /* Panels */
+    .panel {
+      position: absolute; inset: 80px 24px 24px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px;
+    }
+    .card {
+      background: var(--glass); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 18px 18px; box-shadow: var(--shadow);
+    }
+    .title { font-size: 22px; font-weight: 700; letter-spacing: 0.02em; margin: 0 0 8px; }
+    .subtitle { font-size: 13px; color: hsl(var(--muted)); margin-top: 2px; }
+
+    /* Start screen */
+    #start { display: grid; place-items: center; height: 100%; }
+    .start-card { max-width: 720px; padding: 24px 28px; text-align: center; }
+    .start-title { font-size: 32px; margin: 8px 0 0 0; }
+    .start-blurb { color: hsl(var(--muted)); margin: 6px 0 14px; }
+
+    /* Scene */
+    .scene-card { display: grid; grid-template-rows: auto 1fr auto; min-height: 360px; }
+    .scene-text { font-size: 16px; line-height: 1.5; opacity: 0.92; }
+    .scene-id { color: hsl(var(--muted)); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* Decision Area */
+    .decision { position: relative; min-height: 280px; display: grid; place-items: center; overflow: hidden; }
+
+    /* Orbit selector */
+    .orbit {
+      position: relative; width: 420px; height: 420px; border-radius: 50%;
+      background: radial-gradient(260px 260px at 50% 50%, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+      border: 1px dashed rgba(255,255,255,0.12);
+    }
+    .orbit .glyph {
+      position: absolute; width: 160px; height: 44px; display: grid; place-items: center; padding: 6px 10px;
+      background: hsla(var(--bg-hue), 20%, 70%, 0.06); border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; cursor: pointer;
+      transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease, opacity 200ms ease;
+    }
+    .orbit .glyph:hover { background: hsla(var(--bg-hue), 40%, 60%, 0.12); box-shadow: 0 6px 24px rgba(0,0,0,0.35); }
+
+    /* Lens cards */
+    .lens-wrap { position: relative; width: 100%; height: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: center; }
+    .lens-card {
+      position: relative; padding: 18px; height: 160px; display: grid; place-items: center; text-align: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03)); border: 1px solid rgba(255,255,255,0.18); border-radius: 14px;
+      filter: blur(6px) saturate(0.9); overflow: hidden; cursor: none;
+      -webkit-mask-image: radial-gradient(120px 120px at var(--mx,50%) var(--my,50%), rgba(0,0,0,1) 0%, rgba(0,0,0,0.0) 60%);
+      mask-image: radial-gradient(120px 120px at var(--mx,50%) var(--my,50%), rgba(0,0,0,1) 0%, rgba(0,0,0,0.0) 60%);
+      transition: filter 200ms ease;
+    }
+    .lens-card .hint { position: absolute; bottom: 8px; right: 10px; font-size: 11px; color: hsl(var(--muted)); opacity: 0.8; }
+
+    /* Echo ripple */
+    .ripple { position: fixed; width: 10px; height: 10px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, hsla(var(--bg-hue),70%,65%,0.55), hsla(var(--bg-hue),70%,65%,0.0)); animation: ripple 900ms ease-out forwards; }
+    @keyframes ripple { from { transform: scale(0.6); opacity: 0.9; } to { transform: scale(40); opacity: 0; } }
+
+    /* Scene transition */
+    .dissolve { animation: dissolve 420ms ease both; }
+    @keyframes dissolve { from { opacity: 0; filter: blur(8px); transform: translateY(8px); } to { opacity: 1; filter: blur(0); transform: translateY(0); } }
+
+    /* Reflection */
+    .reflect-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; }
+    .portrait { height: 360px; display: grid; place-items: center; background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; position: relative; overflow: hidden; }
+    .portrait svg { width: 90%; height: 90%; }
+    .journal { font-size: 14px; line-height: 1.55; opacity: 0.9; white-space: pre-wrap; }
+    .actions { display: flex; gap: 10px; }
+
+    /* Helper badges */
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); font-size: 11px; color: hsl(var(--muted)); }
+
+    /* Mobile */
+    @media (max-width: 920px) {
+      .panel { grid-template-columns: 1fr; inset: 76px 14px 14px; }
+      .orbit { width: 320px; height: 320px; }
+      .lens-wrap { grid-template-columns: 1fr; }
+      #constellation { width: 200px; height: 120px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="constellation"></canvas>
+  <div class="app" id="app">
+    <div class="hud">
+      <div class="brand">Project Janus · Prototype</div>
+      <div class="controls">
+        <span class="pill">
+          <label for="mode">Decision UI&nbsp;</label>
+          <select id="mode">
+            <option value="orbit">Orbit Selector</option>
+            <option value="lens">Cognitive Lens</option>
+          </select>
+        </span>
+        <button id="restart">Restart</button>
+      </div>
+    </div>
+
+    <div id="start">
+      <div class="card start-card">
+        <div class="badge">Alpha · Single‑Trait Continuum: Humility ↔ Hubris</div>
+        <h1 class="start-title">Enter the Labyrinth</h1>
+        <p class="start-blurb">Make a series of small choices. The world will shift around you. Nothing is scored, but something is revealed.<br/>
+        <em>Controls:</em> Click choices · Press <strong>1/2</strong> to choose · Switch decision UI anytime.</p>
+        <div class="actions" style="justify-content:center; margin-top:12px;">
+          <button id="play">Begin</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="game" style="display:none;" class="panel">
+      <section class="card scene-card" id="sceneCard">
+        <div>
+          <div class="scene-id" id="sceneId">Act I · Mirrors</div>
+          <h2 class="title" id="sceneTitle">—</h2>
+          <div class="subtitle" id="sceneSubtitle">—</div>
+        </div>
+        <div class="scene-text" id="sceneText">—</div>
+        <div class="decision" id="decision"></div>
+      </section>
+
+      <section class="card" id="statusCard">
+        <h3 class="title">Atmosphere</h3>
+        <div class="subtitle">The world reflects your leanings. Nothing is final.</div>
+        <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+          <span class="badge">Humility</span>
+          <div style="flex:1; height:8px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:999px; overflow:hidden;">
+            <div id="traitBar" style="height:100%; width:50%; background: linear-gradient(90deg, hsla(200,70%,55%,0.85), hsla(35,80%,50%,0.85)); transition: width 300ms ease;"></div>
+          </div>
+          <span class="badge">Hubris</span>
+        </div>
+        <div style="margin-top:16px;">
+          <h4 class="subtitle" style="margin:0 0 6px 0;">Constellation Bloom</h4>
+          <div class="subtitle">Faint lights gather where patterns repeat.</div>
+        </div>
+      </section>
+    </div>
+
+    <div id="reflection" style="display:none;" class="panel">
+      <section class="card reflect-grid">
+        <div class="portrait" id="portrait"></div>
+        <div>
+          <h2 class="title">Whispers Collected</h2>
+          <div class="journal" id="journal"></div>
+          <div class="actions" style="margin-top:12px;">
+            <button id="download">Download Ritual Text</button>
+            <button id="again">Walk Again</button>
+          </div>
+        </div>
+      </section>
+      <section class="card">
+        <h3 class="title">Reading of the Thread</h3>
+        <div id="reading" class="scene-text"></div>
+      </section>
+    </div>
+  </div>
+
+<script>
+(function(){
+  // -----------------------------
+  // Narrative data
+  // -----------------------------
+  const scenes = [
+    {
+      id: 'mirror_pool', act: 'Act I · Mirrors', title: 'Mirror Pool',
+      subtitle: 'A still pool mirrors the sky; your reflection waits for a ripple.',
+      text: 'The surface holds your outline with too much patience.',
+      options: [
+        { id:'disturb', label: 'Disturb the surface and watch your face fracture.', delta:+0.6, whisper: 'You broke the stillness first.' },
+        { id:'wait', label: 'Stand motionless until the water calms itself.', delta:-0.6, whisper: 'You let the world settle before you moved.' }
+      ]
+    },
+    {
+      id: 'twin_scholar', act: 'Act I · Mirrors', title: 'Twin Scholar',
+      subtitle: 'Someone identical to you presents a thesis claiming your life’s work.',
+      text: 'Their footnotes are perfect. Their voice is yours.',
+      options: [
+        { id:'dissect', label: 'Publicly dissect their argument until they falter.', delta:+0.5, whisper: 'You answered threat with edge.' },
+        { id:'applaud', label: 'Applaud politely and leave the hall.', delta:-0.4, whisper: 'You passed through without contest.' }
+      ]
+    },
+    {
+      id: 'echo_parlor', act: 'Act II · Chambers', title: 'Echo Parlor',
+      subtitle: 'Empty frames reflect only echoes.',
+      text: 'A room that remembers sound better than faces.',
+      options: [
+        { id:'hum', label: 'Hum a fragment of song and listen for an answer.', delta:-0.35, whisper: 'You invited the room to speak first.' },
+        { id:'silence', label: 'Close the parlor door and keep the silence.', delta:+0.35, whisper: 'You prized control over reply.' }
+      ]
+    },
+    {
+      id: 'riddle_pond', act: 'Act II · Chambers', title: 'Riddle Pond',
+      subtitle: 'A hidden pond whispers a riddle only you can hear.',
+      text: 'Every answer is a door; most are locked from the other side.',
+      options: [
+        { id:'clever', label: 'Answer with a clever twist that feels like a lie.', delta:+0.5, whisper: 'You shaped truth into a better weapon.' },
+        { id:'stones', label: 'Skip stones until the question dissolves.', delta:-0.5, whisper: 'You refused the duel of tongues.' }
+      ]
+    },
+    {
+      id: 'threshold', act: 'Act III · Crossroads', title: 'Quiet Threshold',
+      subtitle: 'Two doors lean toward you like choices already chosen.',
+      text: 'One is licked by flame. One is draped in shadow. Both are unlocked.',
+      options: [
+        { id:'flame', label: 'Step through the flame‑licked archway.', delta:+0.6, whisper: 'You walked where light demands tribute.' },
+        { id:'shadow', label: 'Pass by the shadow‑draped gate.', delta:-0.6, whisper: 'You chose the softness that hides its edge.' }
+      ]
+    }
+  ];
+
+  // Trait state: single continuum (Humility ↔ Hubris). Positive => Hubris, Negative => Humility
+  let trait = 0; // -1..1 
+  const journal = []; // poetic echo lines
+  const path = [];    // record of choices
+  let sceneIndex = 0;
+
+  // DOM refs
+  const start = document.getElementById('start');
+  const playBtn = document.getElementById('play');
+  const game = document.getElementById('game');
+  const reflection = document.getElementById('reflection');
+  const sceneCard = document.getElementById('sceneCard');
+  const sceneId = document.getElementById('sceneId');
+  const sceneTitle = document.getElementById('sceneTitle');
+  const sceneSubtitle = document.getElementById('sceneSubtitle');
+  const sceneText = document.getElementById('sceneText');
+  const decision = document.getElementById('decision');
+  const traitBar = document.getElementById('traitBar');
+  const modeSelect = document.getElementById('mode');
+  const restart = document.getElementById('restart');
+  const portrait = document.getElementById('portrait');
+  const journalEl = document.getElementById('journal');
+  const reading = document.getElementById('reading');
+  const downloadBtn = document.getElementById('download');
+  const againBtn = document.getElementById('again');
+
+  // Entry
+  playBtn.addEventListener('click', startGame);
+  restart.addEventListener('click', resetAll);
+  againBtn.addEventListener('click', resetAll);
+  downloadBtn.addEventListener('click', downloadRitual);
+
+  // Keyboard shortcuts (1/2)
+  document.addEventListener('keydown', (e)=>{
+    if (game.style.display !== 'none' && (e.key === '1' || e.key === '2')) {
+      const idx = e.key === '1' ? 0 : 1;
+      const opts = scenes[sceneIndex].options;
+      if (opts[idx]) handleChoice(opts[idx], {x: window.innerWidth/2, y: window.innerHeight/2});
+    }
+  });
+
+  function startGame(){
+    start.style.display = 'none';
+    reflection.style.display = 'none';
+    game.style.display = '';
+    trait = 0; sceneIndex = 0; journal.length = 0; path.length = 0;
+    renderScene();
+    updateAtmosphere();
+  }
+
+  function resetAll(){
+    start.style.display = '';
+    game.style.display = 'none';
+    reflection.style.display = 'none';
+  }
+
+  function renderScene(){
+    const s = scenes[sceneIndex];
+    sceneId.textContent = s.act;
+    sceneTitle.textContent = s.title;
+    sceneSubtitle.textContent = s.subtitle;
+    sceneText.textContent = s.text;
+
+    decision.innerHTML = '';
+    decision.classList.add('dissolve');
+    setTimeout(()=> decision.classList.remove('dissolve'), 460);
+
+    const mode = modeSelect.value;
+    if (mode === 'orbit') renderOrbit(s.options); else renderLens(s.options);
+  }
+
+  // -----------------------------
+  // Orbit Selector
+  // -----------------------------
+  function renderOrbit(options){
+    const wrap = document.createElement('div');
+    wrap.className = 'orbit';
+    const cx = 210, cy = 210, r = 150; // center, radius
+    const baseAngle = Math.random() * Math.PI * 2 * 0.25; // small randomization
+    options.forEach((opt, i)=>{
+      const angle = baseAngle + (i * (Math.PI * 2 / options.length));
+      const x = cx + r * Math.cos(angle) - 80;
+      const y = cy + r * Math.sin(angle) - 22;
+      const node = document.createElement('div');
+      node.className = 'glyph';
+      node.textContent = opt.label;
+      node.style.left = x + 'px';
+      node.style.top = y + 'px';
+      node.addEventListener('click', (ev)=> handleChoice(opt, {x: ev.clientX, y: ev.clientY}));
+      wrap.appendChild(node);
+    });
+    decision.appendChild(wrap);
+  }
+
+  // -----------------------------
+  // Cognitive Lens
+  // -----------------------------
+  function renderLens(options){
+    const wrap = document.createElement('div');
+    wrap.className = 'lens-wrap';
+    options.forEach((opt)=>{
+      const card = document.createElement('div');
+      card.className = 'lens-card';
+      card.innerHTML = `<div>${opt.label}</div><div class="hint">Focus the lens, then click</div>`;
+      card.addEventListener('mousemove', (e)=>{
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left, y = e.clientY - rect.top;
+        card.style.setProperty('--mx', x + 'px');
+        card.style.setProperty('--my', y + 'px');
+      });
+      card.addEventListener('click', (ev)=> handleChoice(opt, {x: ev.clientX, y: ev.clientY}));
+      wrap.appendChild(card);
+    });
+    decision.appendChild(wrap);
+  }
+
+  // -----------------------------
+  // Choice handling
+  // -----------------------------
+  function handleChoice(opt, point){
+    // Echo ripple feedback
+    echoRipple(point.x, point.y);
+
+    // Update trait & record
+    trait = clamp(trait + opt.delta, -1, 1);
+    path.push({ scene: scenes[sceneIndex].id, choice: opt.id, delta: opt.delta });
+    journal.push(`• ${opt.whisper}`);
+
+    updateAtmosphere();
+
+    // Next scene or reflection
+    sceneIndex++;
+    if (sceneIndex < scenes.length) {
+      renderScene();
+    } else {
+      showReflection();
+    }
+  }
+
+  function updateAtmosphere(){
+    // Map trait [-1..1] to hue (humility blue ~200, hubris amber ~35)
+    const hueHumility = 200, hueHubris = 35;
+    const t = (trait + 1)/2; // 0..1
+    const hue = Math.round(hueHumility * (1-t) + hueHubris * t);
+    document.documentElement.style.setProperty('--bg-hue', hue);
+
+    // Accent for small UI tweaks if needed
+    const accentHue = (hue + 20) % 360;
+    document.documentElement.style.setProperty('--accent', `${accentHue}, 75%, 62%`);
+
+    // Trait bar (visual only, ambiguous)
+    const w = (0.5 + trait/2) * 100; // 0..100
+    traitBar.style.width = w + '%';
+  }
+
+  function showReflection(){
+    game.style.display = 'none';
+    reflection.style.display = '';
+    // Portrait & reading
+    renderPortraitAndReading();
+    // Journal
+    journalEl.textContent = journal.join('\n');
+  }
+
+  function renderPortraitAndReading(){
+    portrait.innerHTML = '';
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('viewBox','0 0 300 300');
+
+    // Background aura gradient
+    const defs = document.createElementNS(svgNS, 'defs');
+    const grad = document.createElementNS(svgNS, 'radialGradient');
+    grad.id = 'aura';
+    grad.innerHTML = `
+      <stop offset="0%" stop-color="hsla(${getComputedStyle(document.documentElement).getPropertyValue('--bg-hue')},70%,60%,0.55)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    `;
+    defs.appendChild(grad);
+    svg.appendChild(defs);
+
+    const aura = document.createElementNS(svgNS, 'circle');
+    aura.setAttribute('cx','150'); aura.setAttribute('cy','110'); aura.setAttribute('r','100');
+    aura.setAttribute('fill','url(#aura)');
+    svg.appendChild(aura);
+
+    // Abstract silhouette (neutral)
+    const head = document.createElementNS(svgNS, 'circle'); head.setAttribute('cx','150'); head.setAttribute('cy','100'); head.setAttribute('r','32'); head.setAttribute('fill','rgba(255,255,255,0.25)'); head.setAttribute('stroke','rgba(255,255,255,0.3)');
+    const body = document.createElementNS(svgNS, 'path'); body.setAttribute('d','M110,180 Q150,150 190,180 L190,240 Q150,260 110,240 Z'); body.setAttribute('fill','rgba(255,255,255,0.12)'); body.setAttribute('stroke','rgba(255,255,255,0.25)');
+    svg.appendChild(head); svg.appendChild(body);
+
+    // Trait-driven adornment
+    if (trait > 0.35) {
+      // Crown of light (Hubris‑lean)
+      const crown = document.createElementNS(svgNS, 'path');
+      crown.setAttribute('d','M118,78 L132,58 L150,80 L168,58 L182,78 Z');
+      crown.setAttribute('fill','rgba(255,215,130,0.35)');
+      crown.setAttribute('stroke','rgba(255,225,170,0.6)');
+      svg.appendChild(crown);
+    } else if (trait < -0.35) {
+      // Halo (Humility‑lean)
+      const halo = document.createElementNS(svgNS, 'ellipse');
+      halo.setAttribute('cx','150'); halo.setAttribute('cy','72'); halo.setAttribute('rx','44'); halo.setAttribute('ry','10');
+      halo.setAttribute('fill','none'); halo.setAttribute('stroke','rgba(180,220,255,0.7)'); halo.setAttribute('stroke-width','3');
+      svg.appendChild(halo);
+    } else {
+      // Mask (Equilibrium‑tense)
+      const mask = document.createElementNS(svgNS, 'rect');
+      mask.setAttribute('x','134'); mask.setAttribute('y','90'); mask.setAttribute('width','32'); mask.setAttribute('height','12');
+      mask.setAttribute('fill','rgba(255,255,255,0.22)'); mask.setAttribute('rx','3');
+      svg.appendChild(mask);
+    }
+
+    portrait.appendChild(svg);
+
+    // Reading text (neutral, non-judgmental)
+    const t = trait;
+    let title, lines;
+    if (t >= 0.55) {
+      title = 'Mythic Persona: The Crowned Ember';
+      lines = [
+        'You walked where heat collects, and doors opened from their own desire.',
+        'Your thread favors edge and ignition; the world answers decisiveness with shape.',
+        'Guard the line between radiance and consumption. Flame lights—also burns.'
+      ];
+    } else if (t <= -0.55) {
+      title = 'Mythic Persona: The Quiet Well';
+      lines = [
+        'You learned the weight of stillness and let echoes arrive before replies.',
+        'Your thread keeps space open; in restraint, signals become voices.',
+        'Guard the line between depth and retreat. Wells nourish—also drown.'
+      ];
+    } else {
+      title = 'Mythic Persona: The Tightrope Listener';
+      lines = [
+        'You balanced invitation with interruption, earning a moving center.',
+        'Your thread braids patience to poise; choices land without noise.',
+        'Guard the line between composure and delay. Balance guides—also stalls.'
+      ];
+    }
+    reading.innerHTML = `<div class="badge">Cosmic Constellation Narrative</div><h2 class="title" style="margin-top:8px;">${title}</h2><div class="scene-text">${lines.map(l=>`<div>• ${l}</div>`).join('')}</div>`;
+  }
+
+  function downloadRitual(){
+    const text = `HERO\'S CHRONICLE (Prototype)\n\n` + journal.join('\n');
+    const blob = new Blob([text], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'janus_ritual.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+
+  function echoRipple(x, y){
+    const r = document.createElement('span');
+    r.className = 'ripple';
+    r.style.left = (x - 5) + 'px';
+    r.style.top = (y - 5) + 'px';
+    document.body.appendChild(r);
+    r.addEventListener('animationend', ()=> r.remove());
+  }
+
+  // -----------------------------
+  // Constellation bloom (ambient)
+  // -----------------------------
+  const canvas = document.getElementById('constellation');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  function initStars(){
+    const w = canvas.width = canvas.clientWidth;
+    const h = canvas.height = canvas.clientHeight;
+    stars = Array.from({length: 80}, ()=>({
+      x: Math.random()*w,
+      y: Math.random()*h,
+      r: Math.random()*1.7 + 0.3,
+      b: Math.random()*0.4 + 0.2,
+    }));
+  }
+  window.addEventListener('resize', initStars);
+  initStars();
+  function tick(){
+    const w = canvas.width = canvas.clientWidth;
+    const h = canvas.height = canvas.clientHeight;
+    ctx.clearRect(0,0,w,h);
+
+    // cluster centers move subtly with trait (–1..1) → shift focus left/right
+    const cx = w*(0.35 + 0.3*((trait+1)/2));
+    const cy = h*0.55;
+
+    for (const s of stars){
+      const dx = s.x - cx, dy = s.y - cy; const d = Math.sqrt(dx*dx + dy*dy) + 1;
+      const glow = 1 / (d*0.04); // nearer to cluster is brighter
+      const alpha = clamp(s.b + glow*0.9, 0, 1);
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
+</body>
+</html>
