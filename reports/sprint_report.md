@@ -1,7 +1,7 @@
 # Project Janus – Sprint Report
 
 ## Overview
-This document summarizes the work completed across sixteen development sprints and the current state of the Project Janus repository.
+This document summarizes the work completed across twenty-two development sprints and the current state of the Project Janus repository.
 
 ## Sprint Accomplishments
 1. **Sprint 1 – Trait glossary and tagging API.** Introduced psychological weighting for quest choices, enabling traits to be tracked throughout gameplay.
@@ -20,6 +20,12 @@ This document summarizes the work completed across sixteen development sprints a
 14. **Sprint 14 – Data ingestion & analytics baseline.** Added canonical trait mapping, run ingestion scripts, and baseline calibration metrics.
 15. **Sprint 15 – Calibrator & optimization.** Implemented bounded calibration utilities, optimizer, and configuration snapshot output.
 16. **Sprint 16 – Dashboard "Personality Mixer."** Integrated a calibration tab with live slider readouts for policy multipliers and master controls.
+17. **Sprint 17 – Persistent state & narrative callbacks.** Added a state manager and cross-scene hooks so earlier choices influence later scenes.
+18. **Sprint 18 – Expanded choice architecture.** Enabled multi-option scenes with trait tagging for richer decisions.
+19. **Sprint 19 – Psychological payoff system upgrade.** Introduced trait-scoring and archetype-based endings.
+20. **Sprint 20 – Story spine & continuity pass.** Wove act intros and interludes referencing player state for cohesive progression.
+21. **Sprint 21 – Internal mythos & meaning mapping.** Linked recurring symbols to traits and adjusted scenes based on them.
+22. **Sprint 22 – Hero’s Chronicle & psychological payoff.** Generated personalised endgame summaries and symbolic epilogues.
 
 ## Repository Status
 - Source code and data are organized under clearly defined directories (`src/`, `data/`, `archive/versions/`, etc.).
