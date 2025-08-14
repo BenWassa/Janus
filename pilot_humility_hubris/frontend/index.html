@@ -195,6 +195,8 @@
           </select>
         </span>
         <button id="restart">Restart</button>
+        <button id="save">Save</button>
+        <button id="load">Load</button>
       </div>
     </div>
 
@@ -315,6 +317,36 @@
         { id:'flame', label: 'Step through the flame‑licked archway.', delta:{ Hubris:+0.6, Wrath:+0.3 }, whisper: 'You walked where light demands tribute.' },
         { id:'shadow', label: 'Pass by the shadow‑draped gate.', delta:{ Hubris:-0.6, Fear:+0.3 }, whisper: 'You chose the softness that hides its edge.' }
       ]
+    },
+    {
+      id: 'garden_masks', act: 'Act III · Crossroads', title: 'Garden of Masks',
+      subtitle: 'Masks bloom like flowers, waiting for a face.',
+      text: 'Each petal hides a gaze.',
+      options: [
+        { id:'don', label:'Don an ivory mask and speak with borrowed courage.', delta:{ Hubris:+0.5, Deception:+0.5 }, whisper:'You wore a face that was not yours.' },
+        { id:'shatter', label:'Shatter a mask and scatter its petals.', delta:{ Wrath:+0.8, Hubris:+0.2 }, whisper:'You left fragments to warn the garden.' },
+        { id:'walk_on', label:'Walk past without touching a single bloom.', delta:{}, whisper:'Not every temptation roots in you.' }
+      ]
+    },
+    {
+      id: 'clockwork_market', act: 'Act IV · Bazaar', title: 'Clockwork Market',
+      subtitle: 'Vendors trade seconds and regrets.',
+      text: 'Time ticks from every stall.',
+      options: [
+        { id:'buy_time', label:'Purchase a minute with an embarrassing memory.', delta:{ Avarice:+0.5, Fear:+0.2 }, whisper:'You paid the past to stretch the future.' },
+        { id:'steal_gear', label:'Pocket a tiny gear when no one looks.', delta:{ Deception:+0.5, Avarice:+0.2 }, whisper:'You took motion without paying the toll.' },
+        { id:'leave_watch', label:'Leave your watch as a gift and walk on.', delta:{ Hubris:-0.5, Apathy:+0.2 }, whisper:'You released your claim on the hour.' }
+      ]
+    },
+    {
+      id: 'abandoned_stage', act: 'Act V · Echoes', title: 'Abandoned Stage',
+      subtitle: 'Curtains stir though no wind moves.',
+      text: 'An audience of dust waits in silence.',
+      options: [
+        { id:'perform', label:'Perform a monologue to the unseen crowd.', delta:{ Hubris:+0.8, Impulsivity:+0.2 }, whisper:'You demanded eyes even when none were offered.' },
+        { id:'sweep', label:'Sweep the boards until they gleam.', delta:{ Rigidity:+0.5, Control:+0.2 }, whisper:'You gave order to a forgotten hall.' },
+        { id:'close', label:'Close the curtains and depart in quiet.', delta:{}, whisper:'Some stories end without applause.' }
+      ]
     }
   ];
  
@@ -392,6 +424,8 @@
   const tarotSpread = document.getElementById('tarotSpread');
   const modeSelect = document.getElementById('mode');
   const restart = document.getElementById('restart');
+  const saveBtn = document.getElementById('save');
+  const loadBtn = document.getElementById('load');
   const portrait = document.getElementById('portrait');
   const journalEl = document.getElementById('journal');
   const reading = document.getElementById('reading');
@@ -403,6 +437,8 @@
   restart.addEventListener('click', resetAll);
   againBtn.addEventListener('click', resetAll);
   downloadBtn.addEventListener('click', downloadRitual);
+  saveBtn.addEventListener('click', saveState);
+  loadBtn.addEventListener('click', loadState);
 
   // Keyboard shortcuts (1/2)
   document.addEventListener('keydown', (e)=>{
@@ -429,6 +465,42 @@
     start.style.display = '';
     game.style.display = 'none';
     reflection.style.display = 'none';
+  }
+
+  function saveState(){
+    const state = { traits, journal, path, sceneIndex };
+    localStorage.setItem('janusState', JSON.stringify(state));
+  }
+
+  function loadState(){
+    const raw = localStorage.getItem('janusState');
+    if(!raw) return;
+    const state = JSON.parse(raw);
+    Object.assign(traits, state.traits || {});
+    journal.length = 0; (state.journal || []).forEach(j=> journal.push(j));
+    path.length = 0; (state.path || []).forEach(p=> path.push(p));
+    sceneIndex = state.sceneIndex || 0;
+
+    sigilRepo.innerHTML = '';
+    tarotSpread.innerHTML = '';
+    for(let i=0;i<sceneIndex && i<path.length;i++){
+      const step = path[i];
+      for(const [k,v] of Object.entries(step.delta || {})){
+        if(Math.abs(v) >= 0.4) showSigil(k);
+      }
+      addTarotCard();
+    }
+
+    start.style.display = 'none';
+    reflection.style.display = 'none';
+    game.style.display = '';
+    if(sceneIndex < scenes.length){
+      renderScene();
+    } else {
+      showReflection();
+    }
+    updateAtmosphere();
+    journalEl.textContent = journal.join('\n\n');
   }
 
   function renderScene(){
@@ -582,7 +654,7 @@
     // Portrait & reading
     renderPortraitAndReading();
     // Journal
-    journalEl.textContent = journal.join('\n');
+    journalEl.textContent = journal.join('\n\n');
   }
 
   function determineArchetype(){
@@ -620,6 +692,7 @@
     // Determine dominant traits for silhouette/adornments
     const sorted = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
     const topTraits = sorted.slice(0,2).map(([k])=>k);
+    const topTraitsAll = sorted.slice(0,3).map(([k])=>k);
 
     // Abstract silhouette with trait distortion
     const head = document.createElementNS(svgNS, 'circle');
@@ -656,12 +729,12 @@
     // Archetype reading
     const arche = determineArchetype();
     const title = `Mythic Persona: ${arche.name}`;
-    const lines = [...arche.lines, `Dominant traits: ${topTraits.join(' & ')}`];
-    reading.innerHTML = `<div class="badge">Cosmic Constellation Narrative</div><h2 class="title" style="margin-top:8px;">${title}</h2><div class="scene-text">${lines.map(l=>`<div>• ${l}</div>`).join('')}</div>`;
+    const narrative = `${arche.lines.join(' ')} Dominant traits: ${topTraitsAll.join(' & ')}.`;
+    reading.innerHTML = `<div class="badge">Cosmic Constellation Narrative</div><h2 class="title" style="margin-top:8px;">${title}</h2><div class="scene-text"><p>${narrative}</p></div>`;
   }
 
   function downloadRitual(){
-    const text = `HERO\'S CHRONICLE (Prototype)\n\n` + journal.join('\n');
+    const text = `HERO\'S CHRONICLE (Prototype)\n\n` + journal.join('\n\n');
     const blob = new Blob([text], {type:'text/plain'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = 'janus_ritual.txt'; a.click();
