@@ -1,6 +1,7 @@
 // app.js
 
 import { scenes, TRAIT_KEYS, SIGILS, TRAIT_COLORS, ARCHETYPES, CARD_GLYPHS } from "./data.js"; // Import CARD_GLYPHS
+import { TRAIT_TEXTS } from "./trait_texts.js";
 
 // Trait state: multi-trait object from Hamartia Engine
 const traits = Object.fromEntries(TRAIT_KEYS.map(t=>[t,0]));
@@ -26,6 +27,7 @@ const consequence = document.getElementById('consequence');
 const traitBar = document.getElementById('traitBar');
 const sigilRepo = document.getElementById('sigils');
 const tarotSpread = document.getElementById('tarotSpread');
+const memories = document.getElementById('memories');
 // const modeSelect = document.getElementById('mode'); // REMOVED: No longer needed
 const restart = document.getElementById('restart');
 const saveBtn = document.getElementById('save');
@@ -40,6 +42,8 @@ if (quickToggle) quickMode = quickToggle.checked;
 
 const downloadBtn = document.getElementById('download');
 const againBtn = document.getElementById('again');
+
+const traitMemories = {};
 
 // Quick runtime integrity check for required/optional DOM hooks
 function integrityCheck(){
@@ -88,6 +92,7 @@ function startGame(){
   TRAIT_KEYS.forEach(k=> traits[k] = 0); // Reset all traits
   sigilRepo.innerHTML = ''; // Clear sigils
   tarotSpread.innerHTML = ''; // Clear tarot cards
+  Object.keys(traitMemories).forEach(k=> delete traitMemories[k]);
   sceneIndex = 0;
   journal.length = 0;
   path.length = 0;
@@ -131,6 +136,7 @@ function loadState(){
     path.length = 0;
     sigilRepo.innerHTML = '';
     tarotSpread.innerHTML = '';
+    Object.keys(traitMemories).forEach(k=> delete traitMemories[k]);
 
     Object.assign(traits, state.traits || {});
     (state.journal || []).forEach(j=> journal.push(j));
@@ -148,9 +154,10 @@ function loadState(){
     const encounteredTraits = new Set();
     path.forEach(step => {
         for(const [k,v] of Object.entries(step.delta || {})){
-            if(Math.abs(v) >= 0.4 && !encounteredTraits.has(k)) { 
+            if(Math.abs(v) >= 0.4 && !encounteredTraits.has(k)) {
                 showSigil(k);
-                encounteredTraits.add(k); 
+                unlockMemory(k);
+                encounteredTraits.add(k);
             }
         }
     });
@@ -224,9 +231,17 @@ function handleChoice(opt, point){
 
   // Update traits & record
   const currentDeltas = opt.delta || {};
+  const microLines = [];
   for(const [k,v] of Object.entries(currentDeltas)){
     traits[k] = clamp((traits[k]||0) + v, -1, 1); // Ensure clamping for each trait
-    if(Math.abs(v) >= 0.4) showSigil(k); // Show sigil for significant trait changes
+    const tt = TRAIT_TEXTS[k];
+    if(tt){
+      microLines.push(v > 0 ? tt.up : tt.down);
+    }
+    if(Math.abs(v) >= 0.4){
+      showSigil(k); // Show sigil for significant trait changes
+      unlockMemory(k);
+    }
   }
   const currentSceneId = scenes[sceneIndex].id;
   path.push({ scene: currentSceneId, choice: opt.id, delta: currentDeltas });
@@ -237,7 +252,8 @@ function handleChoice(opt, point){
   updateAtmosphere();
 
   if (consequence){
-    consequence.textContent = opt.whisper;
+    const extra = microLines.join(' ');
+    consequence.textContent = extra ? `${opt.whisper} ${extra}` : opt.whisper;
     consequence.style.display = 'block';
   }
   decision.style.display = 'none';
@@ -286,6 +302,7 @@ function showReflection(){
   renderPortraitAndReading();
   // Journal
   journalEl.textContent = journal.join('\n\n');
+  renderMemories();
 }
 
 // Function to determine the archetype
@@ -366,6 +383,14 @@ function downloadRitual(){
 
 function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
 
+function unlockMemory(traitKey){
+  if(traitMemories[traitKey]) return;
+  const mem = TRAIT_TEXTS[traitKey]?.memory;
+  if(mem){
+    traitMemories[traitKey] = mem;
+  }
+}
+
 function showSigil(traitKey){
   let node = sigilRepo.querySelector(`[data-trait="${traitKey}"]`);
   if(!node){
@@ -374,11 +399,12 @@ function showSigil(traitKey){
     node.dataset.trait = traitKey;
     node.innerHTML = SIGILS[traitKey] || '';
     node.style.color = `hsl(${TRAIT_COLORS[traitKey][0]},${TRAIT_COLORS[traitKey][1]}%,${TRAIT_COLORS[traitKey][2]}%)`; // Color sigil by trait
+    node.title = TRAIT_TEXTS[traitKey]?.memory || '';
     sigilRepo.appendChild(node);
   }
   node.classList.add('active');
-  node.style.opacity = '1'; 
-  node.style.transform = 'scale(1.3)'; 
+  node.style.opacity = '1';
+  node.style.transform = 'scale(1.3)';
   setTimeout(()=> {
       node.classList.remove('active');
       node.style.transform = 'scale(1)';
@@ -417,6 +443,18 @@ function echoRipple(x, y){
     if(i) r.style.animationDelay = '120ms';
     document.body.appendChild(r);
     r.addEventListener('animationend', ()=> r.remove());
+  });
+}
+
+function renderMemories(){
+  if(!memories) return;
+  memories.innerHTML = '';
+  Object.keys(traitMemories).forEach(k=>{
+    const wrap = document.createElement('div');
+    wrap.className = 'memory';
+    wrap.innerHTML = `${SIGILS[k] || ''}<span>${traitMemories[k]}</span>`;
+    wrap.style.color = `hsl(${TRAIT_COLORS[k][0]},${TRAIT_COLORS[k][1]}%,${TRAIT_COLORS[k][2]}%)`;
+    memories.appendChild(wrap);
   });
 }
 

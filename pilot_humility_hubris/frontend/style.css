@@ -501,6 +501,31 @@ select:focus {
   stroke-linejoin: round;
 }
 
+/* Reflection memories */
+#memories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.memory {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--glass);
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.memory svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
 /* Tarot Spread (Visible Progression) */
 #tarotSpread {
   display: flex;
