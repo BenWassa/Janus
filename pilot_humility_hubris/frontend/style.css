@@ -5,13 +5,14 @@
    ================================ */
 :root {
   /* Dynamic atmosphere colors (updated by JS) */
-  --bg-hue: 250;
+  /* Shifted default to a calmer blue-indigo palette to avoid overly-saturated green */
+  --bg-hue: 215;    /* Indigo-blue base */
   --bg-sat: 18%;
-  --bg-light: 8%;
-  --accent: 72, 92%, 62%;
-  
+  --bg-light: 12%;
+  --accent: 215, 65%, 54%; /* Cool indigo accent (H, S%, L%) */
+
   /* Enhanced color palette with better contrast */
-  --glass: hsla(0, 0%, 100%, 0.07); /* Lighter, more subtle glass */
+  --glass: hsla(215, 10%, 100%, 0.06); /* Slight cool tint to glass */
   --glass-strong: hsla(0, 0%, 100%, 0.12); /* Slightly stronger */
   --glass-hover: hsla(0, 0%, 100%, 0.1);
   --text-primary: hsl(0, 0%, 98%);

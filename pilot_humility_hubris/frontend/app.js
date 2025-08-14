@@ -229,36 +229,29 @@ function handleChoice(opt, point){
 }
 
 function updateAtmosphere(){
+  // Compute a local blended hue from dominant traits but do NOT mutate global CSS vars
   const entries = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
   const top = entries.filter(([k,v]) => Math.abs(v) > 0.1).slice(0,3); // Only consider traits with some value
-  let totalWeight = 0, hueSum = 0, satSum = 0, lightSum = 0;
-
+  let totalWeight = 0, hueSum = 0;
   if(top.length){
     top.forEach(([k,v])=>{
-      const weight = Math.abs(v); // Contribution based on magnitude
-      const [h,s,l] = TRAIT_COLORS[k];
+      const weight = Math.abs(v);
+      const [h] = TRAIT_COLORS[k];
       hueSum += h * weight;
-      satSum += s * weight;
-      lightSum += l * weight;
       totalWeight += weight;
     });
-
-    // Blend colors based on weighted average
-    document.documentElement.style.setProperty('--bg-hue', (hueSum / totalWeight).toFixed(0));
-    document.documentElement.style.setProperty('--bg-sat', (satSum / totalWeight).toFixed(0)+'%');
-    document.documentElement.style.setProperty('--bg-light', (lightSum / totalWeight).toFixed(0)+'%');
-  } else { // Default to neutral if no strong traits
-    document.documentElement.style.setProperty('--bg-hue', '250');
-    document.documentElement.style.setProperty('--bg-sat', '18%');
-    document.documentElement.style.setProperty('--bg-light', '8%');
   }
+  const blendedHue = totalWeight ? Math.round(hueSum / totalWeight) : 215; // fallback to indigo-blue base
 
-  const currentHue = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bg-hue'));
-  const accentHue = (currentHue + 20) % 360; // Keep accent relative to background hue
-  document.documentElement.style.setProperty('--accent', `${accentHue}, 75%, 62%`);
+  // Local accent (used only for small UI elements like trait bar and portrait accents)
+  const accentHue = (blendedHue + 20) % 360;
 
+  // Update small UI elements only (guard existence)
   const hubris = traits.Hubris || 0;
-  traitBar.style.width = ((0.5 + hubris/2) * 100) + '%';
+  if (traitBar) {
+    traitBar.style.width = ((0.5 + hubris/2) * 100) + '%';
+    traitBar.style.background = `linear-gradient(90deg, hsla(${accentHue},70%,55%,0.9), hsla(${(accentHue+30)%360},80%,50%,0.9))`;
+  }
 }
 
 function showReflection(){
@@ -318,19 +311,29 @@ function determineArchetype(){
 }
 
 function renderPortraitAndReading(){
+  if (!portrait) return; // graceful guard
   portrait.innerHTML = '';
-  const svgNS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(svgNS, 'svg');
   svg.setAttribute('viewBox','0 0 300 300');
 
-  // Background aura gradient
+  // Compute local portrait hue from top traits (do not read or write root CSS)
+  const sorted = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
+  const topTraitKeys = sorted.filter(([k,v]) => Math.abs(v) > 0.1).slice(0,3).map(([k])=>k);
+  const topForHue = sorted.filter(([k,v]) => Math.abs(v) > 0.1).slice(0,2);
+  let totalWeight = 0, hueSum = 0;
+  if(topForHue.length){
+    topForHue.forEach(([k,v])=>{ const weight = Math.abs(v); hueSum += TRAIT_COLORS[k][0] * weight; totalWeight += weight; });
+  }
+  const portraitHue = totalWeight ? Math.round(hueSum/totalWeight) : 215;
+  const accentHue = (portraitHue + 20) % 360;
+  const stopA = `hsl(${portraitHue},70%,52%)`;
+  const stopB = `hsl(${(portraitHue+30)%360},78%,48%)`;
+
+  // Background aura gradient (inline stops)
   const defs = document.createElementNS(svgNS, 'defs');
   const grad = document.createElementNS(svgNS, 'radialGradient');
   grad.id = 'aura';
-  grad.innerHTML = `
-    <stop offset="0%" stop-color="hsla(${getComputedStyle(document.documentElement).getPropertyValue('--bg-hue')},70%,60%,0.55)"/>
-    <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-  `;
+  grad.innerHTML = `\n    <stop offset="0%" stop-color="${stopA}" stop-opacity="0.55"/>\n    <stop offset="100%" stop-color="rgba(0,0,0,0)"/>\n  `;
   defs.appendChild(grad);
   svg.appendChild(defs);
 
@@ -338,10 +341,6 @@ function renderPortraitAndReading(){
   aura.setAttribute('cx','150'); aura.setAttribute('cy','110'); aura.setAttribute('r','100');
   aura.setAttribute('fill','url(#aura)');
   svg.appendChild(aura);
-
-  // Determine dominant traits for silhouette/adornments
-  const sorted = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
-  const topTraitKeys = sorted.filter(([k,v]) => Math.abs(v) > 0.1).slice(0,3).map(([k])=>k);
 
   // Abstract silhouette with trait distortion (using the top trait for primary visual)
   const head = document.createElementNS(svgNS, 'circle');
@@ -358,14 +357,18 @@ function renderPortraitAndReading(){
   body.setAttribute('stroke','rgba(255,255,255,0.25)');
   svg.appendChild(head); svg.appendChild(body);
 
-  // Adornments for dominant traits
+  // Adornments for dominant traits (use local accent colors, avoid root vars)
+  const crownFill = `hsla(${accentHue},70%,55%,0.35)`;
+  const crownStroke = `hsla(${accentHue},70%,55%,0.6)`;
+  const adornStroke = `hsla(${accentHue},70%,55%,0.5)`;
+
   topTraitKeys.forEach(traitKey => {
     switch (traitKey) {
       case 'Hubris': // Crown of light
         const crown = document.createElementNS(svgNS, 'path');
         crown.setAttribute('d','M118,78 L132,58 L150,80 L168,58 L182,78 Z');
-        crown.setAttribute('fill','hsla(var(--accent),0.35)');
-        crown.setAttribute('stroke','hsla(var(--accent),0.6)');
+        crown.setAttribute('fill', crownFill);
+        crown.setAttribute('stroke', crownStroke);
         crown.classList.add('adornment-animation');
         svg.appendChild(crown);
         break;
@@ -383,7 +386,7 @@ function renderPortraitAndReading(){
       case 'Deception': // Shifting lines around head
         const deceptionLine = document.createElementNS(svgNS, 'path');
         deceptionLine.setAttribute('d','M100,110 Q150,90 200,110');
-        deceptionLine.setAttribute('stroke','hsla(var(--accent),0.5)');
+        deceptionLine.setAttribute('stroke', adornStroke);
         deceptionLine.setAttribute('stroke-dasharray','5 5');
         deceptionLine.setAttribute('fill','none');
         deceptionLine.classList.add('adornment-animation');
@@ -406,7 +409,7 @@ function renderPortraitAndReading(){
       case 'Impulsivity': // Burst lines
         const burst = document.createElementNS(svgNS, 'line');
         burst.setAttribute('x1','150'); burst.setAttribute('y1','100'); burst.setAttribute('x2','165'); burst.setAttribute('y2','85');
-        burst.setAttribute('stroke','hsla(var(--accent),0.6)');
+        burst.setAttribute('stroke', adornStroke);
         burst.classList.add('adornment-animation');
         const burst2 = burst.cloneNode(); burst2.setAttribute('x2','135'); burst2.setAttribute('y2','85');
         svg.appendChild(burst); svg.appendChild(burst2);
@@ -441,7 +444,7 @@ function renderPortraitAndReading(){
   const title = `Mythic Persona: ${arche.name}`;
   const topTraitsFormatted = topTraitKeys.length > 0 ? `Dominant inclinations: ${topTraitKeys.join(', ')}.` : '';
   const narrative = arche.lines.map(l=>`<div>• ${l}</div>`).join('') + `<div class="trait-summary">${topTraitsFormatted}</div>`;
-  reading.innerHTML = `<div class="badge">Cosmic Constellation Narrative</div><h2 class="title" style="margin-top:8px;">${title}</h2><div class="scene-text">${narrative}</div>`;
+  if (reading) reading.innerHTML = `<div class="badge">Cosmic Constellation Narrative</div><h2 class="title" style="margin-top:8px;">${title}</h2><div class="scene-text">${narrative}</div>`;
 }
 
 function downloadRitual(){
@@ -538,7 +541,12 @@ function echoRipple(x, y){
       const h = canvas.height = canvas.clientHeight;
       ctx.clearRect(0,0,w,h);
 
-      const currentHue = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bg-hue')) || 0;
+  // compute a local hue for constellation based on traits (non-invasive)
+  const entries = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
+  const top = entries.filter(([k,v]) => Math.abs(v) > 0.1).slice(0,3);
+  let thSum = 0, tw = 0;
+  if(top.length){ top.forEach(([k,v])=>{ const w = Math.abs(v); thSum += TRAIT_COLORS[k][0] * w; tw += w; }); }
+  const currentHue = tw ? Math.round(thSum / tw) : 215;
 
       // cluster centers move subtly with hubris trait (–1..1) → shift focus left/right
       const hubris = traits.Hubris || 0; // Keeping hubris for this specific effect
