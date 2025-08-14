@@ -14,10 +14,12 @@
 </head>
 <body>
   <div class="app" id="app">
+    <canvas id="constellation"></canvas>
     <div class="hud">
       <div class="brand">Project Janus · Prototype</div>
       <div class="controls">
-        <!-- REMOVED: <span class="pill">...</span> containing modeSelect -->
+        <label class="pill"><input type="checkbox" id="quick"> Quick</label>
+        <label class="pill"><input type="checkbox" id="ambience"> Ambience</label>
         <button id="restart">Restart</button>
         <button id="save">Save</button>
         <button id="load">Load</button>
@@ -45,6 +47,7 @@
         </div>
         <div class="scene-text" id="sceneText">—</div>
         <div class="decision" id="decision"></div>
+        <div class="consequence" id="consequence"></div>
       </section>
 
       <section class="card" id="statusCard">

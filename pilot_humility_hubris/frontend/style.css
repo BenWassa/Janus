@@ -143,6 +143,16 @@ body {
   width: 100%;
 }
 
+#constellation {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  display: none;
+  pointer-events: none;
+}
+
 /* Top HUD Navigation */
 .hud {
   position: fixed;
@@ -198,6 +208,10 @@ body {
 .pill label {
   color: var(--text-muted); /* Make label more muted */
   font-weight: 500;
+}
+
+.pill input {
+  margin-right: var(--space-xs);
 }
 
 /* Form Controls */
@@ -368,6 +382,14 @@ select:focus {
   padding: var(--space-lg) 0;
   opacity: 0;
   animation: choicesFadeIn 700ms ease-out forwards 300ms; /* Delayed fade in */
+}
+
+.consequence {
+  display: none;
+  margin-top: var(--space-md);
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  min-height: 1.5em;
 }
 
 .choice-button {
@@ -569,6 +591,19 @@ select:focus {
   width: 85%;
   height: 85%;
   overflow: visible; /* Allow adornments to extend slightly */
+}
+
+.archetype-card {
+  text-align: center;
+  padding: var(--space-lg);
+}
+
+.archetype-card h2 {
+  margin-bottom: var(--space-md);
+}
+
+.archetype-card p {
+  margin: var(--space-xs) 0;
 }
 
 .journal {
