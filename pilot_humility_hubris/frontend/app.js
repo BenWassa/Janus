@@ -1,437 +1,612 @@
+// app.js
+
 import { scenes, TRAIT_KEYS, SIGILS, TRAIT_COLORS, ARCHETYPES } from "./data.js";
 
- 
-  // Trait state: multi-trait object from Hamartia Engine
-  const traits = Object.fromEntries(TRAIT_KEYS.map(t=>[t,0]));
-  const journal = []; // poetic echo lines
-  const path = [];    // record of choices
-  let sceneIndex = 0;
+// Trait state: multi-trait object from Hamartia Engine
+const traits = Object.fromEntries(TRAIT_KEYS.map(t=>[t,0]));
+const journal = []; // poetic echo lines
+const path = [];    // record of choices
+let sceneIndex = 0;
+let choicesLocked = false; // New: Flag to prevent multiple choices
 
-  // DOM refs
-  const start = document.getElementById('start');
-  const playBtn = document.getElementById('play');
-  const game = document.getElementById('game');
-  const reflection = document.getElementById('reflection');
-  const sceneCard = document.getElementById('sceneCard');
-  const sceneId = document.getElementById('sceneId');
-  const sceneTitle = document.getElementById('sceneTitle');
-  const sceneSubtitle = document.getElementById('sceneSubtitle');
-  const sceneText = document.getElementById('sceneText');
-  const decision = document.getElementById('decision');
-  const traitBar = document.getElementById('traitBar');
-  const sigilRepo = document.getElementById('sigils');
-  const tarotSpread = document.getElementById('tarotSpread');
-  const modeSelect = document.getElementById('mode');
-  const restart = document.getElementById('restart');
-  const saveBtn = document.getElementById('save');
-  const loadBtn = document.getElementById('load');
-  const portrait = document.getElementById('portrait');
-  const journalEl = document.getElementById('journal');
-  const reading = document.getElementById('reading');
-  const downloadBtn = document.getElementById('download');
-  const againBtn = document.getElementById('again');
+// DOM refs
+const start = document.getElementById('start');
+const playBtn = document.getElementById('play');
+const game = document.getElementById('game');
+const reflection = document.getElementById('reflection');
+const sceneCard = document.getElementById('sceneCard');
+const sceneId = document.getElementById('sceneId');
+const sceneTitle = document.getElementById('sceneTitle');
+const sceneSubtitle = document.getElementById('sceneSubtitle');
+const sceneText = document.getElementById('sceneText');
+const decision = document.getElementById('decision');
+const traitBar = document.getElementById('traitBar');
+const sigilRepo = document.getElementById('sigils');
+const tarotSpread = document.getElementById('tarotSpread');
+const modeSelect = document.getElementById('mode');
+const restart = document.getElementById('restart');
+const saveBtn = document.getElementById('save');
+const loadBtn = document.getElementById('load');
+const portrait = document.getElementById('portrait');
+const journalEl = document.getElementById('journal');
+const reading = document.getElementById('reading');
+const downloadBtn = document.getElementById('download');
+const againBtn = document.getElementById('again');
 
-  // Entry
-  playBtn.addEventListener('click', startGame);
-  restart.addEventListener('click', resetAll);
-  againBtn.addEventListener('click', resetAll);
-  downloadBtn.addEventListener('click', downloadRitual);
-  saveBtn.addEventListener('click', saveState);
-  loadBtn.addEventListener('click', loadState);
+// Entry
+playBtn.addEventListener('click', startGame);
+restart.addEventListener('click', resetAll);
+againBtn.addEventListener('click', resetAll);
+downloadBtn.addEventListener('click', downloadRitual);
+saveBtn.addEventListener('click', saveState);
+loadBtn.addEventListener('click', loadState);
 
-  // Keyboard shortcuts (1/2)
-  document.addEventListener('keydown', (e)=>{
-    if (game.style.display !== 'none' && (e.key === '1' || e.key === '2')) {
-      const idx = e.key === '1' ? 0 : 1;
-      const opts = scenes[sceneIndex].options;
-      if (opts[idx]) handleChoice(opts[idx], {x: window.innerWidth/2, y: window.innerHeight/2});
-    }
-  });
-
-  function startGame(){
-    start.style.display = 'none';
-    reflection.style.display = 'none';
-    game.style.display = '';
-    TRAIT_KEYS.forEach(k=> traits[k] = 0);
-    sigilRepo.innerHTML = '';
-    tarotSpread.innerHTML = '';
-    sceneIndex = 0; journal.length = 0; path.length = 0;
-    renderScene();
-    updateAtmosphere();
+// Keyboard shortcuts (1/2)
+document.addEventListener('keydown', (e)=>{
+  if (game.style.display !== 'none' && !choicesLocked && (e.key === '1' || e.key === '2')) {
+    const opts = scenes[sceneIndex].options;
+    const idx = e.key === '1' ? 0 : 1;
+    if (opts[idx]) handleChoice(opts[idx], {x: window.innerWidth/2, y: window.innerHeight/2});
   }
+});
 
-  function resetAll(){
-    start.style.display = '';
-    game.style.display = 'none';
-    reflection.style.display = 'none';
-  }
+function startGame(){
+  start.style.display = 'none';
+  reflection.style.display = 'none';
+  game.style.display = '';
+  TRAIT_KEYS.forEach(k=> traits[k] = 0); // Reset all traits
+  sigilRepo.innerHTML = ''; // Clear sigils
+  tarotSpread.innerHTML = ''; // Clear tarot cards
+  sceneIndex = 0;
+  journal.length = 0;
+  path.length = 0;
+  choicesLocked = false; // Ensure choices are unlocked for new game
+  renderScene();
+  updateAtmosphere();
+}
 
-  function saveState(){
+function resetAll(){
+  // Clear localStorage on full reset for clean slate
+  localStorage.removeItem('janusState');
+  start.style.display = '';
+  game.style.display = 'none';
+  reflection.style.display = 'none';
+}
+
+function saveState(){
+  try {
     const state = { traits, journal, path, sceneIndex };
     localStorage.setItem('janusState', JSON.stringify(state));
+    console.log('[Save State] Game state saved successfully.');
+  } catch (error) {
+    console.error('[Save State] Failed to save state:', error);
+    alert('Failed to save game state. Your browser might be in private mode or storage is full.');
   }
+}
 
-  function loadState(){
+function loadState(){
+  try {
     const raw = localStorage.getItem('janusState');
-    if(!raw) return;
+    if(!raw) {
+      console.log('[Load State] No saved state found.');
+      alert('No saved game found!');
+      return;
+    }
     const state = JSON.parse(raw);
-    Object.assign(traits, state.traits || {});
-    journal.length = 0; (state.journal || []).forEach(j=> journal.push(j));
-    path.length = 0; (state.path || []).forEach(p=> path.push(p));
-    sceneIndex = state.sceneIndex || 0;
-
+    
+    // Reset current state to avoid cumulative issues
+    TRAIT_KEYS.forEach(k=> traits[k] = 0);
+    journal.length = 0;
+    path.length = 0;
     sigilRepo.innerHTML = '';
     tarotSpread.innerHTML = '';
-    for(let i=0;i<sceneIndex && i<path.length;i++){
-      const step = path[i];
-      for(const [k,v] of Object.entries(step.delta || {})){
-        if(Math.abs(v) >= 0.4) showSigil(k);
-      }
-      addTarotCard();
+
+    Object.assign(traits, state.traits || {});
+    (state.journal || []).forEach(j=> journal.push(j));
+    (state.path || []).forEach(p=> path.push(p));
+    sceneIndex = state.sceneIndex || 0;
+
+    // Reconstruct UI elements based on loaded path and traits
+    // Tarot cards
+    for(let i=0;i<path.length;i++){
+      addTarotCard(true); // 'true' for immediate reveal on load
     }
+
+    // Sigils (re-evaluate all relevant deltas from path)
+    const encounteredTraits = new Set();
+    path.forEach(step => {
+        for(const [k,v] of Object.entries(step.delta || {})){
+            if(Math.abs(v) >= 0.4 && !encounteredTraits.has(k)) { // Re-show sigils for significant accumulated traits
+                showSigil(k);
+                encounteredTraits.add(k); // Mark as already shown
+            }
+        }
+    });
 
     start.style.display = 'none';
     reflection.style.display = 'none';
     game.style.display = '';
+    
     if(sceneIndex < scenes.length){
       renderScene();
     } else {
       showReflection();
     }
     updateAtmosphere();
-    journalEl.textContent = journal.join('\n\n');
+    journalEl.textContent = journal.join('\n\n'); // Update journal for reflection screen if loading to end
+    console.log('[Load State] Game state loaded successfully.');
+  } catch (error) {
+    console.error('[Load State] Failed to load state:', error);
+    alert('Failed to load game state. The saved data might be corrupted.');
   }
+}
 
-  function renderScene(){
-    const s = scenes[sceneIndex];
-    sceneId.textContent = s.act;
-    sceneTitle.textContent = s.title;
-    sceneSubtitle.textContent = s.subtitle;
-    sceneText.textContent = s.text;
 
-    decision.innerHTML = '';
-    sceneCard.classList.add('dissolve');
-    setTimeout(()=> sceneCard.classList.remove('dissolve'), 720);
+function renderScene(){
+  choicesLocked = false; // Unlock choices for the new scene
+  const s = scenes[sceneIndex];
+  sceneId.textContent = s.act;
+  sceneTitle.textContent = s.title;
+  sceneSubtitle.textContent = s.subtitle;
+  sceneText.textContent = s.text;
 
-    const mode = modeSelect.value;
-    if (mode === 'orbit') renderOrbit(s.options);
-    else if (mode === 'lens') renderLens(s.options);
-    else renderWhisper(s.options);
-  }
+  decision.innerHTML = '';
+  sceneCard.classList.add('dissolve');
+  // Trigger reflow to ensure animation restarts on subsequent calls
+  void sceneCard.offsetWidth; 
+  setTimeout(()=> sceneCard.classList.remove('dissolve'), 720);
 
-  // -----------------------------
-  // Orbit Selector
-  // -----------------------------
-  function renderOrbit(options){
-    const wrap = document.createElement('div');
-    wrap.className = 'orbit';
-    const cx = 210, cy = 210, r = 150; // center, radius
-    const baseAngle = Math.random() * Math.PI * 2 * 0.25; // small randomization
-    options.forEach((opt, i)=>{
-      const angle = baseAngle + (i * (Math.PI * 2 / options.length));
-      const x = cx + r * Math.cos(angle) - 80;
-      const y = cy + r * Math.sin(angle) - 22;
-      const node = document.createElement('div');
-      node.className = 'glyph';
-      node.textContent = opt.label;
-      node.style.left = x + 'px';
-      node.style.top = y + 'px';
-      node.style.animationDelay = (i * 80) + 'ms';
-      node.addEventListener('click', (ev)=>{
-        node.classList.add('selected');
-        handleChoice(opt, {x: ev.clientX, y: ev.clientY});
-      });
-      wrap.appendChild(node);
+  const mode = modeSelect.value;
+  if (mode === 'orbit') renderOrbit(s.options);
+  else if (mode === 'lens') renderLens(s.options);
+  else renderWhisper(s.options);
+}
+
+// -----------------------------
+// Orbit Selector
+// -----------------------------
+function renderOrbit(options){
+  const wrap = document.createElement('div');
+  wrap.className = 'orbit';
+  const cx = 210, cy = 210, r = 150; // center, radius
+  const baseAngle = Math.random() * Math.PI * 2 * 0.25; // small randomization
+  options.forEach((opt, i)=>{
+    const angle = baseAngle + (i * (Math.PI * 2 / options.length));
+    const x = cx + r * Math.cos(angle) - 80;
+    const y = cy + r * Math.sin(angle) - 22;
+    const node = document.createElement('div');
+    node.className = 'glyph';
+    node.textContent = opt.label;
+    node.style.left = x + 'px';
+    node.style.top = y + 'px';
+    node.style.animationDelay = (i * 80) + 'ms';
+    node.addEventListener('click', (ev)=>{
+      if (choicesLocked) return; // Prevent multiple clicks
+      node.classList.add('selected');
+      handleChoice(opt, {x: ev.clientX, y: ev.clientY});
     });
-    decision.appendChild(wrap);
-  }
+    wrap.appendChild(node);
+  });
+  decision.appendChild(wrap);
+}
 
-  // -----------------------------
-  // Cognitive Lens
-  // -----------------------------
-  function renderLens(options){
-    const wrap = document.createElement('div');
-    wrap.className = 'lens-wrap';
-    options.forEach((opt, i)=>{
-      const card = document.createElement('div');
-      card.className = 'lens-card';
-      card.innerHTML = `<div>${opt.label}</div><div class="hint">Focus the lens, then click</div>`;
-      card.style.animationDelay = (i * 80) + 'ms';
-      card.addEventListener('mousemove', (e)=>{
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left, y = e.clientY - rect.top;
-        card.style.setProperty('--mx', x + 'px');
-        card.style.setProperty('--my', y + 'px');
-      });
-      card.addEventListener('mouseenter', ()=> card.classList.add('focus'));
-      card.addEventListener('mouseleave', ()=> card.classList.remove('focus'));
-      card.addEventListener('click', (ev)=> handleChoice(opt, {x: ev.clientX, y: ev.clientY}));
-      wrap.appendChild(card);
+// -----------------------------
+// Cognitive Lens
+// -----------------------------
+function renderLens(options){
+  const wrap = document.createElement('div');
+  wrap.className = 'lens-wrap';
+  options.forEach((opt, i)=>{
+    const card = document.createElement('div');
+    card.className = 'lens-card';
+    card.innerHTML = `<div>${opt.label}</div><div class="hint">Focus the lens, then click</div>`;
+    card.style.animationDelay = (i * 80) + 'ms';
+    card.addEventListener('mousemove', (e)=>{
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      card.style.setProperty('--mx', x + 'px');
+      card.style.setProperty('--my', y + 'px');
     });
-    decision.appendChild(wrap);
+    card.addEventListener('mouseenter', ()=> card.classList.add('focus'));
+    card.addEventListener('mouseleave', ()=> card.classList.remove('focus'));
+    card.addEventListener('click', (ev)=>{
+      if (choicesLocked) return; // Prevent multiple clicks
+      card.classList.add('selected'); // Added for visual feedback if desired
+      handleChoice(opt, {x: ev.clientX, y: ev.clientY});
+    });
+    wrap.appendChild(card);
+  });
+  decision.appendChild(wrap);
+}
+
+// -----------------------------
+// Whisper Panel
+// -----------------------------
+function renderWhisper(options){
+  let currentWhisperIndex = 0;
+  const wrap = document.createElement('div');
+  wrap.className = 'whisper-wrap';
+  const text = document.createElement('div');
+  text.className = 'whisper-text';
+  const actions = document.createElement('div');
+  actions.className = 'whisper-actions';
+  const accept = document.createElement('button');
+  accept.textContent = 'Accept';
+  const reject = document.createElement('button');
+  reject.textContent = 'Reject';
+  actions.appendChild(accept); actions.appendChild(reject);
+  wrap.appendChild(text);
+  wrap.appendChild(actions);
+  decision.appendChild(wrap);
+
+  function showWhisper(){
+    text.textContent = options[currentWhisperIndex].label;
+    text.classList.add('whisper-in');
+    void text.offsetWidth; // Trigger reflow
+    text.classList.remove('whisper-in');
   }
 
-  // -----------------------------
-  // Whisper Panel
-  // -----------------------------
-  function renderWhisper(options){
-    let idx = 0;
-    const wrap = document.createElement('div');
-    wrap.className = 'whisper-wrap';
-    const text = document.createElement('div');
-    text.className = 'whisper-text';
-    const actions = document.createElement('div');
-    actions.className = 'whisper-actions';
-    const accept = document.createElement('button');
-    accept.textContent = 'Accept';
-    const reject = document.createElement('button');
-    reject.textContent = 'Reject';
-    actions.appendChild(accept); actions.appendChild(reject);
-    wrap.appendChild(text);
-    wrap.appendChild(actions);
-    decision.appendChild(wrap);
-    function show(){ text.textContent = options[idx].label; }
-    accept.addEventListener('click', (ev)=> handleChoice(options[idx], {x: ev.clientX, y: ev.clientY}));
-    reject.addEventListener('click', ()=>{ idx = (idx+1)%options.length; show(); });
-    show();
+  accept.addEventListener('click', (ev)=>{
+    if (choicesLocked) return;
+    accept.classList.add('selected'); // Visual feedback
+    handleChoice(options[currentWhisperIndex], {x: ev.clientX, y: ev.clientY});
+  });
+  reject.addEventListener('click', ()=>{
+    if (choicesLocked) return;
+    reject.classList.add('rejected'); // Visual feedback for rejection
+    currentWhisperIndex = (currentWhisperIndex + 1) % options.length;
+    showWhisper();
+    setTimeout(() => reject.classList.remove('rejected'), 300); // Remove class after animation
+  });
+  showWhisper(); // Show first whisper initially
+}
+
+
+// -----------------------------
+// Choice handling
+// -----------------------------
+function handleChoice(opt, point){
+  if (choicesLocked) return;
+  choicesLocked = true; // Lock choices immediately
+
+  // Echo ripple feedback
+  echoRipple(point.x, point.y);
+
+  // Update traits & record
+  const currentDeltas = opt.delta || {};
+  for(const [k,v] of Object.entries(currentDeltas)){
+    traits[k] = clamp((traits[k]||0) + v, -1, 1); // Ensure clamping for each trait
+    if(Math.abs(v) >= 0.4) showSigil(k); // Show sigil for significant trait changes
   }
+  const currentSceneId = scenes[sceneIndex].id;
+  path.push({ scene: currentSceneId, choice: opt.id, delta: currentDeltas });
+  console.log('[Telemetry]', { scene: currentSceneId, choice: opt.id, delta: currentDeltas, traits: { ...traits } });
+  journal.push(`• ${opt.whisper}`);
+  addTarotCard();
 
-  // -----------------------------
-  // Choice handling
-  // -----------------------------
-  function handleChoice(opt, point){
-    // Echo ripple feedback
-    echoRipple(point.x, point.y);
+  updateAtmosphere();
 
-    // Update traits & record
-    for(const [k,v] of Object.entries(opt.delta || {})){
-      traits[k] = clamp((traits[k]||0) + v, -1, 1);
-      if(Math.abs(v) >= 0.4) showSigil(k);
-    }
-    const sceneId = scenes[sceneIndex].id;
-    path.push({ scene: sceneId, choice: opt.id, delta: opt.delta });
-    console.log('[Telemetry]', { scene: sceneId, choice: opt.id, delta: opt.delta || {}, traits: { ...traits } });
-    journal.push(`• ${opt.whisper}`);
-    addTarotCard();
-
-    updateAtmosphere();
-
-    // Next scene or reflection
+  // Next scene or reflection
+  setTimeout(() => { // Delay transition for visual feedback to play out
     sceneIndex++;
     if (sceneIndex < scenes.length) {
       renderScene();
     } else {
       showReflection();
     }
-  }
+  }, 800); // Adjust delay as needed
+}
 
-  function updateAtmosphere(){
-    const entries = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
-    const top = entries.slice(0,3);
-    let total = 0, hue = 200, sat = 18, light = 8; // defaults
-    if(top.length){
-      hue = sat = light = 0;
-      top.forEach(([k,v])=>{
-        const weight = Math.abs(v);
-        const [h,s,l] = TRAIT_COLORS[k];
-        hue += h*weight; sat += s*weight; light += l*weight; total += weight;
-      });
-      hue /= total; sat /= total; light /= total;
-    }
-    document.documentElement.style.setProperty('--bg-hue', hue.toFixed(0));
-    document.documentElement.style.setProperty('--bg-sat', sat.toFixed(0)+'%');
-    document.documentElement.style.setProperty('--bg-light', light.toFixed(0)+'%');
+function updateAtmosphere(){
+  const entries = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
+  const top = entries.filter(([k,v]) => Math.abs(v) > 0.1).slice(0,3); // Only consider traits with some value
+  let totalWeight = 0, hueSum = 0, satSum = 0, lightSum = 0;
 
-    const accentHue = (hue + 20) % 360;
-    document.documentElement.style.setProperty('--accent', `${accentHue}, 75%, 62%`);
-
-    const hubris = traits.Hubris || 0;
-    traitBar.style.width = ((0.5 + hubris/2) * 100) + '%';
-  }
-
-  function showReflection(){
-    game.style.display = 'none';
-    reflection.style.display = '';
-    // Portrait & reading
-    renderPortraitAndReading();
-    // Journal
-    journalEl.textContent = journal.join('\n\n');
-  }
-
-  function determineArchetype(){
-    const keys = Object.entries(traits)
-      .sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]))
-      .slice(0,2)
-      .map(([k])=>k)
-      .sort()
-      .join(',');
-    return ARCHETYPES[keys] || { name: 'The Unshaped', lines: ['Your pattern resists simple names.'] };
-  }
-
-  function renderPortraitAndReading(){
-    portrait.innerHTML = '';
-    const svgNS = 'http://www.w3.org/2000/svg';
-    const svg = document.createElementNS(svgNS, 'svg');
-    svg.setAttribute('viewBox','0 0 300 300');
-
-    // Background aura gradient
-    const defs = document.createElementNS(svgNS, 'defs');
-    const grad = document.createElementNS(svgNS, 'radialGradient');
-    grad.id = 'aura';
-    grad.innerHTML = `
-      <stop offset="0%" stop-color="hsla(${getComputedStyle(document.documentElement).getPropertyValue('--bg-hue')},70%,60%,0.55)"/>
-      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-    `;
-    defs.appendChild(grad);
-    svg.appendChild(defs);
-
-    const aura = document.createElementNS(svgNS, 'circle');
-    aura.setAttribute('cx','150'); aura.setAttribute('cy','110'); aura.setAttribute('r','100');
-    aura.setAttribute('fill','url(#aura)');
-    svg.appendChild(aura);
-
-    // Determine dominant traits for silhouette/adornments
-    const sorted = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
-    const topTraits = sorted.slice(0,2).map(([k])=>k);
-    const topTraitsAll = sorted.slice(0,3).map(([k])=>k);
-
-    // Abstract silhouette with trait distortion
-    const head = document.createElementNS(svgNS, 'circle');
-    head.setAttribute('cx','150'); head.setAttribute('cy','100'); head.setAttribute('r','32');
-    head.setAttribute('fill','rgba(255,255,255,0.25)'); head.setAttribute('stroke','rgba(255,255,255,0.3)');
-    let bodyPath = 'M110,180 Q150,150 190,180 L190,240 Q150,260 110,240 Z';
-    if(topTraits[0] === 'Rigidity') bodyPath = 'M110,180 L150,150 190,180 190,240 110,240 Z';
-    else if(topTraits[0] === 'Impulsivity') bodyPath = 'M110,180 Q150,140 190,180 Q150,260 110,240 Z';
-    const body = document.createElementNS(svgNS, 'path');
-    body.setAttribute('d', bodyPath);
-    body.setAttribute('fill','rgba(255,255,255,0.12)');
-    body.setAttribute('stroke','rgba(255,255,255,0.25)');
-    svg.appendChild(head); svg.appendChild(body);
-
-    // Adornments for dominant traits
-    if(topTraits.includes('Impulsivity')){
-      const swirl = document.createElementNS(svgNS,'path');
-      swirl.setAttribute('d','M60,220 Q150,170 240,220');
-      swirl.setAttribute('stroke','rgba(255,255,255,0.25)');
-      swirl.setAttribute('stroke-width','3');
-      swirl.setAttribute('fill','none');
-      svg.appendChild(swirl);
-    }
-    if(topTraits.includes('Rigidity')){
-      const bars = document.createElementNS(svgNS,'path');
-      bars.setAttribute('d','M120,180 L120,240 M180,180 L180,240');
-      bars.setAttribute('stroke','rgba(255,255,255,0.25)');
-      bars.setAttribute('fill','none');
-      svg.appendChild(bars);
-    }
-
-    portrait.appendChild(svg);
-
-    // Archetype reading
-    const arche = determineArchetype();
-    const title = `Mythic Persona: ${arche.name}`;
-    const narrative = `${arche.lines.join(' ')} Dominant traits: ${topTraitsAll.join(' & ')}.`;
-    reading.innerHTML = `<div class="badge">Cosmic Constellation Narrative</div><h2 class="title" style="margin-top:8px;">${title}</h2><div class="scene-text"><p>${narrative}</p></div>`;
-  }
-
-  function downloadRitual(){
-    const text = `HERO\'S CHRONICLE (Prototype)\n\n` + journal.join('\n\n');
-    const blob = new Blob([text], {type:'text/plain'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'janus_ritual.txt'; a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
-
-  function showSigil(trait){
-    let node = sigilRepo.querySelector(`[data-trait="${trait}"]`);
-    if(!node){
-      node = document.createElement('div');
-      node.className = 'sigil';
-      node.dataset.trait = trait;
-      node.innerHTML = SIGILS[trait] || '';
-      sigilRepo.appendChild(node);
-    }
-    node.classList.add('active');
-    setTimeout(()=> node.classList.remove('active'), 800);
-  }
-
-  function addTarotCard(){
-    const card = document.createElement('div');
-    card.className = 'tarot-card';
-    tarotSpread.appendChild(card);
-    requestAnimationFrame(()=> card.classList.add('reveal'));
-  }
-
-  function echoRipple(x, y){
-    ['','faint'].forEach((cls, i)=>{
-      const r = document.createElement('span');
-      r.className = 'ripple' + (cls ? ' ' + cls : '');
-      r.style.left = (x - 5) + 'px';
-      r.style.top = (y - 5) + 'px';
-      if(i) r.style.animationDelay = '120ms';
-      document.body.appendChild(r);
-      r.addEventListener('animationend', ()=> r.remove());
+  if(top.length){
+    top.forEach(([k,v])=>{
+      const weight = Math.abs(v); // Contribution based on magnitude
+      const [h,s,l] = TRAIT_COLORS[k];
+      hueSum += h * weight;
+      satSum += s * weight;
+      lightSum += l * weight;
+      totalWeight += weight;
     });
+
+    // Blend colors based on weighted average
+    document.documentElement.style.setProperty('--bg-hue', (hueSum / totalWeight).toFixed(0));
+    document.documentElement.style.setProperty('--bg-sat', (satSum / totalWeight).toFixed(0)+'%');
+    document.documentElement.style.setProperty('--bg-light', (lightSum / totalWeight).toFixed(0)+'%');
+  } else { // Default to neutral if no strong traits
+    document.documentElement.style.setProperty('--bg-hue', '250');
+    document.documentElement.style.setProperty('--bg-sat', '18%');
+    document.documentElement.style.setProperty('--bg-light', '8%');
   }
 
-  // -----------------------------
-  // Constellation bloom (ambient)
-  // -----------------------------
-  const canvas = document.getElementById('constellation');
-  const ctx = canvas.getContext('2d');
-  let stars = [];
-  function initStars(){
-    const w = canvas.width = canvas.clientWidth;
-    const h = canvas.height = canvas.clientHeight;
-    stars = Array.from({length: 80}, ()=>({
-      x: Math.random()*w,
-      y: Math.random()*h,
-      r: Math.random()*1.7 + 0.3,
-      b: Math.random()*0.4 + 0.2,
-      vx: (Math.random()-0.5)*0.05,
-      vy: (Math.random()-0.5)*0.05,
-    }));
-  }
-  window.addEventListener('resize', initStars);
-  initStars();
-  function tick(){
-    const w = canvas.width = canvas.clientWidth;
-    const h = canvas.height = canvas.clientHeight;
-    ctx.clearRect(0,0,w,h);
+  const currentHue = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bg-hue'));
+  const accentHue = (currentHue + 20) % 360; // Keep accent relative to background hue
+  document.documentElement.style.setProperty('--accent', `${accentHue}, 75%, 62%`);
 
-    const hue = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bg-hue')) || 0;
+  const hubris = traits.Hubris || 0;
+  traitBar.style.width = ((0.5 + hubris/2) * 100) + '%';
+}
 
-    // cluster centers move subtly with hubris trait (–1..1) → shift focus left/right
-    const hubris = traits.Hubris || 0;
-    const cx = w*(0.35 + 0.3*((hubris+1)/2));
-    const cy = h*0.55;
+function showReflection(){
+  game.style.display = 'none';
+  reflection.style.display = '';
+  // Portrait & reading
+  renderPortraitAndReading();
+  // Journal
+  journalEl.textContent = journal.join('\n\n');
+}
 
-    for (const s of stars){
-      s.x = (s.x + s.vx + w) % w;
-      s.y = (s.y + s.vy + h) % h;
-      s.b = clamp(s.b + (Math.random()-0.5)*0.01, 0.2, 0.6);
-      const dx = s.x - cx, dy = s.y - cy; const d = Math.sqrt(dx*dx + dy*dy) + 1;
-      const glow = 1 / (d*0.04); // nearer to cluster is brighter
-      const alpha = clamp(s.b + glow*0.9, 0, 1);
-      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-      ctx.fillStyle = `hsla(${hue},50%,80%,${alpha})`;
-      ctx.fill();
-    }
+// Function to determine the archetype
+function determineArchetype(){
+  const sortedTraits = Object.entries(traits)
+    .sort(([,v1], [,v2]) => Math.abs(v2) - Math.abs(v1)); // Sort by magnitude, descending
 
-    for(let i=0;i<stars.length;i++){
-      for(let j=i+1;j<stars.length;j++){
-        const a = stars[i], b = stars[j];
-        const dx = a.x-b.x, dy = a.y-b.y; const d = Math.sqrt(dx*dx+dy*dy);
-        if(d < 50){
-          const alpha = 0.1 * (1 - d/50);
-          ctx.strokeStyle = `hsla(${hue},60%,70%,${alpha})`;
-          ctx.lineWidth = 0.5;
-          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-        }
+  // Try to find archetypes based on 2 or 3 most dominant traits
+  for (let i = 0; i < Math.min(sortedTraits.length, 3); i++) {
+    for (let j = i + 1; j < Math.min(sortedTraits.length, 3); j++) {
+      const trait1 = sortedTraits[i][0];
+      const trait2 = sortedTraits[j][0];
+      const key = [trait1, trait2].sort().join(','); // Standardize key
+      if (ARCHETYPES[key]) {
+        console.log(`[Archetype] Found pair: ${key}`);
+        return ARCHETYPES[key];
+      }
+      // Consider three-trait combinations for more specific archetypes
+      if (i === 0 && j === 1 && sortedTraits.length >= 3) {
+          const trait3 = sortedTraits[2][0];
+          const threeKey = [trait1, trait2, trait3].sort().join(',');
+          if (ARCHETYPES[threeKey]) {
+              console.log(`[Archetype] Found triplet: ${threeKey}`);
+              return ARCHETYPES[threeKey];
+          }
       }
     }
-    requestAnimationFrame(tick);
   }
-  tick();
+
+  // Fallback to single most dominant trait if no pair/triplet found
+  if (sortedTraits.length > 0 && Math.abs(sortedTraits[0][1]) > 0.1) {
+    const singleTraitKey = sortedTraits[0][0];
+    if (ARCHETYPES[singleTraitKey]) {
+      console.log(`[Archetype] Found dominant single trait: ${singleTraitKey}`);
+      return ARCHETYPES[singleTraitKey];
+    }
+  }
+
+  // Default fallback if no significant traits or archetypes match
+  console.log('[Archetype] No specific archetype found, using default.');
+  return {
+    name: 'The Seeker of Unwritten Paths',
+    lines: [
+      'Your journey weaves a unique pattern, less defined by stark forces and more by subtle currents.',
+      'The whispers echo not a clear destination, but the boundless potential of the unchosen road.'
+    ]
+  };
+}
+
+function renderPortraitAndReading(){
+  portrait.innerHTML = '';
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('viewBox','0 0 300 300');
+
+  // Background aura gradient
+  const defs = document.createElementNS(svgNS, 'defs');
+  const grad = document.createElementNS(svgNS, 'radialGradient');
+  grad.id = 'aura';
+  grad.innerHTML = `
+    <stop offset="0%" stop-color="hsla(${getComputedStyle(document.documentElement).getPropertyValue('--bg-hue')},70%,60%,0.55)"/>
+    <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+  `;
+  defs.appendChild(grad);
+  svg.appendChild(defs);
+
+  const aura = document.createElementNS(svgNS, 'circle');
+  aura.setAttribute('cx','150'); aura.setAttribute('cy','110'); aura.setAttribute('r','100');
+  aura.setAttribute('fill','url(#aura)');
+  svg.appendChild(aura);
+
+  // Determine dominant traits for silhouette/adornments
+  const sorted = Object.entries(traits).sort((a,b)=>Math.abs(b[1]) - Math.abs(a[1]));
+  const topTraitKeys = sorted.filter(([k,v]) => Math.abs(v) > 0.1).slice(0,3).map(([k])=>k);
+
+  // Abstract silhouette with trait distortion (using the top trait for primary visual)
+  const head = document.createElementNS(svgNS, 'circle');
+  head.setAttribute('cx','150'); head.setAttribute('cy','100'); head.setAttribute('r','32');
+  head.setAttribute('fill','rgba(255,255,255,0.25)'); head.setAttribute('stroke','rgba(255,255,255,0.3)');
+  let bodyPath = 'M110,180 Q150,150 190,180 L190,240 Q150,260 110,240 Z';
+  if(topTraitKeys.includes('Rigidity')) bodyPath = 'M110,180 L150,150 190,180 190,240 L110,240 Z'; // More angular
+  else if(topTraitKeys.includes('Impulsivity')) bodyPath = 'M110,180 Q150,140 190,180 Q150,260 110,240 Z'; // More fluid
+  else if(topTraitKeys.includes('Control')) bodyPath = 'M110,180 Q150,160 190,180 L190,220 Q150,240 110,220 Z'; // Broader base
+  else if(topTraitKeys.includes('Fear')) bodyPath = 'M120,190 Q150,170 180,190 L180,230 Q150,240 120,230 Z'; // Slightly smaller, hunched
+  const body = document.createElementNS(svgNS, 'path');
+  body.setAttribute('d', bodyPath);
+  body.setAttribute('fill','rgba(255,255,255,0.12)');
+  body.setAttribute('stroke','rgba(255,255,255,0.25)');
+  svg.appendChild(head); svg.appendChild(body);
+
+  // Adornments for dominant traits
+  topTraitKeys.forEach(traitKey => {
+    switch (traitKey) {
+      case 'Hubris': // Crown of light
+        const crown = document.createElementNS(svgNS, 'path');
+        crown.setAttribute('d','M118,78 L132,58 L150,80 L168,58 L182,78 Z');
+        crown.setAttribute('fill','hsla(var(--accent),0.35)');
+        crown.setAttribute('stroke','hsla(var(--accent),0.6)');
+        crown.classList.add('adornment-animation');
+        svg.appendChild(crown);
+        break;
+      case 'Fear': // Cloak/Shadowed form
+        const cloak = document.createElementNS(svgNS, 'path');
+        cloak.setAttribute('d','M80,180 Q150,160 220,180 L220,240 Q150,260 80,240 Z');
+        cloak.setAttribute('fill','rgba(0,0,0,0.25)');
+        cloak.setAttribute('stroke','rgba(0,0,0,0.4)');
+        svg.appendChild(cloak);
+        break;
+      case 'Avarice': // Gems/Coins around body
+        const coin1 = document.createElementNS(svgNS, 'circle'); coin1.setAttribute('cx', '125'); coin1.setAttribute('cy', '190'); coin1.setAttribute('r', '5'); coin1.setAttribute('fill', 'gold'); svg.appendChild(coin1);
+        const coin2 = document.createElementNS(svgNS, 'circle'); coin2.setAttribute('cx', '175'); coin2.setAttribute('cy', '195'); coin2.setAttribute('r', '6'); coin2.setAttribute('fill', 'gold'); svg.appendChild(coin2);
+        break;
+      case 'Deception': // Shifting lines around head
+        const deceptionLine = document.createElementNS(svgNS, 'path');
+        deceptionLine.setAttribute('d','M100,110 Q150,90 200,110');
+        deceptionLine.setAttribute('stroke','hsla(var(--accent),0.5)');
+        deceptionLine.setAttribute('stroke-dasharray','5 5');
+        deceptionLine.setAttribute('fill','none');
+        deceptionLine.classList.add('adornment-animation');
+        svg.appendChild(deceptionLine);
+        break;
+      // Add more cases for other traits
+      case 'Wrath': // Fiery eyes/glow
+        const eyeGlow = document.createElementNS(svgNS, 'circle');
+        eyeGlow.setAttribute('cx','140'); eyeGlow.setAttribute('cy','95'); eyeGlow.setAttribute('r','3');
+        eyeGlow.setAttribute('fill','hsla(0,100%,70%,0.8)');
+        eyeGlow.classList.add('adornment-animation');
+        const eyeGlow2 = eyeGlow.cloneNode(); eyeGlow2.setAttribute('cx','160');
+        svg.appendChild(eyeGlow); svg.appendChild(eyeGlow2);
+        break;
+      case 'Control': // Geometric patterns
+        const controlPattern = document.createElementNS(svgNS, 'rect');
+        controlPattern.setAttribute('x','140'); controlPattern.setAttribute('y','130'); controlPattern.setAttribute('width','20'); controlPattern.setAttribute('height','20');
+        controlPattern.setAttribute('fill','none'); controlPattern.setAttribute('stroke','rgba(255,255,255,0.3)');
+        svg.appendChild(controlPattern);
+        break;
+      case 'Impulsivity': // Burst lines
+        const burst = document.createElementNS(svgNS, 'line');
+        burst.setAttribute('x1','150'); burst.setAttribute('y1','100'); burst.setAttribute('x2','165'); burst.setAttribute('y2','85');
+        burst.setAttribute('stroke','hsla(var(--accent),0.6)');
+        burst.classList.add('adornment-animation');
+        const burst2 = burst.cloneNode(); burst2.setAttribute('x2','135'); burst2.setAttribute('y2','85');
+        svg.appendChild(burst); svg.appendChild(burst2);
+        break;
+    }
+  });
+
+  portrait.appendChild(svg);
+
+  // Archetype reading
+  const arche = determineArchetype();
+  const title = `Mythic Persona: ${arche.name}`;
+  const topTraitsFormatted = topTraitKeys.length > 0 ? `Dominant inclinations: ${topTraitKeys.join(', ')}.` : '';
+  const narrative = arche.lines.map(l=>`<div>• ${l}</div>`).join('') + `<div class="trait-summary">${topTraitsFormatted}</div>`;
+  reading.innerHTML = `<div class="badge">Cosmic Constellation Narrative</div><h2 class="title" style="margin-top:8px;">${title}</h2><div class="scene-text">${narrative}</div>`;
+}
+
+function downloadRitual(){
+  const text = `HERO\'S CHRONICLE (Prototype)\n\n` + journal.join('\n\n');
+  const blob = new Blob([text], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'janus_ritual.txt'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+
+function showSigil(traitKey){
+  let node = sigilRepo.querySelector(`[data-trait="${traitKey}"]`);
+  if(!node){
+    node = document.createElement('div');
+    node.className = 'sigil';
+    node.dataset.trait = traitKey;
+    node.innerHTML = SIGILS[traitKey] || '';
+    node.style.color = `hsl(${TRAIT_COLORS[traitKey][0]},${TRAIT_COLORS[traitKey][1]}%,${TRAIT_COLORS[traitKey][2]}%)`; // Color sigil by trait
+    sigilRepo.appendChild(node);
+  }
+  node.classList.add('active');
+  node.style.opacity = '1'; // Ensure it's visible if already present but faded
+  node.style.transform = 'scale(1.2)'; // Pop effect
+  setTimeout(()=> {
+      node.classList.remove('active');
+      node.style.transform = 'scale(1)';
+      node.style.opacity = '0.4'; // Fade slightly when not active
+  }, 800);
+}
+
+function addTarotCard(isLoad = false){
+  const card = document.createElement('div');
+  card.className = 'tarot-card';
+  tarotSpread.appendChild(card);
+  if (isLoad) {
+    card.classList.add('reveal');
+  } else {
+    requestAnimationFrame(()=> card.classList.add('reveal'));
+  }
+  // Optional: add a unique ID or class for styling a specific card type later
+  // card.dataset.sceneId = scenes[sceneIndex].id;
+}
+
+function echoRipple(x, y){
+  ['','faint'].forEach((cls, i)=>{
+    const r = document.createElement('span');
+    r.className = 'ripple' + (cls ? ' ' + cls : '');
+    r.style.left = (x - 5) + 'px';
+    r.style.top = (y - 5) + 'px';
+    if(i) r.style.animationDelay = '120ms';
+    document.body.appendChild(r);
+    r.addEventListener('animationend', ()=> r.remove());
+  });
+}
+
+// -----------------------------
+// Constellation bloom (ambient)
+// -----------------------------
+const canvas = document.getElementById('constellation');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function initStars(){
+  const w = canvas.width = canvas.clientWidth;
+  const h = canvas.height = canvas.clientHeight;
+  stars = Array.from({length: 80}, ()=>({
+    x: Math.random()*w,
+    y: Math.random()*h,
+    r: Math.random()*1.7 + 0.3,
+    b: Math.random()*0.4 + 0.2, // base brightness
+    vx: (Math.random()-0.5)*0.08, // Increased velocity
+    vy: (Math.random()-0.5)*0.08, // Increased velocity
+  }));
+}
+window.addEventListener('resize', initStars);
+initStars();
+function tick(){
+  const w = canvas.width = canvas.clientWidth;
+  const h = canvas.height = canvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+
+  const currentHue = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bg-hue')) || 0;
+
+  // cluster centers move subtly with hubris trait (–1..1) → shift focus left/right
+  const hubris = traits.Hubris || 0; // Keeping hubris for this specific effect
+  const cx = w*(0.35 + 0.3*((hubris+1)/2));
+  const cy = h*0.55;
+
+  for (const s of stars){
+    s.x = (s.x + s.vx + w) % w;
+    s.y = (s.y + s.vy + h) % h;
+    s.b = clamp(s.b + (Math.random()-0.5)*0.01, 0.2, 0.6); // Subtle brightness flicker
+    const dx = s.x - cx, dy = s.y - cy; const d = Math.sqrt(dx*dx + dy*dy) + 1;
+    const glow = 1 / (d*0.04); // nearer to cluster is brighter
+    const alpha = clamp(s.b + glow*0.9, 0, 1);
+    
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `hsla(${currentHue},50%,80%,${alpha})`; // Use dynamic hue
+    ctx.fill();
+  }
+
+  // Draw connections between nearby stars
+  for(let i=0;i<stars.length;i++){
+    for(let j=i+1;j<stars.length;j++){
+      const a = stars[i], b = stars[j];
+      const dx = a.x-b.x, dy = a.y-b.y; const d = Math.sqrt(dx*dx+dy*dy);
+      if(d < 60){ // Increased connection distance
+        const alpha = 0.15 * (1 - d/60); // Stronger opacity for connections
+        ctx.strokeStyle = `hsla(${currentHue},60%,70%,${alpha})`;
+        ctx.lineWidth = 0.7; // Thicker lines
+        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(tick);
+}
+tick();
