@@ -242,25 +242,7 @@ select:focus {
   box-shadow: 0 0 0 3px hsla(var(--accent), 0.25);
 }
 
-/* ================================
-   CONSTELLATION CANVAS
-   ================================ */
-#constellation {
-  position: fixed;
-  right: var(--space-lg);
-  bottom: var(--space-lg);
-  width: 320px;
-  height: 200px;
-  opacity: 0.85;
-  filter: drop-shadow(var(--shadow-md));
-  border-radius: var(--radius-lg);
-  background: linear-gradient(
-    135deg, 
-    rgba(0, 0, 0, 0.1), 
-    rgba(0, 0, 0, 0.05)
-  );
-  border: 1px solid var(--border-subtle);
-}
+/* Constellation canvas removed; decorative styles deleted */
 
 /* ================================
    PANEL LAYOUTS
@@ -723,12 +705,7 @@ select:focus {
 
   /* No specific decision UI to adjust here, as it's just buttons */
 
-  #constellation {
-    width: 240px;
-    height: 150px;
-    right: var(--space-md);
-    bottom: var(--space-md);
-  }
+  /* constellation removed */
 
   .start-card {
     padding: var(--space-2xl) var(--space-xl);
@@ -796,12 +773,7 @@ select:focus {
     font-size: var(--font-size-xl);
   }
 
-  #constellation {
-    width: 180px;
-    height: 110px;
-    right: var(--space-sm);
-    bottom: var(--space-sm);
-  }
+  /* constellation removed */
 
   .start-card {
     padding: var(--space-xl) var(--space-lg);
@@ -864,10 +836,7 @@ select:focus {
     padding: var(--space-sm);
   }
 
-  #constellation {
-    width: 140px;
-    height: 90px;
-  }
+  /* constellation removed */
 
   .start-card {
     margin: var(--space-md);
@@ -909,7 +878,6 @@ select:focus {
    ================================ */
 @media print {
   .hud,
-  #constellation,
   .decision {
     display: none !important;
   }

@@ -509,63 +509,70 @@ function echoRipple(x, y){
 }
 
 // -----------------------------
-// Constellation bloom (ambient)
+// Constellation bloom (ambient) — optional decorative canvas
+// If the canvas is removed from the DOM this entire block will skip safely.
 // -----------------------------
-const canvas = document.getElementById('constellation');
-const ctx = canvas.getContext('2d');
-let stars = [];
-function initStars(){
-  const w = canvas.width = canvas.clientWidth;
-  const h = canvas.height = canvas.clientHeight;
-  stars = Array.from({length: 80}, ()=>({
-    x: Math.random()*w,
-    y: Math.random()*h,
-    r: Math.random()*1.7 + 0.3,
-    b: Math.random()*0.4 + 0.2, // base brightness
-    vx: (Math.random()-0.5)*0.08, // Increased velocity
-    vy: (Math.random()-0.5)*0.08, // Increased velocity
-  }));
-}
-window.addEventListener('resize', initStars);
-initStars();
-function tick(){
-  const w = canvas.width = canvas.clientWidth;
-  const h = canvas.height = canvas.clientHeight;
-  ctx.clearRect(0,0,w,h);
-
-  const currentHue = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bg-hue')) || 0;
-
-  // cluster centers move subtly with hubris trait (–1..1) → shift focus left/right
-  const hubris = traits.Hubris || 0; // Keeping hubris for this specific effect
-  const cx = w*(0.35 + 0.3*((hubris+1)/2));
-  const cy = h*0.55;
-
-  for (const s of stars){
-    s.x = (s.x + s.vx + w) % w;
-    s.y = (s.y + s.vy + h) % h;
-    s.b = clamp(s.b + (Math.random()-0.5)*0.01, 0.2, 0.6); // Subtle brightness flicker
-    const dx = s.x - cx, dy = s.y - cy; const d = Math.sqrt(dx*dx + dy*dy) + 1;
-    const glow = 1 / (d*0.04); // nearer to cluster is brighter
-    const alpha = clamp(s.b + glow*0.9, 0, 1);
-    
-    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-    ctx.fillStyle = `hsla(${currentHue},50%,80%,${alpha})`; // Use dynamic hue
-    ctx.fill();
-  }
-
-  // Draw connections between nearby stars
-  for(let i=0;i<stars.length;i++){
-    for(let j=i+1;j<stars.length;j++){
-      const a = stars[i], b = stars[j];
-      const dx = a.x-b.x, dy = a.y-b.y; const d = Math.sqrt(dx*dx+dy*dy);
-      if(d < 60){ // Increased connection distance
-        const alpha = 0.15 * (1 - d/60); // Stronger opacity for connections
-        ctx.strokeStyle = `hsla(${currentHue},60%,70%,${alpha})`;
-        ctx.lineWidth = 0.7; // Thicker lines
-        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-      }
+{
+  const canvas = document.getElementById('constellation');
+  if (!canvas || !canvas.getContext) {
+    console.info('[Constellation] canvas not found or unsupported; skipping constellation rendering.');
+  } else {
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    function initStars(){
+      const w = canvas.width = canvas.clientWidth;
+      const h = canvas.height = canvas.clientHeight;
+      stars = Array.from({length: 80}, ()=>({
+        x: Math.random()*w,
+        y: Math.random()*h,
+        r: Math.random()*1.7 + 0.3,
+        b: Math.random()*0.4 + 0.2, // base brightness
+        vx: (Math.random()-0.5)*0.08, // Increased velocity
+        vy: (Math.random()-0.5)*0.08, // Increased velocity
+      }));
     }
+    window.addEventListener('resize', initStars);
+    initStars();
+    function tick(){
+      const w = canvas.width = canvas.clientWidth;
+      const h = canvas.height = canvas.clientHeight;
+      ctx.clearRect(0,0,w,h);
+
+      const currentHue = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bg-hue')) || 0;
+
+      // cluster centers move subtly with hubris trait (–1..1) → shift focus left/right
+      const hubris = traits.Hubris || 0; // Keeping hubris for this specific effect
+      const cx = w*(0.35 + 0.3*((hubris+1)/2));
+      const cy = h*0.55;
+
+      for (const s of stars){
+        s.x = (s.x + s.vx + w) % w;
+        s.y = (s.y + s.vy + h) % h;
+        s.b = clamp(s.b + (Math.random()-0.5)*0.01, 0.2, 0.6); // Subtle brightness flicker
+        const dx = s.x - cx, dy = s.y - cy; const d = Math.sqrt(dx*dx + dy*dy) + 1;
+        const glow = 1 / (d*0.04); // nearer to cluster is brighter
+        const alpha = clamp(s.b + glow*0.9, 0, 1);
+        
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fillStyle = `hsla(${currentHue},50%,80%,${alpha})`; // Use dynamic hue
+        ctx.fill();
+      }
+
+      // Draw connections between nearby stars
+      for(let i=0;i<stars.length;i++){
+        for(let j=i+1;j<stars.length;j++){
+          const a = stars[i], b = stars[j];
+          const dx = a.x-b.x, dy = a.y-b.y; const d = Math.sqrt(dx*dx+dy*dy);
+          if(d < 60){ // Increased connection distance
+            const alpha = 0.15 * (1 - d/60); // Stronger opacity for connections
+            ctx.strokeStyle = `hsla(${currentHue},60%,70%,${alpha})`;
+            ctx.lineWidth = 0.7; // Thicker lines
+            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
   }
-  requestAnimationFrame(tick);
 }
-tick();
