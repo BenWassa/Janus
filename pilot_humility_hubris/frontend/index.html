@@ -7,6 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Project Janus — Prototype</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Optional: Google Font for 'Inter' -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
   <canvas id="constellation"></canvas>
@@ -14,14 +18,7 @@
     <div class="hud">
       <div class="brand">Project Janus · Prototype</div>
       <div class="controls">
-        <span class="pill">
-          <label for="mode">Decision UI&nbsp;</label>
-          <select id="mode">
-            <option value="orbit">Orbit Selector</option>
-            <option value="lens">Cognitive Lens</option>
-            <option value="whisper">Whisper Panel</option>
-          </select>
-        </span>
+        <!-- REMOVED: <span class="pill">...</span> containing modeSelect -->
         <button id="restart">Restart</button>
         <button id="save">Save</button>
         <button id="load">Load</button>
@@ -32,8 +29,8 @@
       <div class="card start-card">
         <div class="badge">Alpha · Multi‑Trait Prototype</div>
         <h1 class="start-title">Enter the Labyrinth</h1>
-        <p class="start-blurb">Make a series of small choices. The world will shift around you. Multiple traits accumulate quietly; reflections, not verdicts.<br/>
-        <em>Controls:</em> Click choices · Press <strong>1/2</strong> to choose · Switch decision UI anytime.</p>
+        <p class="start-blurb">Walk a dream-like path where your choices guide the narrative flow. As you proceed, a symbolic Tarot spread will reveal your journey, and subtle traits will be illuminated—reflections, not verdicts.<br/>
+        <em>Controls:</em> Click on a choice · Press <strong>1</strong> or <strong>2</strong> to choose.</p>
         <div class="actions" style="justify-content:center; margin-top:12px;">
           <button id="play">Begin</button>
         </div>
@@ -54,23 +51,23 @@
       <section class="card" id="statusCard">
         <h3 class="title">Atmosphere</h3>
         <div class="subtitle">Many traits stir beneath the surface; the world reflects your leanings—reflections, not verdicts.</div>
-        <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+        <div style="margin-top:var(--space-md); display:flex; gap:var(--space-md); align-items:center;">
           <span class="badge">Humility</span>
-          <div style="flex:1; height:8px; background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:999px; overflow:hidden;">
-            <div id="traitBar" style="height:100%; width:50%; background: linear-gradient(90deg, hsla(200,70%,55%,0.85), hsla(35,80%,50%,0.85)); transition: width 300ms ease;"></div>
+          <div style="flex:1; height:8px; background: rgba(255,255,255,0.08); border:1px solid var(--border-medium); border-radius:var(--radius-full); overflow:hidden;">
+            <div id="traitBar" style="height:100%; width:50%; background: linear-gradient(90deg, hsla(200,70%,55%,0.85), hsla(35,80%,50%,0.85)); transition: width var(--transition-slow);"></div>
           </div>
           <span class="badge">Hubris</span>
         </div>
-          <div style="margin-top:16px;">
-            <h4 class="subtitle" style="margin:0 0 6px 0;">Constellation Bloom</h4>
+          <div style="margin-top:var(--space-lg);">
+            <h4 class="subtitle" style="margin:0 0 var(--space-xs) 0;">Constellation Bloom</h4>
             <div class="subtitle">Faint lights gather where patterns repeat.</div>
           </div>
-          <div style="margin-top:16px;">
-            <h4 class="subtitle" style="margin:0 0 6px 0;">Glyph Repository</h4>
+          <div style="margin-top:var(--space-lg);">
+            <h4 class="subtitle" style="margin:0 0 var(--space-xs) 0;">Glyph Repository</h4>
             <div id="sigils"></div>
           </div>
-          <div style="margin-top:16px;">
-            <h4 class="subtitle" style="margin:0 0 6px 0;">The Thread of Fate</h4>
+          <div style="margin-top:var(--space-lg);">
+            <h4 class="subtitle" style="margin:0 0 var(--space-xs) 0;">The Thread of Fate</h4>
             <div id="tarotSpread" class="tarot-spread"></div>
           </div>
         </section>
@@ -82,7 +79,7 @@
         <div>
           <h2 class="title">Whispers Collected</h2>
           <div class="journal" id="journal"></div>
-          <div class="actions" style="margin-top:12px;">
+          <div class="actions" style="margin-top:var(--space-lg);">
             <button id="download">Download Ritual Text</button>
             <button id="again">Walk Again</button>
           </div>

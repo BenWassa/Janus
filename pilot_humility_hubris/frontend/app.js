@@ -1,13 +1,13 @@
 // app.js
 
-import { scenes, TRAIT_KEYS, SIGILS, TRAIT_COLORS, ARCHETYPES } from "./data.js";
+import { scenes, TRAIT_KEYS, SIGILS, TRAIT_COLORS, ARCHETYPES, CARD_GLYPHS } from "./data.js"; // Import CARD_GLYPHS
 
 // Trait state: multi-trait object from Hamartia Engine
 const traits = Object.fromEntries(TRAIT_KEYS.map(t=>[t,0]));
 const journal = []; // poetic echo lines
 const path = [];    // record of choices
 let sceneIndex = 0;
-let choicesLocked = false; // New: Flag to prevent multiple choices
+let choicesLocked = false; // Flag to prevent multiple choices
 
 // DOM refs
 const start = document.getElementById('start');
@@ -23,7 +23,7 @@ const decision = document.getElementById('decision');
 const traitBar = document.getElementById('traitBar');
 const sigilRepo = document.getElementById('sigils');
 const tarotSpread = document.getElementById('tarotSpread');
-const modeSelect = document.getElementById('mode');
+// const modeSelect = document.getElementById('mode'); // REMOVED: No longer needed
 const restart = document.getElementById('restart');
 const saveBtn = document.getElementById('save');
 const loadBtn = document.getElementById('load');
@@ -31,7 +31,7 @@ const portrait = document.getElementById('portrait');
 const journalEl = document.getElementById('journal');
 const reading = document.getElementById('reading');
 const downloadBtn = document.getElementById('download');
-const againBtn = document.getElementById('again');
+const againBtn = document = document.getElementById('again');
 
 // Entry
 playBtn.addEventListener('click', startGame);
@@ -41,12 +41,16 @@ downloadBtn.addEventListener('click', downloadRitual);
 saveBtn.addEventListener('click', saveState);
 loadBtn.addEventListener('click', loadState);
 
-// Keyboard shortcuts (1/2)
+// Keyboard shortcuts (1/2) - Now for the new simple choice buttons
 document.addEventListener('keydown', (e)=>{
   if (game.style.display !== 'none' && !choicesLocked && (e.key === '1' || e.key === '2')) {
     const opts = scenes[sceneIndex].options;
     const idx = e.key === '1' ? 0 : 1;
-    if (opts[idx]) handleChoice(opts[idx], {x: window.innerWidth/2, y: window.innerHeight/2});
+    const choiceButton = decision.children[idx]; // Get the actual button
+    if (opts[idx] && choiceButton) {
+        choiceButton.classList.add('selected'); // Add visual feedback for keyboard selection
+        handleChoice(opts[idx], {x: choiceButton.getBoundingClientRect().left + choiceButton.offsetWidth/2, y: choiceButton.getBoundingClientRect().top + choiceButton.offsetHeight/2});
+    }
   }
 });
 
@@ -107,18 +111,19 @@ function loadState(){
     sceneIndex = state.sceneIndex || 0;
 
     // Reconstruct UI elements based on loaded path and traits
-    // Tarot cards
+    // Tarot cards (add glyph based on scene ID from path)
     for(let i=0;i<path.length;i++){
-      addTarotCard(true); // 'true' for immediate reveal on load
+      const sceneIdForCard = path[i].scene;
+      addTarotCard(sceneIdForCard, true); // 'true' for immediate reveal on load
     }
 
     // Sigils (re-evaluate all relevant deltas from path)
     const encounteredTraits = new Set();
     path.forEach(step => {
         for(const [k,v] of Object.entries(step.delta || {})){
-            if(Math.abs(v) >= 0.4 && !encounteredTraits.has(k)) { // Re-show sigils for significant accumulated traits
+            if(Math.abs(v) >= 0.4 && !encounteredTraits.has(k)) { 
                 showSigil(k);
-                encounteredTraits.add(k); // Mark as already shown
+                encounteredTraits.add(k); 
             }
         }
     });
@@ -133,7 +138,7 @@ function loadState(){
       showReflection();
     }
     updateAtmosphere();
-    journalEl.textContent = journal.join('\n\n'); // Update journal for reflection screen if loading to end
+    journalEl.textContent = journal.join('\n\n'); 
     console.log('[Load State] Game state loaded successfully.');
   } catch (error) {
     console.error('[Load State] Failed to load state:', error);
@@ -150,117 +155,30 @@ function renderScene(){
   sceneSubtitle.textContent = s.subtitle;
   sceneText.textContent = s.text;
 
-  decision.innerHTML = '';
+  decision.innerHTML = ''; // Clear previous choices
   sceneCard.classList.add('dissolve');
-  // Trigger reflow to ensure animation restarts on subsequent calls
-  void sceneCard.offsetWidth; 
-  setTimeout(()=> sceneCard.classList.remove('dissolve'), 720);
+  void sceneCard.offsetWidth; // Trigger reflow for animation
+  setTimeout(()=> sceneCard.classList.remove('dissolve'), 1000); // Match CSS dissolve duration
 
-  const mode = modeSelect.value;
-  if (mode === 'orbit') renderOrbit(s.options);
-  else if (mode === 'lens') renderLens(s.options);
-  else renderWhisper(s.options);
+  renderSimpleChoices(s.options); // Call the new simple choice renderer
 }
 
 // -----------------------------
-// Orbit Selector
+// New: Simple Choice Renderer (Dream-Walk style)
 // -----------------------------
-function renderOrbit(options){
-  const wrap = document.createElement('div');
-  wrap.className = 'orbit';
-  const cx = 210, cy = 210, r = 150; // center, radius
-  const baseAngle = Math.random() * Math.PI * 2 * 0.25; // small randomization
+function renderSimpleChoices(options){
   options.forEach((opt, i)=>{
-    const angle = baseAngle + (i * (Math.PI * 2 / options.length));
-    const x = cx + r * Math.cos(angle) - 80;
-    const y = cy + r * Math.sin(angle) - 22;
-    const node = document.createElement('div');
-    node.className = 'glyph';
-    node.textContent = opt.label;
-    node.style.left = x + 'px';
-    node.style.top = y + 'px';
-    node.style.animationDelay = (i * 80) + 'ms';
-    node.addEventListener('click', (ev)=>{
-      if (choicesLocked) return; // Prevent multiple clicks
-      node.classList.add('selected');
+    const button = document.createElement('button');
+    button.className = 'choice-button';
+    button.textContent = `${i + 1}. ${opt.label}`; // Add numbering
+    button.addEventListener('click', (ev)=>{
+      if (choicesLocked) return;
+      button.classList.add('selected'); // Visual feedback for click
       handleChoice(opt, {x: ev.clientX, y: ev.clientY});
     });
-    wrap.appendChild(node);
+    decision.appendChild(button);
   });
-  decision.appendChild(wrap);
 }
-
-// -----------------------------
-// Cognitive Lens
-// -----------------------------
-function renderLens(options){
-  const wrap = document.createElement('div');
-  wrap.className = 'lens-wrap';
-  options.forEach((opt, i)=>{
-    const card = document.createElement('div');
-    card.className = 'lens-card';
-    card.innerHTML = `<div>${opt.label}</div><div class="hint">Focus the lens, then click</div>`;
-    card.style.animationDelay = (i * 80) + 'ms';
-    card.addEventListener('mousemove', (e)=>{
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left, y = e.clientY - rect.top;
-      card.style.setProperty('--mx', x + 'px');
-      card.style.setProperty('--my', y + 'px');
-    });
-    card.addEventListener('mouseenter', ()=> card.classList.add('focus'));
-    card.addEventListener('mouseleave', ()=> card.classList.remove('focus'));
-    card.addEventListener('click', (ev)=>{
-      if (choicesLocked) return; // Prevent multiple clicks
-      card.classList.add('selected'); // Added for visual feedback if desired
-      handleChoice(opt, {x: ev.clientX, y: ev.clientY});
-    });
-    wrap.appendChild(card);
-  });
-  decision.appendChild(wrap);
-}
-
-// -----------------------------
-// Whisper Panel
-// -----------------------------
-function renderWhisper(options){
-  let currentWhisperIndex = 0;
-  const wrap = document.createElement('div');
-  wrap.className = 'whisper-wrap';
-  const text = document.createElement('div');
-  text.className = 'whisper-text';
-  const actions = document.createElement('div');
-  actions.className = 'whisper-actions';
-  const accept = document.createElement('button');
-  accept.textContent = 'Accept';
-  const reject = document.createElement('button');
-  reject.textContent = 'Reject';
-  actions.appendChild(accept); actions.appendChild(reject);
-  wrap.appendChild(text);
-  wrap.appendChild(actions);
-  decision.appendChild(wrap);
-
-  function showWhisper(){
-    text.textContent = options[currentWhisperIndex].label;
-    text.classList.add('whisper-in');
-    void text.offsetWidth; // Trigger reflow
-    text.classList.remove('whisper-in');
-  }
-
-  accept.addEventListener('click', (ev)=>{
-    if (choicesLocked) return;
-    accept.classList.add('selected'); // Visual feedback
-    handleChoice(options[currentWhisperIndex], {x: ev.clientX, y: ev.clientY});
-  });
-  reject.addEventListener('click', ()=>{
-    if (choicesLocked) return;
-    reject.classList.add('rejected'); // Visual feedback for rejection
-    currentWhisperIndex = (currentWhisperIndex + 1) % options.length;
-    showWhisper();
-    setTimeout(() => reject.classList.remove('rejected'), 300); // Remove class after animation
-  });
-  showWhisper(); // Show first whisper initially
-}
-
 
 // -----------------------------
 // Choice handling
@@ -282,7 +200,7 @@ function handleChoice(opt, point){
   path.push({ scene: currentSceneId, choice: opt.id, delta: currentDeltas });
   console.log('[Telemetry]', { scene: currentSceneId, choice: opt.id, delta: currentDeltas, traits: { ...traits } });
   journal.push(`• ${opt.whisper}`);
-  addTarotCard();
+  addTarotCard(currentSceneId); // Pass scene ID to tarot card
 
   updateAtmosphere();
 
@@ -294,7 +212,7 @@ function handleChoice(opt, point){
     } else {
       showReflection();
     }
-  }, 800); // Adjust delay as needed
+  }, 1000); // Match scene transition duration for smooth flow
 }
 
 function updateAtmosphere(){
@@ -354,7 +272,7 @@ function determineArchetype(){
         console.log(`[Archetype] Found pair: ${key}`);
         return ARCHETYPES[key];
       }
-      // Consider three-trait combinations for more specific archetypes
+      // Consider three-trait combinations for more specific archetypes (e.g., if you add 'Apathy,Cynicism,Fear')
       if (i === 0 && j === 1 && sortedTraits.length >= 3) {
           const trait3 = sortedTraits[2][0];
           const threeKey = [trait1, trait2, trait3].sort().join(',');
@@ -458,7 +376,6 @@ function renderPortraitAndReading(){
         deceptionLine.classList.add('adornment-animation');
         svg.appendChild(deceptionLine);
         break;
-      // Add more cases for other traits
       case 'Wrath': // Fiery eyes/glow
         const eyeGlow = document.createElementNS(svgNS, 'circle');
         eyeGlow.setAttribute('cx','140'); eyeGlow.setAttribute('cy','95'); eyeGlow.setAttribute('r','3');
@@ -480,6 +397,26 @@ function renderPortraitAndReading(){
         burst.classList.add('adornment-animation');
         const burst2 = burst.cloneNode(); burst2.setAttribute('x2','135'); burst2.setAttribute('y2','85');
         svg.appendChild(burst); svg.appendChild(burst2);
+        break;
+      case 'Rigidity': // Solid lines, perhaps a grid
+        const gridLine1 = document.createElementNS(svgNS, 'line'); gridLine1.setAttribute('x1', '130'); gridLine1.setAttribute('y1', '120'); gridLine1.setAttribute('x2', '170'); gridLine1.setAttribute('y2', '120'); gridLine1.setAttribute('stroke', 'rgba(255,255,255,0.2)'); svg.appendChild(gridLine1);
+        const gridLine2 = gridLine1.cloneNode(); gridLine2.setAttribute('y1', '140'); gridLine2.setAttribute('y2', '140'); svg.appendChild(gridLine2);
+        break;
+      case 'Apathy': // Fading or desaturated effect (achieved via overall color, but can add subtle overlay)
+        const apathyOverlay = document.createElementNS(svgNS, 'rect'); apathyOverlay.setAttribute('x','0'); apathyOverlay.setAttribute('y','0'); apathyOverlay.setAttribute('width','300'); apathyOverlay.setAttribute('height','300'); apathyOverlay.setAttribute('fill','rgba(0,0,0,0.1)');
+        svg.appendChild(apathyOverlay);
+        break;
+      case 'Cynicism': // Distorted/broken patterns
+        const cynicShard = document.createElementNS(svgNS, 'path'); cynicShard.setAttribute('d', 'M140,95 L160,95 L155,105 Z'); cynicShard.setAttribute('fill', 'rgba(255,255,255,0.1)'); cynicShard.setAttribute('stroke', 'rgba(255,255,255,0.2)');
+        svg.appendChild(cynicShard);
+        break;
+      case 'Envy': // Reaching tendrils
+        const tendril = document.createElementNS(svgNS, 'path'); tendril.setAttribute('d', 'M150,100 C130,120 170,120 150,140'); tendril.setAttribute('stroke', 'hsl(120,70%,40%)'); tendril.setAttribute('fill', 'none'); tendril.classList.add('adornment-animation');
+        svg.appendChild(tendril);
+        break;
+      case 'Moodiness': // Swirling mist
+        const mist = document.createElementNS(svgNS, 'circle'); mist.setAttribute('cx', '150'); mist.setAttribute('cy', '100'); mist.setAttribute('r', '20'); mist.setAttribute('fill', 'rgba(180,150,200,0.1)');
+        svg.appendChild(mist);
         break;
     }
   });
@@ -515,26 +452,35 @@ function showSigil(traitKey){
     sigilRepo.appendChild(node);
   }
   node.classList.add('active');
-  node.style.opacity = '1'; // Ensure it's visible if already present but faded
-  node.style.transform = 'scale(1.2)'; // Pop effect
+  node.style.opacity = '1'; 
+  node.style.transform = 'scale(1.3)'; 
   setTimeout(()=> {
       node.classList.remove('active');
       node.style.transform = 'scale(1)';
-      node.style.opacity = '0.4'; // Fade slightly when not active
+      node.style.opacity = '0.4'; 
   }, 800);
 }
 
-function addTarotCard(isLoad = false){
+const svgNS = 'http://www.w3.org/2000/svg';
+
+function addTarotCard(sceneIdForCard, isLoad = false){
   const card = document.createElement('div');
   card.className = 'tarot-card';
+  
+  // Add an inner SVG glyph based on the scene ID or a general progression pattern
+  const glyphSvg = document.createElementNS(svgNS, 'svg');
+  glyphSvg.setAttribute('viewBox', '0 0 20 20');
+  glyphSvg.innerHTML = CARD_GLYPHS[sceneIdForCard] || CARD_GLYPHS['default']; // Use a default if sceneId doesn't have a specific glyph
+  card.appendChild(glyphSvg);
+
   tarotSpread.appendChild(card);
   if (isLoad) {
     card.classList.add('reveal');
   } else {
     requestAnimationFrame(()=> card.classList.add('reveal'));
   }
-  // Optional: add a unique ID or class for styling a specific card type later
-  // card.dataset.sceneId = scenes[sceneIndex].id;
+  // Scroll to the latest card
+  tarotSpread.scroll({ left: tarotSpread.scrollWidth, behavior: 'smooth' });
 }
 
 function echoRipple(x, y){

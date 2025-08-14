@@ -56,7 +56,7 @@ export const scenes = [
       options: [
         { id:'don', label:'Don an ivory mask and speak with borrowed courage.', delta:{ Deception:+0.5, Hubris:+0.5 }, whisper:'You wore a face that was not yours.' },
         { id:'shatter', label:'Shatter a mask and scatter its petals.', delta:{ Wrath:+0.8, Impulsivity:+0.2 }, whisper:'You left fragments to warn the garden.' },
-        { id:'walk_on', label:'Walk past without touching a single bloom.', delta:{ Apathy:+0.4, Cynicism:+0.1 }, whisper:'Not every temptation roots in you.' } // Decoy for multiple traits
+        { id:'walk_on', label:'Walk past without touching a single bloom.', delta:{ Apathy:+0.4, Cynicism:+0.1 }, whisper:'Not every temptation roots in you.' }
       ]
     },
     {
@@ -76,16 +76,12 @@ export const scenes = [
       options: [
         { id:'perform', label:'Perform a monologue to the unseen crowd.', delta:{ Hubris:+0.8, Impulsivity:+0.2 }, whisper:'You demanded eyes even when none were offered.' },
         { id:'sweep', label:'Sweep the boards until they gleam.', delta:{ Rigidity:+0.5, Control:+0.2 }, whisper:'You gave order to a forgotten hall.' },
-        { id:'close', label:'Close the curtains and depart in quiet.', delta:{ Cynicism:+0.4, Apathy:+0.1 }, whisper:'Some stories end without applause.' } // Decoy for multiple traits
+        { id:'close', label:'Close the curtains and depart in quiet.', delta:{ Cynicism:+0.4, Apathy:+0.1 }, whisper:'Some stories end without applause.' }
       ]
     }
 ];
 
-export const TRAIT_KEYS = [
-    'Hubris', 'Avarice', 'Deception', 'Control', 'Wrath', 'Fear',
-    'Impulsivity', 'Envy', 'Apathy', 'Cynicism', 'Moodiness', 'Rigidity'
-];
-
+export const TRAIT_KEYS = ['Hubris','Avarice','Deception','Control','Wrath','Fear','Impulsivity','Envy','Apathy','Cynicism','Moodiness','Rigidity'];
 export const SIGILS = {
     Hubris:'<svg viewBox="0 0 20 20"><path d="M10 2 L14 14 L6 14 Z" fill="currentColor"/></svg>', // Triangle pointing up (ambition, pride)
     Avarice:'<svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="6" fill="currentColor"/><path d="M7 10 L13 10 M10 7 L10 13" stroke="white" stroke-width="1.5"/></svg>', // Coin with cross (possessiveness)
@@ -164,7 +160,8 @@ export const ARCHETYPES = {
       name: 'The Melancholy Seer',
       lines: [
         'You perceive the world\'s flaws with a sensitive and often somber clarity.',
-        'Wisdom can be born of sorrow, but ensure your insights do not lead to an isolating despair.'
+        'Wisdom can be born of sorrow, but ensure your insights do not lead to an isolating despair.',
+        'Beware the comfort of perpetual detachment, lest the world\'s vibrant hues fade to grey.'
       ]
     },
     'Hubris': { // Single dominant trait archetype
@@ -188,5 +185,24 @@ export const ARCHETYPES = {
         'Prudence is a guide, but remember that some growth lies beyond the edge of your comfort.'
       ]
     },
-    // Add more archetypes for various single traits and other combinations as needed for v2 depth
+    'default': { // Fallback if no specific archetype matches for single dominant trait
+      name: 'The Seeker of Unwritten Paths',
+      lines: [
+        'Your journey weaves a unique pattern, less defined by stark forces and more by subtle currents.',
+        'The whispers echo not a clear destination, but the boundless potential of the unchosen road.'
+      ]
+    }
+};
+
+// Tarot Card Glyphs - symbolic representation for each scene
+export const CARD_GLYPHS = {
+    'mirror_pool': '<path d="M10 3 L10 17 M3 10 H17" stroke="currentColor" stroke-width="2" fill="none"/>', // Crossroads/Reflection
+    'twin_scholar': '<path d="M5 5 L15 5 L15 15 L5 15 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 15 L15 5" stroke="currentColor" stroke-width="1.5"/>', // Conflict/Dualism
+    'echo_parlor': '<path d="M10 4 L10 16 M4 10 H16 M10 10 A3 3 0 1 0 10 10.01Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>', // Center/Resonance
+    'riddle_pond': '<path d="M10 2 L18 10 L10 18 L2 10 Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="10" r="2" fill="currentColor"/>', // Enigma/Diamond
+    'threshold': '<path d="M3 18 L10 2 L17 18 Z" fill="none" stroke="currentColor" stroke-width="2"/><line x1="10" y1="5" x2="10" y2="15" stroke="currentColor" stroke-width="1.5"/>', // Passage/Gate
+    'garden_masks': '<path d="M10 2 L15 10 L10 18 L5 10 Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="8" r="1.5" fill="currentColor"/><circle cx="10" cy="12" r="1.5" fill="currentColor"/>', // Concealment/Mask
+    'clockwork_market': '<path d="M10 2 A8 8 0 1 1 10 18 A8 8 0 1 0 10 2 Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="10" r="2" fill="currentColor"/>', // Cycle/Mechanism
+    'abandoned_stage': '<path d="M3 15 H17 L10 5 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 12 Q10 8 15 12" stroke="currentColor" stroke-width="1.5" fill="none"/>', // Performance/Narrative
+    'default': '<circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2"/><line x1="7" y1="10" x2="13" y2="10" stroke="currentColor" stroke-width="1.5"/>' // Generic placeholder
 };

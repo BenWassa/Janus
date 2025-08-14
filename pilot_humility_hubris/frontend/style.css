@@ -1,279 +1,930 @@
-/* style.css */
+/* Enhanced style.css - Project Janus Prototype v2 - Refined */
 
-    :root {
-      --bg-hue: 250;          /* atmospheric hue, updated by JS */
-      --bg-sat: 18%;
-      --bg-light: 8%;
-      --accent: 72, 92%, 62%; /* HSL, updated by JS */
-      --glass: hsla(0,0%,100%,0.06);
-      --glass-strong: hsla(0,0%,100%,0.12);
-      --text: 0,0%,96%;
-      --muted: 0,0%,75%;
-      --shadow: 0 10px 30px rgba(0,0,0,0.35);
-      --border-light: rgba(255,255,255,0.18);
-      --border-dark: rgba(255,255,255,0.12);
-    }
+/* ================================
+   CSS CUSTOM PROPERTIES & TOKENS
+   ================================ */
+:root {
+  /* Dynamic atmosphere colors (updated by JS) */
+  --bg-hue: 250;
+  --bg-sat: 18%;
+  --bg-light: 8%;
+  --accent: 72, 92%, 62%;
+  
+  /* Enhanced color palette with better contrast */
+  --glass: hsla(0, 0%, 100%, 0.07); /* Lighter, more subtle glass */
+  --glass-strong: hsla(0, 0%, 100%, 0.12); /* Slightly stronger */
+  --glass-hover: hsla(0, 0%, 100%, 0.1);
+  --text-primary: hsl(0, 0%, 98%);
+  --text-secondary: hsl(0, 0%, 80%);
+  --text-muted: hsl(0, 0%, 65%); /* Darker for subtle hints */
+  --text-accent: hsl(var(--accent));
+  
+  /* Enhanced border system */
+  --border-subtle: hsla(0, 0%, 100%, 0.08); /* More subtle */
+  --border-medium: hsla(0, 0%, 100%, 0.15);
+  --border-strong: hsla(0, 0%, 100%, 0.22);
+  --border-accent: hsla(var(--accent), 0.7); /* Brighter accent border */
+  
+  /* Shadows with better depth and less harshness */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.3);
+  --shadow-accent: 0 6px 18px hsla(var(--accent), 0.35);
+  
+  /* Typography scale */
+  --font-family-primary: "Inter", ui-sans-serif, system-ui, -apple-system, 
+                         "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-size-xs: 0.7rem;     /* 11.2px */
+  --font-size-sm: 0.825rem;    /* 13.2px */
+  --font-size-base: 0.95rem;      /* 15.2px */
+  --font-size-lg: 1.1rem;    /* 17.6px */
+  --font-size-xl: 1.25rem;     /* 20px */
+  --font-size-2xl: 1.5rem;     /* 24px */
+  --font-size-3xl: 1.875rem;   /* 30px */
+  --font-size-4xl: 2.5rem;    /* 40px */
+  
+  /* Spacing scale */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 0.75rem;   /* 12px */
+  --space-lg: 1rem;      /* 16px */
+  --space-xl: 1.5rem;    /* 24px */
+  --space-2xl: 2rem;     /* 32px */
+  --space-3xl: 3rem;     /* 48px */
+  --space-4xl: 4rem;     /* 64px */
+  
+  /* Border radius system */
+  --radius-sm: 0.375rem;  /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-full: 9999px;
+  
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-atmosphere: 2000ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      color: hsl(var(--text));
-      background: radial-gradient(1200px 800px at 20% 10%, hsla(var(--bg-hue), var(--bg-sat), calc(var(--bg-light) + 8%), 0.6), transparent),
-                  linear-gradient(145deg, hsla(var(--bg-hue), calc(var(--bg-sat) - 10%), var(--bg-light), 1), hsla(calc(var(--bg-hue) + 40), var(--bg-sat), calc(var(--bg-light) - 3%), 1));
-      transition: background 1600ms ease, filter 1600ms ease; /* Smoother transition */
-      overflow: hidden;
-    }
+/* ================================
+   RESET & BASE STYLES
+   ================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-    .app {
-      position: relative; height: 100%; width: 100%;
-    }
+html {
+  height: 100%;
+  font-size: 16px; /* Ensure 1rem = 16px for consistent rem units */
+}
 
-    /* Constellation canvas */
-    #constellation {
-      position: fixed; right: 12px; bottom: 12px; width: 280px; height: 180px; opacity: 0.8; filter: drop-shadow(0 0 6px rgba(0,0,0,0.25));
-    }
+body {
+  margin: 0;
+  height: 100%;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: 
+    radial-gradient(1400px 900px at 25% 15%, 
+      hsla(var(--bg-hue), var(--bg-sat), calc(var(--bg-light) + 10%), 0.7), 
+      transparent
+    ),
+    linear-gradient(135deg, 
+      hsla(var(--bg-hue), calc(var(--bg-sat) - 8%), var(--bg-light), 1), 
+      hsla(calc(var(--bg-hue) + 35), var(--bg-sat), calc(var(--bg-light) - 2%), 1)
+    );
+  transition: background var(--transition-atmosphere), 
+              filter var(--transition-atmosphere);
+  overflow: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-    /* Top HUD */
-    .hud {
-      position: fixed; left: 0; right: 0; top: 0; height: 64px;
-      display: flex; align-items: center; justify-content: space-between; padding: 12px 16px;
-      backdrop-filter: blur(10px); background: linear-gradient(to bottom, rgba(0,0,0,0.28), rgba(0,0,0,0.05));
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .hud .brand { font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.92; }
-    .hud .controls { display: flex; gap: 10px; align-items: center; }
-    .pill {
-      background: var(--glass); border: 1px solid var(--border-light); border-radius: 999px; padding: 8px 12px; backdrop-filter: blur(6px);
-      display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow);
-    }
-    select, button {
-      color: hsl(var(--text)); background: transparent; border: 1px solid var(--border-light); border-radius: 10px; padding: 8px 10px;
-      transition: all 200ms ease; /* Added transition */
-    }
-    button { cursor: pointer; }
-    button:hover {
-        background: hsla(var(--accent),0.1);
-        border-color: hsla(var(--accent),0.5);
-    }
-    button:active {
-        transform: translateY(1px);
-    }
-    select:focus, button:focus {
-        outline: 1px solid hsla(var(--accent),0.6);
-        box-shadow: 0 0 0 2px hsla(var(--accent),0.2);
-    }
+/* ================================
+   FOCUS MANAGEMENT & ACCESSIBILITY
+   ================================ */
+:focus {
+  outline: 2px solid var(--border-accent);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--border-accent);
+  outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ================================
+   LAYOUT COMPONENTS
+   ================================ */
+.app {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+/* Top HUD Navigation */
+.hud {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg) var(--space-xl);
+  backdrop-filter: blur(16px) saturate(180%);
+  background: linear-gradient(
+    to bottom, 
+    rgba(0, 0, 0, 0.35), 
+    rgba(0, 0, 0, 0.1)
+  );
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+  z-index: 1000;
+}
+
+.hud .brand {
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  opacity: 0.95;
+}
+
+.hud .controls {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.pill {
+  background: var(--glass);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-full);
+  padding: var(--space-sm) var(--space-lg);
+  backdrop-filter: blur(8px) saturate(150%);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  color: var(--text-secondary); /* Text color for label */
+  font-size: var(--font-size-sm);
+}
+
+.pill label {
+  color: var(--text-muted); /* Make label more muted */
+  font-weight: 500;
+}
+
+/* Form Controls */
+select,
+button {
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+button {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  box-shadow: var(--shadow-sm); /* Buttons now also have shadow */
+}
+
+button:hover,
+select:hover {
+  background: hsla(var(--accent), 0.12);
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-md); /* Stronger shadow on hover */
+}
+
+button:active {
+  transform: translateY(1px);
+  box-shadow: var(--shadow-sm); /* Resets to smaller shadow on active */
+}
+
+button:focus,
+select:focus {
+  background: hsla(var(--accent), 0.08);
+  border-color: var(--border-accent);
+  box-shadow: 0 0 0 3px hsla(var(--accent), 0.25);
+}
+
+/* ================================
+   CONSTELLATION CANVAS
+   ================================ */
+#constellation {
+  position: fixed;
+  right: var(--space-lg);
+  bottom: var(--space-lg);
+  width: 320px;
+  height: 200px;
+  opacity: 0.85;
+  filter: drop-shadow(var(--shadow-md));
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    135deg, 
+    rgba(0, 0, 0, 0.1), 
+    rgba(0, 0, 0, 0.05)
+  );
+  border: 1px solid var(--border-subtle);
+}
+
+/* ================================
+   PANEL LAYOUTS
+   ================================ */
+.panel {
+  position: absolute;
+  inset: 88px var(--space-xl) var(--space-xl);
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+/* Card Components */
+.card {
+  background: var(--glass);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px) saturate(150%);
+  transition: all var(--transition-normal);
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Typography Components */
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ================================
+   START SCREEN
+   ================================ */
+#start {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: var(--space-xl);
+}
+
+.start-card {
+  max-width: 720px;
+  padding: var(--space-3xl) var(--space-2xl);
+  text-align: center;
+  background: var(--glass-strong);
+  border: 1px solid var(--border-strong);
+}
+
+.start-title {
+  font-size: var(--font-size-4xl);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1.2;
+  margin: var(--space-lg) 0 0 0;
+  background: linear-gradient(
+    135deg, 
+    var(--text-primary), 
+    hsla(var(--accent), 0.9)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.start-blurb {
+  color: var(--text-secondary);
+  font-size: var(--font-size-lg);
+  line-height: 1.7;
+  margin: var(--space-lg) 0 var(--space-2xl) 0;
+}
+
+/* ================================
+   SCENE COMPONENTS (Dream-Walk Emphasis)
+   ================================ */
+.scene-card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 400px;
+  gap: var(--space-lg);
+}
+
+.scene-text {
+  font-size: var(--font-size-lg);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.scene-id {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-xs);
+}
+
+/* Decision Area for Dream-Walk Choices */
+.decision {
+  position: relative;
+  min-height: 120px; /* Smaller as choices are direct */
+  display: flex; /* Flexbox for buttons */
+  flex-direction: column;
+  gap: var(--space-md);
+  justify-content: center;
+  align-items: flex-start; /* Align choices to left */
+  padding: var(--space-lg) 0;
+  opacity: 0;
+  animation: choicesFadeIn 700ms ease-out forwards 300ms; /* Delayed fade in */
+}
+
+.choice-button {
+  background: var(--glass);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: left; /* Ensure text aligns left within button */
+  width: 100%; /* Full width for better click target */
+  box-shadow: var(--shadow-sm);
+}
+
+.choice-button:hover {
+  background: hsla(var(--accent), 0.15);
+  border-color: var(--border-accent);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px); /* Subtle slide on hover */
+}
+
+.choice-button.selected {
+  background: hsla(var(--accent), 0.25);
+  border-color: var(--border-accent);
+  color: var(--text-accent);
+  box-shadow: var(--shadow-accent), inset 0 0 10px hsla(var(--accent), 0.3);
+  transform: translateX(0);
+}
+
+@keyframes choicesFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 
-    /* Panels */
-    .panel {
-      position: absolute; inset: 80px 24px 24px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px;
-    }
-    .card {
-      background: var(--glass); border: 1px solid var(--border-dark); border-radius: 16px; padding: 18px 18px; box-shadow: var(--shadow);
-    }
-    .title { font-size: 22px; font-weight: 700; letter-spacing: 0.02em; margin: 0 0 8px; }
-    .subtitle { font-size: 13px; color: hsl(var(--muted)); margin-top: 2px; }
+/* ================================
+   STATUS & UI ELEMENTS
+   ================================ */
 
-    /* Start screen */
-    #start { display: grid; place-items: center; height: 100%; }
-    .start-card { max-width: 720px; padding: 24px 28px; text-align: center; }
-    .start-title { font-size: 32px; margin: 8px 0 0 0; }
-    .start-blurb { color: hsl(var(--muted)); margin: 6px 0 14px; }
+/* Badge Components */
+.badge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  background: var(--glass);
+  border: 1px solid var(--border-medium);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
 
-    /* Scene */
-    .scene-card { display: grid; grid-template-rows: auto 1fr auto; min-height: 360px; }
-    .scene-text { font-size: 16px; line-height: 1.5; opacity: 0.92; }
-    .scene-id { color: hsl(var(--muted)); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+/* Trait Bar (Humility vs Hubris visual only) */
+#traitBar {
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    hsla(200, 70%, 60%, 0.9), 
+    hsla(35, 85%, 55%, 0.9)
+  );
+  transition: width var(--transition-slow);
+  border-radius: inherit;
+}
 
-    /* Decision Area */
-    .decision { position: relative; min-height: 280px; display: grid; place-items: center; overflow: hidden; }
+/* Sigil Repository (Mid Clarity) */
+#sigils {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: var(--space-md);
+  min-height: 40px; /* Ensure space even if empty */
+}
 
-    /* Orbit selector */
-    .orbit {
-      position: relative; width: 420px; height: 420px; border-radius: 50%;
-      background: radial-gradient(260px 260px at 50% 50%, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-      border: 1px dashed var(--border-dark);
-      animation: orbitRotate 120s linear infinite; /* Subtle continuous rotation */
-    }
-    @keyframes orbitRotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    .orbit .glyph {
-      position: absolute; width: 160px; height: 44px; display: grid; place-items: center; padding: 6px 10px;
-      background: hsla(var(--bg-hue), 20%, 70%, 0.06); border: 1px solid var(--border-light); border-radius: 12px; cursor: pointer;
-      transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease, opacity 200ms ease, border-color 200ms ease;
-      opacity: 0; transform: scale(0.8); animation: choiceIn 400ms ease forwards;
-    }
-    .orbit .glyph:hover {
-      background: hsla(var(--bg-hue), 40%, 60%, 0.18); /* Stronger hover */
-      box-shadow: 0 0 16px hsla(var(--accent),0.4); /* Accent color glow */
-      animation: orbitHover 1.6s ease-in-out infinite;
-      transform: scale(1.05);
-      border-color: hsla(var(--accent),0.6);
-    }
-    .orbit .glyph.selected {
-      box-shadow: 0 0 24px hsla(var(--accent),0.8), inset 0 0 10px hsla(var(--accent),0.5);
-      border-color: hsla(var(--accent),0.8);
-      background: hsla(var(--accent),0.2);
-      transform: scale(1.1); /* Pop more on selection */
-    }
-    @keyframes orbitHover {
-      0%,100% { box-shadow: 0 0 12px hsla(var(--accent),0.0); }
-      50% { box-shadow: 0 0 18px hsla(var(--accent),0.6); }
-    }
-    @keyframes choiceIn {
-      from { opacity: 0; transform: scale(0.6); }
-      to { opacity: 1; transform: scale(1); }
-    }
+.sigil {
+  width: 28px;
+  height: 28px;
+  opacity: 0.15; /* More faded when inactive */
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm); /* Subtle shadow for sigils */
+  border-radius: var(--radius-sm); /* Slight rounded corners */
+  background: var(--glass); /* Glass background for sigils */
+  padding: 4px; /* Padding for the SVG */
+}
 
-    /* Lens cards */
-    .lens-wrap { position: relative; width: 100%; height: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: center; }
-    .lens-card {
-      position: relative; padding: 18px; height: 160px; display: grid; place-items: center; text-align: center;
-      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03)); border: 1px solid var(--border-light); border-radius: 14px;
-      filter: blur(6px) saturate(0.8) brightness(0.9); overflow: hidden; cursor: none;
-      -webkit-mask-image: radial-gradient(120px 120px at var(--mx,50%) var(--my,50%), rgba(0,0,0,1) 0%, rgba(0,0,0,0.0) 60%);
-      mask-image: radial-gradient(120px 120px at var(--mx,50%) var(--my,50%), rgba(0,0,0,1) 0%, rgba(0,0,0,0.0) 60%);
-      transition: filter 200ms ease, box-shadow 200ms ease, transform 200ms ease, border-color 200ms ease;
-      opacity: 0; transform: scale(0.96); animation: choiceIn 400ms ease forwards;
-    }
-    .lens-card.focus {
-      filter: blur(0) saturate(1.2) brightness(1.1);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 12px hsla(var(--accent),0.3);
-      transform: scale(1.02);
-      border-color: hsla(var(--accent),0.5);
-    }
-    .lens-card.selected {
-      filter: blur(0) saturate(1.2) brightness(1.1);
-      box-shadow: 0 0 24px hsla(var(--accent),0.8), inset 0 0 10px hsla(var(--accent),0.5);
-      border-color: hsla(var(--accent),0.8);
-      background: hsla(var(--accent),0.2);
-      transform: scale(1.05);
-    }
-    .lens-card .hint { position: absolute; bottom: 8px; right: 10px; font-size: 11px; color: hsl(var(--muted)); opacity: 0.8; }
+.sigil.active {
+  opacity: 0.9;
+  transform: scale(1.3) rotate(8deg);
+  filter: drop-shadow(0 0 8px currentColor);
+  box-shadow: var(--shadow-md);
+}
 
-    /* Echo ripple */
-    .ripple { position: fixed; width: 10px; height: 10px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, hsla(var(--accent),0.35), hsla(var(--accent),0.0)); animation: ripple 900ms ease-out forwards; }
-    .ripple.faint { opacity: 0.25; animation: ripple 1200ms ease-out forwards; }
-    @keyframes ripple { from { transform: scale(0.6); opacity: 0.6; } to { transform: scale(40); opacity: 0; } }
+.sigil svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
-    /* Scene transition */
-    .dissolve { animation: dissolve 700ms ease both; }
-    @keyframes dissolve {
-      0%   { opacity: 0; filter: blur(12px) hue-rotate(-15deg); transform: translateY(20px) scale(0.98); }
-      50%  { filter: blur(4px) hue-rotate(10deg); transform: translateY(-4px) scale(1.02); }
-      100% { opacity: 1; filter: blur(0) hue-rotate(0deg); transform: translateY(0) scale(1); }
-    }
+/* Tarot Spread (Visible Progression) */
+#tarotSpread {
+  display: flex;
+  gap: var(--space-md);
+  height: 90px; /* Increased height for prominence */
+  padding: var(--space-sm) 0;
+  overflow-x: auto;
+  align-items: center; /* Vertically center cards */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-medium) transparent;
+  margin-top: var(--space-md);
+  border-radius: var(--radius-md);
+  background: rgba(0,0,0,0.1); /* Subtle background for the spread area */
+  border: 1px dashed var(--border-subtle); /* Dashed border to imply flow */
+}
 
-    /* Tarot spread */
-    .tarot-spread { display: flex; gap: 8px; height: 42px; padding: 4px 0; overflow-x: auto; scrollbar-width: none; } /* Added overflow for many cards */
-    .tarot-card {
-      min-width: 30px; height: 40px; border: 1px solid var(--border-light); border-radius: 4px; /* More refined card shape */
-      background: hsla(var(--bg-hue),40%,60%,0.12);
-      transform: rotateY(90deg) scale(0.8); opacity: 0; /* Initial hidden state */
-      transition: transform 600ms ease, opacity 600ms ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    .tarot-card.reveal {
-      transform: rotateY(0deg) scale(1); opacity: 1;
-      /* Optional: Add slight random rotation for aesthetic */
-      /* transform: rotateY(0deg) scale(1) rotate(calc(var(--rand-rot, 0) * 1deg)); */
-    }
-    .tarot-spread::-webkit-scrollbar { display: none; } /* Hide scrollbar for aesthetics */
+.tarot-card {
+  min-width: 50px; /* Wider cards */
+  height: 70px; /* Taller cards (approx 5:7 aspect ratio) */
+  flex-shrink: 0; /* Prevent cards from shrinking */
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  background: var(--glass-hover); /* More distinct card background */
+  transform: rotateY(90deg) scale(0.8);
+  opacity: 0;
+  transition: transform 900ms cubic-bezier(0.34, 1.56, 0.64, 1), 
+              opacity 900ms ease;
+  box-shadow: var(--shadow-md);
+  position: relative; /* For inner glyphs */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  font-size: var(--font-size-2xl); /* For glyphs */
+}
 
+.tarot-card.reveal {
+  transform: rotateY(0deg) scale(1);
+  opacity: 1;
+}
 
-    /* Reflection */
-    .reflect-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; }
-    .portrait { height: 360px; display: grid; place-items: center; background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); border: 1px solid var(--border-dark); border-radius: 16px; position: relative; overflow: hidden; }
-    .portrait svg { width: 90%; height: 90%; }
-    .journal { font-size: 14px; line-height: 1.55; opacity: 0.9; white-space: pre-wrap; }
-    .actions { display: flex; gap: 10px; }
-    .trait-summary { font-size: 13px; color: hsl(var(--muted)); margin-top: 10px; font-style: italic; }
+/* Inner Glyph for Tarot Cards */
+.tarot-card svg {
+  width: 70%;
+  height: 70%;
+  opacity: 0.6; /* Faint glyphs */
+  stroke: currentColor;
+  fill: currentColor;
+  transition: opacity var(--transition-normal);
+}
 
-    /* Helper badges */
-    .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid var(--border-light); font-size: 11px; color: hsl(var(--muted)); }
+.tarot-spread::-webkit-scrollbar {
+  height: 6px;
+}
 
-    /* Sigil repository */
-    #sigils { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-    .sigil {
-        width:24px; height:24px; opacity:0.15; /* More faded when inactive */
-        transition:opacity 300ms ease, transform 300ms ease;
-        display: flex; align-items: center; justify-content: center;
-    }
-    .sigil.active {
-        opacity:0.9;
-        transform:scale(1.3) rotate(5deg); /* More pronounced pop and slight rotation */
-        filter: drop-shadow(0 0 4px currentColor);
-    }
-    .sigil svg { width:100%; height:100%; stroke: currentColor; fill: currentColor; } /* Use currentColor for dynamic color from JS */
+.tarot-spread::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-    /* Whisper panel */
-    .whisper-wrap {
-      display:grid; gap:20px; text-align:center;
-      max-width: 480px; margin: auto; /* Center content */
-      padding: 20px;
-      background: hsla(var(--bg-hue), 10%, 15%, 0.4);
-      border: 1px solid hsla(var(--bg-hue), 20%, 30%, 0.6);
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-    }
-    .whisper-text {
-        font-size: 1.3em;
-        font-style:italic; opacity:0.85;
-        min-height: 60px; /* Ensure consistent height */
-        display: flex; align-items: center; justify-content: center;
-        transition: opacity 300ms ease, transform 300ms ease;
-    }
-    .whisper-text.whisper-in {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    .whisper-actions { display:flex; gap:12px; justify-content:center; }
-    .whisper-actions button {
-        background: hsla(var(--bg-hue), 30%, 50%, 0.2);
-        border-color: hsla(var(--bg-hue), 40%, 60%, 0.4);
-        padding: 10px 20px;
-        font-weight: 500;
-    }
-    .whisper-actions button:hover {
-        background: hsla(var(--accent),0.3);
-        border-color: hsla(var(--accent),0.6);
-    }
-    .whisper-actions button.selected {
-        background: hsla(var(--accent),0.5);
-        border-color: hsla(var(--accent),0.9);
-        box-shadow: 0 0 15px hsla(var(--accent),0.7);
-        transform: scale(1.05);
-    }
-    .whisper-actions button.rejected {
-        transform: translateX(-5px) rotate(-2deg);
-        opacity: 0.7;
-    }
+.tarot-spread::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
+}
 
-    /* SVG Adornment Animations */
-    @keyframes pulseGlow {
-        0%, 100% { opacity: 0.8; transform: scale(1); filter: drop-shadow(0 0 2px hsla(var(--accent), 0.5)); }
-        50% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 0 6px hsla(var(--accent), 0.8)); }
-    }
-    .adornment-animation {
-        animation: pulseGlow 2.5s infinite ease-in-out;
-    }
+/* ================================
+   REFLECTION SCREEN
+   ================================ */
+.reflect-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: var(--space-xl);
+  align-items: start;
+}
 
-    /* Mobile */
-    @media (max-width: 920px) {
-      .panel { grid-template-columns: 1fr; inset: 76px 14px 14px; }
-      .orbit { width: 320px; height: 320px; }
-      .lens-wrap { grid-template-columns: 1fr; }
-      #constellation { width: 200px; height: 120px; }
-    }
-    @media (max-width: 600px) {
-      .hud { height: 56px; }
-      .panel { inset: 70px 12px 12px; }
-      .orbit { width: 260px; height: 260px; }
-      .lens-card { height: 130px; }
-      .title { font-size: 18px; }
-      .tarot-spread { height: 30px; gap: 4px; }
-      .tarot-card { min-width: 20px; height: 28px; }
-    }
+.portrait {
+  height: 400px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(
+    145deg, 
+    var(--glass-strong), 
+    var(--glass)
+  );
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.portrait svg {
+  width: 85%;
+  height: 85%;
+  overflow: visible; /* Allow adornments to extend slightly */
+}
+
+.journal {
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-medium) transparent;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.trait-summary {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin-top: var(--space-md);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ================================
+   ANIMATIONS & EFFECTS
+   ================================ */
+
+/* Echo Ripple Effect */
+.ripple {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle, 
+    hsla(var(--accent), 0.6), 
+    hsla(var(--accent), 0.0)
+  );
+  animation: ripple 1200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  z-index: 999; /* Ensure it's on top */
+}
+
+.ripple.faint {
+  opacity: 0.3;
+  animation: ripple 1600ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes ripple {
+  from {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(50);
+    opacity: 0;
+  }
+}
+
+/* Scene Transition (Dream-Walk) */
+.dissolve {
+  animation: dissolve 1000ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes dissolve {
+  0% {
+    opacity: 0;
+    filter: blur(16px) hue-rotate(-20deg) brightness(0.7);
+    transform: translateY(30px) scale(0.96);
+  }
+  50% {
+    filter: blur(6px) hue-rotate(15deg) brightness(1.1);
+    transform: translateY(-6px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0) hue-rotate(0deg) brightness(1);
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* SVG Adornment Animations */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+    filter: drop-shadow(0 0 3px hsla(var(--accent), 0.6));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 10px hsla(var(--accent), 0.9));
+  }
+}
+
+.adornment-animation {
+  animation: pulseGlow 3s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+
+/* Tablet Breakpoint: 768px */
+@media (max-width: 768px) {
+  :root {
+    --font-size-4xl: 2rem;
+    --font-size-3xl: 1.75rem;
+    --space-4xl: 3rem;
+    --space-3xl: 2rem;
+  }
+
+  .hud {
+    height: 64px;
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .hud .brand {
+    font-size: var(--font-size-xs);
+  }
+
+  .panel {
+    grid-template-columns: 1fr;
+    inset: 80px var(--space-lg) var(--space-lg);
+    gap: var(--space-lg);
+  }
+
+  .card {
+    padding: var(--space-lg);
+  }
+
+  /* No specific decision UI to adjust here, as it's just buttons */
+
+  #constellation {
+    width: 240px;
+    height: 150px;
+    right: var(--space-md);
+    bottom: var(--space-md);
+  }
+
+  .start-card {
+    padding: var(--space-2xl) var(--space-xl);
+  }
+
+  .reflect-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .portrait {
+    height: 320px;
+  }
+
+  .whisper-wrap { /* Keep this if you want it as a content block style, not decision UI */
+    padding: var(--space-xl);
+    max-width: 100%;
+  }
+  /* Remove whisper-actions button styles if no longer used as a decision method */
+}
+
+/* Mobile Breakpoint: 480px */
+@media (max-width: 480px) {
+  :root {
+    --font-size-4xl: 1.75rem;
+    --font-size-3xl: 1.5rem;
+    --font-size-2xl: 1.25rem;
+    --space-3xl: 1.5rem;
+    --space-2xl: 1.25rem;
+  }
+
+  .hud {
+    height: 56px;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .hud .brand {
+    font-size: 0.7rem;
+  }
+
+  .hud .controls {
+    gap: var(--space-sm);
+  }
+
+  .pill {
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  button,
+  select {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .panel {
+    inset: 72px var(--space-md) var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .card {
+    padding: var(--space-md);
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  #constellation {
+    width: 180px;
+    height: 110px;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+  }
+
+  .start-card {
+    padding: var(--space-xl) var(--space-lg);
+    margin: var(--space-lg);
+  }
+
+  .start-title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .start-blurb {
+    font-size: var(--font-size-base);
+  }
+
+  .scene-card {
+    min-height: 320px;
+    gap: var(--space-md);
+  }
+
+  .scene-text {
+    font-size: var(--font-size-base);
+  }
+
+  .decision {
+    min-height: 100px;
+    padding: var(--space-md) 0;
+  }
+
+  .tarot-spread {
+    height: 60px; /* Reduced height for small mobile */
+    gap: var(--space-sm);
+  }
+
+  .tarot-card {
+    min-width: 40px;
+    height: 56px;
+  }
+
+  .portrait {
+    height: 280px;
+  }
+}
+
+/* Ultra-small screens: 360px */
+@media (max-width: 360px) {
+  .hud {
+    height: 52px;
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .hud .brand {
+    font-size: 0.65rem;
+  }
+
+  .panel {
+    inset: 68px var(--space-sm) var(--space-sm);
+  }
+
+  .card {
+    padding: var(--space-sm);
+  }
+
+  #constellation {
+    width: 140px;
+    height: 90px;
+  }
+
+  .start-card {
+    margin: var(--space-md);
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .decision {
+    min-height: 80px;
+  }
+}
+
+/* ================================
+   HIGH CONTRAST MODE SUPPORT
+   ================================ */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: hsl(0, 0%, 100%);
+    --text-secondary: hsl(0, 0%, 90%);
+    --text-muted: hsl(0, 0%, 80%);
+    --border-medium: hsla(0, 0%, 100%, 0.4);
+    --border-strong: hsla(0, 0%, 100%, 0.6);
+    --glass: hsla(0, 0%, 100%, 0.2);
+    --glass-strong: hsla(0, 0%, 100%, 0.35);
+  }
+
+  .card, .pill, button, select, .choice-button {
+    border-width: 2px;
+  }
+
+  button:focus,
+  select:focus,
+  .choice-button:focus {
+    box-shadow: 0 0 0 4px hsla(var(--accent), 0.6);
+  }
+}
+
+/* ================================
+   PRINT STYLES
+   ================================ */
+@media print {
+  .hud,
+  #constellation,
+  .decision {
+    display: none !important;
+  }
+
+  .panel {
+    position: static;
+    display: block;
+    background: white;
+    color: black;
+  }
+
+  .card {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    background: white;
+  }
+}
