@@ -1,0 +1,9 @@
+{
+  "scene_id": "mirror_chimera",
+  "append_text": "Its scales reflect your stance—smaller when you shrink, towering when you swell.",
+  "choices": [
+    { "id": "stroke_carefully", "text": "Stroke the mane without claiming it.", "hh_delta": -1 },
+    { "id": "touch_plainly",    "text": "Touch and step back, gauging reaction.", "hh_delta": 0 },
+    { "id": "strike_confident", "text": "Strike and declare the beast beneath you.", "hh_delta": 1 }
+  ]
+}

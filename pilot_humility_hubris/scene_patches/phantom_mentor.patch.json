@@ -1,0 +1,9 @@
+{
+  "scene_id": "phantom_mentor",
+  "symbol": "mirror",
+  "choices": [
+    { "id": "accept_gracefully", "text": "Bow and accept with gratitude.", "hh_delta": -1 },
+    { "id": "accept_plainly",    "text": "Accept with a nod—neither boast nor beg.", "hh_delta": 0 },
+    { "id": "spurn_proudly",     "text": "Laugh that you need no such gift.", "hh_delta": 1 }
+  ]
+}
