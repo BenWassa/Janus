@@ -37,18 +37,31 @@ const journalEl = document.getElementById('journal');
 const reading = document.getElementById('reading');
 const quickToggle = document.getElementById('quick');
 const ambienceToggle = document.getElementById('ambience');
+const telemetryToggle = document.getElementById('telemetry');
 const constellationCanvas = document.getElementById('constellation');
 if (quickToggle) quickMode = quickToggle.checked;
+let telemetryEnabled = telemetryToggle ? telemetryToggle.checked : false;
 
 const downloadBtn = document.getElementById('download');
 const againBtn = document.getElementById('again');
 
 const traitMemories = {};
 
+function logTelemetry(entry){
+  if(!telemetryEnabled) return;
+  try{
+    const log = JSON.parse(localStorage.getItem('janusTelemetry') || '[]');
+    log.push(entry);
+    localStorage.setItem('janusTelemetry', JSON.stringify(log));
+  } catch(err){
+    console.warn('[Telemetry] Failed to log entry', err);
+  }
+}
+
 // Quick runtime integrity check for required/optional DOM hooks
 function integrityCheck(){
   const required = ['start','play','game','sceneCard','decision'];
-  const optional = ['reflection','traitBar','sigils','tarotSpread','portrait','journal','reading','restart','save','load','download','again','constellation','quick','ambience','consequence'];
+  const optional = ['reflection','traitBar','sigils','tarotSpread','portrait','journal','reading','restart','save','load','download','again','constellation','quick','ambience','telemetry','consequence'];
   const missingRequired = required.filter(id => !document.getElementById(id));
   const missingOptional = optional.filter(id => !document.getElementById(id));
   if(missingRequired.length) console.warn('[IntegrityCheck] Missing required DOM ids:', missingRequired.join(', '));
@@ -65,6 +78,10 @@ if (downloadBtn) downloadBtn.addEventListener('click', downloadRitual);
 if (saveBtn) saveBtn.addEventListener('click', saveState);
 if (loadBtn) loadBtn.addEventListener('click', loadState);
 if (quickToggle) quickToggle.addEventListener('change', () => { quickMode = quickToggle.checked; });
+if (telemetryToggle) telemetryToggle.addEventListener('change', () => {
+  telemetryEnabled = telemetryToggle.checked;
+  if (telemetryEnabled) localStorage.setItem('janusTelemetry', JSON.stringify([]));
+});
 if (ambienceToggle && constellationCanvas) {
   ambienceToggle.addEventListener('change', () => {
     constellationCanvas.style.display = ambienceToggle.checked ? 'block' : 'none';
@@ -97,6 +114,7 @@ function startGame(){
   journal.length = 0;
   path.length = 0;
   choicesLocked = false; // Ensure choices are unlocked for new game
+  if (telemetryEnabled) localStorage.setItem('janusTelemetry', JSON.stringify([]));
   renderScene();
   updateAtmosphere();
 }
@@ -244,8 +262,10 @@ function handleChoice(opt, point){
     }
   }
   const currentSceneId = scenes[sceneIndex].id;
-  path.push({ scene: currentSceneId, choice: opt.id, delta: currentDeltas });
-  console.log('[Telemetry]', { scene: currentSceneId, choice: opt.id, delta: currentDeltas, traits: { ...traits } });
+  const entry = { scene: currentSceneId, choice: opt.id, delta: currentDeltas, ts: Date.now() };
+  path.push(entry);
+  logTelemetry(entry);
+  console.log('[Telemetry]', { ...entry, traits: { ...traits } });
   journal.push(`• ${opt.whisper}`);
   addTarotCard(currentSceneId); // Pass scene ID to tarot card
 

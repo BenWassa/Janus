@@ -3,3 +3,4 @@ dist/
 
 outputs/*
 !outputs/README.md
+tests/front_end_playwright/__snapshots__/
